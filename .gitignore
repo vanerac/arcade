@@ -1,0 +1,26 @@
+# vscode
+.vscode
+
+# clion
+CMakeLists.txt
+cmake-build-debug
+.idea
+
+# cpp
+*.o
+obj/
+a.out
+vgcore.*
+unit_test
+
+# tmpfiles
+*[Tt][Mm][Pp]*
+*[Tt][Oo][ _\-][Dd][Ee][Ll]*
+*[Tt][Oo][Dd][Ee][Ll]*
+*zip*
+log.txt
+
+# bin
+*.so
+arcade
+

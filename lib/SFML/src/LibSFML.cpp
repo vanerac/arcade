@@ -1,0 +1,146 @@
+/*
+** EPITECH PROJECT, 2021
+** B-OOP-400-BDX-4-1-arcade-honore.dupieu
+** File description:
+** LibSFML
+*/
+
+#include <iostream>
+#include <unordered_map>
+#include "LibSFML.hpp"
+
+LibSFML::LibSFML()
+{
+}
+
+LibSFML::~LibSFML()
+{
+}
+
+int LibSFML::availableOptions() const
+{
+    return SET_CHARACTER_SIZE | MOUSE_MOVE;
+}
+
+void LibSFML::init()
+{
+    std::cout << "Init" << std::endl;
+    _window.create(sf::VideoMode(1920, 1080), "SFML Window!", sf::Style::Fullscreen);
+    _window.setFramerateLimit(60);
+    restartClock();
+}
+
+void LibSFML::stop()
+{
+    std::cout << "Stop" << std::endl;
+    _window.close();
+}
+
+void LibSFML::restartClock()
+{
+    _clock.restart();
+}
+
+double LibSFML::getDeltaTime()
+{
+    return _clock.getElapsedTime().asSeconds();
+}
+
+void LibSFML::display()
+{
+    _window.display();
+    _eventsFetched = false;
+    restartClock();
+}
+
+void LibSFML::clearWindow()
+{
+    _window.clear();
+}
+
+arcade::data::Vector2u LibSFML::getWindowSize()
+{
+    auto size = _window.getSize();
+    return arcade::data::Vector2u{size.x, size.y};
+}
+
+std::unique_ptr<arcade::displayer::IText> LibSFML::createText(const std::string &text)
+{
+    return std::make_unique<TextSFML>(text);
+}
+
+std::unique_ptr<arcade::displayer::IText> LibSFML::createText()
+{
+    return std::make_unique<TextSFML>();
+}
+
+std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale)
+{
+    (void)asciiSprite;
+    return std::make_unique<SpriteSFML>(spritePath, scale);
+}
+
+std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite()
+{
+    return std::make_unique<SpriteSFML>();
+}
+
+std::vector<arcade::data::Event> LibSFML::getEvents()
+{
+    if (_eventsFetched) {
+        return _events;
+    }
+    _eventsFetched = true;
+    _events.clear();
+    sf::Event event;
+    static const std::map<sf::Keyboard::Key, arcade::data::KeyCode> sfToArcadeKey {
+        {sf::Keyboard::Escape,  arcade::data::KeyCode::ESCAPE},
+        {sf::Keyboard::Space,   arcade::data::KeyCode::SPACE},
+        {sf::Keyboard::Down,    arcade::data::KeyCode::DOWN},
+        {sf::Keyboard::Up,      arcade::data::KeyCode::UP},
+        {sf::Keyboard::Left,    arcade::data::KeyCode::LEFT},
+        {sf::Keyboard::Right,   arcade::data::KeyCode::RIGHT},
+        {sf::Keyboard::Enter,   arcade::data::KeyCode::ENTER},
+    };
+    static const std::map<sf::Event::EventType, arcade::data::EventType> sfToArcadeMouseType {
+        {sf::Event::EventType::MouseButtonPressed,  arcade::data::EventType::MOUSE_PRESSED},
+        {sf::Event::EventType::MouseButtonReleased, arcade::data::EventType::MOUSE_RELEASED},
+        {sf::Event::EventType::MouseMoved,          arcade::data::EventType::MOUSE_MOVED},
+    };
+    static const std::map<sf::Mouse::Button, arcade::data::MouseBtn> sfToArcadeMouseBtn {
+        {sf::Mouse::Button::Left,   arcade::data::MouseBtn::BTN_1},
+        {sf::Mouse::Button::Middle, arcade::data::MouseBtn::BTN_2},
+        {sf::Mouse::Button::Right,  arcade::data::MouseBtn::BTN_3},
+    };
+    while (_window.pollEvent(event)) {
+        if (event.type == sf::Event::EventType::KeyPressed) {
+            char key = event.key.code;
+            if (key <= sf::Keyboard::Z) {
+                key += event.key.shift ? 'A' : 'a';
+                _events.emplace_back(arcade::data::EventType::KEY_PRESSED, key);
+            } else if ((key >= sf::Keyboard::Num0 && key <= sf::Keyboard::Num9) || (key >= sf::Keyboard::Numpad0 && key <= sf::Keyboard::Numpad9)) {
+                key = '0' + (key - (key >= sf::Keyboard::Numpad0 ? sf::Keyboard::Numpad0 : sf::Keyboard::Num0));
+                _events.emplace_back(arcade::data::EventType::KEY_PRESSED, key);
+            } else if (sfToArcadeKey.find(event.key.code) != sfToArcadeKey.end()) {
+                _events.emplace_back(arcade::data::EventType::KEY_PRESSED, sfToArcadeKey.at(event.key.code));
+            }
+        } if (sfToArcadeMouseType.find(event.type) != sfToArcadeMouseType.end()) {
+            if (event.type == sf::Event::EventType::MouseMoved) {
+                _events.emplace_back(arcade::data::EventType::MOUSE_MOVED, event.mouseMove.x, event.mouseMove.y);
+            } else {
+                _events.emplace_back(sfToArcadeMouseType.at(event.type), sfToArcadeMouseBtn.at(event.mouseButton.button), event.mouseButton.x, event.mouseButton.y);
+            }
+        }
+    }
+    return _events;
+}
+
+void LibSFML::draw(std::unique_ptr<arcade::displayer::IText> &text)
+{
+    _window.draw((reinterpret_cast<std::unique_ptr<TextSFML> &>(text))->getText());
+}
+
+void LibSFML::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
+{
+    _window.draw((reinterpret_cast<std::unique_ptr<SpriteSFML> &>(sprite))->getSprite());
+}
