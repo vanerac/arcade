@@ -10,7 +10,9 @@ override SRC		=	entry_point.cpp		\
 						src/SpriteNCRS.cpp	\
 						src/TextNCRS.cpp	\
 
-override CPPFLAGS	+=	-Iinclude -I../../shared
+SHARED_DIR			= ../../../shared
+
+override CPPFLAGS	+=	-Iinclude -I$(SHARED_DIR)
 
 override CXXFLAGS	+=	-W -Wall -Wextra -fPIC -g
 
@@ -18,13 +20,13 @@ override LDLIBS		+=	-lncurses
 
 override LDFLAGS	+=	-shared
 
-NAME				=	arcade_ncrs.so
+NAME				=	arcade_ncurses.so
 
 BUILDDIR			=	obj
 
 override OBJ		=	$(SRC:%.cpp=$(BUILDDIR)/%.o)
 
-SHARED_OBJ			=	../../shared/obj/**/*.o
+SHARED_OBJ			=	$(SHARED_DIR)/obj/**/*.o
 
 CC					=	g++
 

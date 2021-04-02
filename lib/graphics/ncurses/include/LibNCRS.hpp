@@ -2,24 +2,25 @@
 ** EPITECH PROJECT, 2021
 ** B-OOP-400-BDX-4-1-arcade-honore.dupieu
 ** File description:
-** LibSFML
+** LibNCRS
 */
 
-#ifndef LIBSFML_HPP_
-#define LIBSFML_HPP_
+#ifndef LIBNCRS_HPP_
+#define LIBNCRS_HPP_
 
-#include <SFML/Audio.hpp>
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
+#include <fstream>
+
+// #include <png.h>
+#include <ncurses.h>
 #include <chrono>
+#include <tuple>
 #include "Displayer.hpp"
 
-class TextSFML : public arcade::displayer::IText {
+class TextNCRS : public arcade::displayer::IText {
     public:
-        TextSFML();
-        TextSFML(const std::string &text);
-        ~TextSFML();
+        TextNCRS(const std::string &text);
+        TextNCRS();
+        ~TextNCRS();
 
         void setText(const std::string &text) override;
         std::string getText() const override;
@@ -32,25 +33,30 @@ class TextSFML : public arcade::displayer::IText {
         arcade::data::FloatRect getLocalBounds() override;
         void setOrigin(arcade::data::Vector2f origin) override;
         arcade::data::Vector2f getOrigin() override;
-        
-        sf::Text &getText();
+
+        const char *getString() const;
+        unsigned int getNcrsColor() const;
 
     protected:
     private:
-        sf::Text _text;
-        sf::Font _font;
+        std::string _text;
+        arcade::data::Vector2f _pos;
+        arcade::data::Color _color;
+        unsigned int _ncrsColor = COLOR_WHITE;
+        arcade::data::Vector2f _origin;
 };
 
-class SpriteSFML : public arcade::displayer::ISprite {
+class SpriteNCRS : public arcade::displayer::ISprite {
     public:
-        SpriteSFML();
-        SpriteSFML(const std::string &spritePath, arcade::data::Vector2f scale = arcade::data::Vector2f{1, 1});
-        ~SpriteSFML();
+        SpriteNCRS();
+        SpriteNCRS(const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale = arcade::data::Vector2f{1, 1});
+        ~SpriteNCRS();
 
         void setSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite) override;
         void setPosition(arcade::data::Vector2f pos) override;
         arcade::data::Vector2f getPosition() const override;
         void move(arcade::data::Vector2f pos) override;
+        void move(float x, float y) override;
         void setOrigin(arcade::data::Vector2f origin) override;
         arcade::data::Vector2f getOrigin() override;
         arcade::data::FloatRect getLocalBounds() override;
@@ -60,28 +66,37 @@ class SpriteSFML : public arcade::displayer::ISprite {
         void setRotation(float angle) override;
         void rotate(float angle) override;
         void setTextureRect(const arcade::data::IntRect &rect) override;
+        arcade::data::IntRect getTextureRect() const override;
         void setColor(arcade::data::Color color, const std::vector<std::vector<arcade::data::Color>> &asciiColors) override;
 
-        sf::Sprite &getSprite();
+        std::vector<std::vector<chtype>> &getSprite();
 
     protected:
     private:
-        sf::Texture _texture;
-        sf::Sprite _sprite;
+        std::vector<std::vector<chtype>> _sprite;
+        std::vector<std::vector<chtype>> _originalSprite;
+        arcade::data::Vector2f _pos;
+        arcade::data::Vector2f _origin;
+        arcade::data::Vector2f _scale = arcade::data::Vector2f{1, 1};
+        float _actualRotation;
+        float _rotation;
+        arcade::data::IntRect _textureRect;
 };
 
-class LibSFML : public arcade::displayer::IDisplay {
+class LibNCRS : public arcade::displayer::IDisplay {
     public:
-        LibSFML();
-        ~LibSFML();
+        LibNCRS();
+        ~LibNCRS();
 
         int availableOptions() const override;
-        void init() override;
+        void init(const std::string &winName, unsigned int framesLimit = 60) override;
         void stop() override;
+        bool isOpen() override;
         void clearWindow() override;
         void display() override;
         void restartClock() override;
         double getDeltaTime() override;
+        double getFrameDuration() const;
         arcade::data::Vector2u getWindowSize() override;
         std::vector<arcade::data::Event> getEvents() override;
         void draw(std::unique_ptr<arcade::displayer::IText> &text) override;
@@ -90,18 +105,22 @@ class LibSFML : public arcade::displayer::IDisplay {
         std::unique_ptr<arcade::displayer::IText> createText(const std::string &text) override;
         std::unique_ptr<arcade::displayer::ISprite> createSprite() override;
         std::unique_ptr<arcade::displayer::ISprite> createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale = arcade::data::Vector2f{1, 1}) override;
+        double scaleMoveX(double time) override;
+        double scaleMoveY(double time) override;
 
-        std::ofstream &log() { return stream; };
+        std::ofstream &log() override;
+        static NCURSES_PAIRS_T getNcrsColorPair(short fg, short bg);
+        static std::pair<arcade::data::Color, NCURSES_PAIRS_T> colorToNcrsColor(arcade::data::Color color);
 
     protected:
     private:
-        bool _eventsFetched = false;
+        bool _windowIsOpen = false;
+        bool _eventFetched = false;
         std::vector<arcade::data::Event> _events;
         std::ofstream stream;
-        sf::RenderWindow _window;
-        sf::Font _font;
-        sf::Clock _clock;
+        unsigned int _frameLimit = 60;
         std::chrono::time_point<std::chrono::high_resolution_clock> _timePoint;
+        double _lastFrameTime;
 };
 
-#endif /* !LIBSFML_HPP_ */
+#endif /* !LIBNCRS_HPP_ */

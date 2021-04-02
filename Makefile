@@ -12,13 +12,15 @@ ARCADE_NAME			=	arcade
 
 LIBS_DIR 			=	lib
 
-SFML_DIR			=	$(LIBS_DIR)/SFML
+GRAPHICS_DIR 		=	$(LIBS_DIR)/graphics
+
+SFML_DIR			=	$(GRAPHICS_DIR)/SFML
 SFML_NAME			=	arcade_sfml.so
 
-NCRS_DIR			=	$(LIBS_DIR)/ncurses
-NCRS_NAME			=	arcade_ncrs.so
+NCRS_DIR			=	$(GRAPHICS_DIR)/ncurses
+NCRS_NAME			=	arcade_ncurses.so
 
-GAMES_DIR			=	games
+GAMES_DIR			=	$(LIBS_DIR)/games
 
 GAME1_DIR			=	$(GAMES_DIR)/Game1
 GAME1_NAME			=	arcade_game1.so
@@ -35,7 +37,7 @@ core:				shared									## Make the core of the arcade
 .PHONY:	core
 
 games:				shared									## Make all games
-					make -C $(GAME1_DIR) && cp $(GAME1_DIR)/$(GAME1_NAME) $(GAMES_DIR)
+					make -C $(GAME1_DIR) && cp $(GAME1_DIR)/$(GAME1_NAME) $(LIBS_DIR)
 .PHONY:	games
 
 graphicals:			shared									## Make all graphicals
@@ -68,7 +70,7 @@ fclean:														## Delete the binary and call "clean"
 					$(RM) $(ARCADE_NAME)
 					$(RM) $(LIBS_DIR)/$(SFML_NAME)
 					$(RM) $(LIBS_DIR)/$(NCRS_NAME)
-					$(RM) $(GAMES_DIR)/$(GAME1_NAME)
+					$(RM) $(LIBS_DIR)/$(GAME1_NAME)
 .PHONY:	fclean
 
 re:					fclean all								## Delete everything from the previous compilation and compile

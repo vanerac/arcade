@@ -13,6 +13,7 @@ void arcade::Arcade::menuLoadDisplayer()
     _menuQuitText = _displayer->createText("Quit");
     _menuQuitText->setFont(font);
     _menuQuitText->setPosition(_menuQuitText->getPosition().move(0, 1));
+
     auto winSize = _displayer->getWindowSize();
     const int yOffset = 1;
     int characterSize = isOptions(_displayer, SET_CHARACTER_SIZE) ? 20 : 1;
@@ -22,16 +23,6 @@ void arcade::Arcade::menuLoadDisplayer()
     yStart -= ((_galibsPath.size() % 2 == 0) * (characterSize / 2));
     arcade::data::Vector2f pos{static_cast<float>(winSize.x / 2), static_cast<float>(yStart)};
     arcade::data::Vector2f origin{0, 0};
-    std::vector<arcade::data::Color> colors = {
-        arcade::data::Color::Black,
-        arcade::data::Color::White,
-        arcade::data::Color::Red,
-        arcade::data::Color::Green,
-        arcade::data::Color::Blue,
-        arcade::data::Color::Yellow,
-        arcade::data::Color::Magenta,
-        arcade::data::Color::Cyan,
-    };
 
     _menuGamesListText.clear();
     for (unsigned int i = 0; i < _galibsPath.size(); ++i, pos.move(0, yOffset + characterSize)) {
@@ -47,12 +38,17 @@ void arcade::Arcade::menuLoadDisplayer()
         origin.x = text->getLocalBounds().width / 2;
         text->setOrigin(origin);
         text->setPosition(pos);
-        // text->setColor(colors[i]);
     }
-    _pacman = _displayer->createSprite("ressources/pacman.png", {"PA","CM"}, arcade::data::Vector2f{0.1, 0.1});
+
+    _pacman = _displayer->createSprite("ressources/pacman.png", {"PAC\r","MA\rN"}, arcade::data::Vector2f{0.1, 0.1});
     auto b = _pacman->getLocalBounds();
     _pacman->setOrigin(b.width / 2);
+    _pacman->setColor({}, {{arcade::data::Color::Red, arcade::data::Color::Yellow}, {arcade::data::Color::Blue, arcade::data::Color::Green}});
     _pacman->setPosition(_displayer->getWindowSize().x / 2);
+}
+
+void arcade::Arcade::menuInitElems()
+{
 }
 
 void arcade::Arcade::drawMenu()
@@ -61,11 +57,15 @@ void arcade::Arcade::drawMenu()
         return;
     }
     _displayer->clearWindow();
-    // _menuQuitText->setPosition(_menuQuitText->getPosition().move(40000 * _displayer->getDeltaTime()));
-    _menuQuitText->setPosition(_menuQuitText->getPosition().move(1, 0));
+    // auto t = _displayer->getDeltaTime();
+    // _displayer->log() << "[" << t << ", " << (1.0f / t) << "]" << std::endl;
+    _menuQuitText->setPosition(_menuQuitText->getPosition().move(_displayer->scaleMoveX(10), 0));
+    // _menuQuitText->setPosition(_menuQuitText->getPosition().move(50 * _displayer->getDeltaTime(), 0));
     _displayer->draw(_menuQuitText);
     for (auto &text : _menuGamesListText) {
         _displayer->draw(text);
     }
+    // _pacman->move(0, _displayer->scaleMoveY(3));
+    // _pacman->rotate(90);
     _displayer->draw(_pacman);
 }

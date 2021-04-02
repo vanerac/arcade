@@ -119,8 +119,6 @@ namespace arcade
 
         struct Color
         {
-            // Color();
-            // Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255);
             Color() : r(255), g(255), b(255), a(255) {};
             Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255)
                 : r(red), g(green), b(blue), a(alpha) {};

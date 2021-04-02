@@ -74,7 +74,7 @@ const char *TextNCRS::getString() const
 
 arcade::data::FloatRect TextNCRS::getLocalBounds()
 {
-    return arcade::data::FloatRect{_pos.y, _pos.x, static_cast<int>(_text.size()), 1};
+    return arcade::data::FloatRect{_pos.y, _pos.x, static_cast<float>(_text.size()), 1.0f};
 }
 
 void TextNCRS::setOrigin(arcade::data::Vector2f origin)

@@ -8,7 +8,9 @@
 override SRC		=	entry_point.cpp		\
 						src/Game1.cpp		\
 
-override CPPFLAGS	+=	-Iinclude -I../../shared
+SHARED_DIR			= ../../../shared
+
+override CPPFLAGS	+=	-Iinclude -I$(SHARED_DIR)
 
 override CXXFLAGS	+=	-W -Wall -Wextra -fPIC -g
 
@@ -20,7 +22,7 @@ BUILDDIR			=	obj
 
 override OBJ		=	$(SRC:%.cpp=$(BUILDDIR)/%.o)
 
-SHARED_OBJ			=	../../shared/obj/**/*.o
+SHARED_OBJ			=	$(SHARED_DIR)/obj/**/*.o
 
 CC					=	g++
 

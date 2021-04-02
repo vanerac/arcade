@@ -38,6 +38,7 @@ namespace arcade
             Arcade();
             ~Arcade();
 
+            void setLibsList(const std::string &folder);
             void setGraphicalLibList(const std::string &grlibsFolder);
             void setGamesLibList(const std::string &galibsFolder);
 
@@ -52,6 +53,7 @@ namespace arcade
             void handleEvents();
 
             void menuLoadDisplayer();
+            void menuInitElems();
             void drawMenu();
 
         protected:
@@ -60,7 +62,11 @@ namespace arcade
                 QUITTING,
                 MENU,
             };
+            void setValidLibs();
 
+            std::vector<std::string> _grlibValid;
+            std::vector<std::string> _galibValid;
+            bool _validSet = false;
             std::vector<std::string> _grlibsPath;
             std::vector<std::string> _galibsPath;
             DLLoader _grLoader;

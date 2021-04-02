@@ -8,26 +8,27 @@
 #include <iostream>
 #include <array>
 #include <algorithm>
+#include <thread>
 #include "LibNCRS.hpp"
 
 static const std::array<std::tuple<arcade::data::EventType, uint64_t>, 20> ncrsToArcadeMouseType = {
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON1_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON1_PRESSED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON1_RELEASED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON1_PRESSED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON1_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON1_DOUBLE_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON1_TRIPLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON2_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON2_PRESSED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON2_RELEASED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON2_PRESSED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON2_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON2_DOUBLE_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON2_TRIPLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON3_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON3_PRESSED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON3_RELEASED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON3_PRESSED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON3_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON3_DOUBLE_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON3_TRIPLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON4_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON4_PRESSED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON4_RELEASED},
+    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON4_PRESSED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON4_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON4_DOUBLE_CLICKED},
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON4_TRIPLE_CLICKED},
@@ -39,6 +40,9 @@ LibNCRS::LibNCRS() : stream("./log.txt")
 
 LibNCRS::~LibNCRS()
 {
+    if (isOpen()) {
+        stop();
+    }
 }
 
 std::ofstream &LibNCRS::log()
@@ -51,51 +55,33 @@ int LibNCRS::availableOptions() const
     return NO_OPTIONS;
 }
 
-void LibNCRS::init()
+void LibNCRS::init(const std::string &winName, unsigned int framesLimit)
 {
     std::cout << "Init" << std::endl;
+    (void)winName;
+    _windowIsOpen = true;
+    _frameLimit = framesLimit;
     initscr();
     noecho();
     curs_set(FALSE);
     keypad(stdscr, TRUE);
     mousemask(ALL_MOUSE_EVENTS, NULL);
-    timeout((1.0f / 60) * 1000);
-    timeout(500);
+    timeout(0);
     start_color();
-    // init_pair(0, COLOR_BLACK, COLOR_BLACK);
-    // init_pair(1, COLOR_BLACK, COLOR_CYAN);
-    // attron(COLOR_PAIR(1));
-    // // mvprintw(getWindowSize().y / 2, getWindowSize().x / 2, "              ");
-    // mvprintw(getWindowSize().y / 2, getWindowSize().x / 2 - 15, "                                     ");
-    // mvprintw(0, 0, "                                     ");
-    // attroff(COLOR_PAIR(1));
     refresh();
-
-
-
-    // attr_t att;
-    // NCURSES_PAIRS_T pair;
-    // short fg;
-    // short bg;
-    // auto winSize = getWindowSize();
-    // for (unsigned int y = 0; y < winSize.y; ++y) {
-    //     log() << "[";
-    //     for (unsigned int x = 0; x < winSize.x; ++x) {
-    //         move(y, x);
-    //         attr_get(&att, &pair, NULL);
-    //         pair_content(att, &fg, &bg);
-    //         log() << (x == 0 ? "" : ", ") << pair;
-    //         // log() << "[" << att << ", " << pair << ", " << fg << ", " << bg << "]" << std::endl;
-    //     }
-    //     log() << "]" << std::endl;
-    // }
     restartClock();
 }
 
 void LibNCRS::stop()
 {
     endwin();
+    _windowIsOpen = false;
     std::cout << "Stop" << std::endl;
+}
+
+bool LibNCRS::isOpen()
+{
+    return _windowIsOpen;
 }
 
 void LibNCRS::clearWindow()
@@ -105,29 +91,14 @@ void LibNCRS::clearWindow()
 
 void LibNCRS::display()
 {
-    if (!_eventFetched) {
-        getch();
-    }
     refresh();
-    // Add some wait to normalise frames
-    // attr_t att;
-    // NCURSES_PAIRS_T pair;
-    // short fg;
-    // short bg;
-    // auto winSize = getWindowSize();
-    // for (unsigned int y = 0; y < winSize.y; ++y) {
-    //     log() << "[";
-    //     for (unsigned int x = 0; x < winSize.x; ++x) {
-    //         move(y, x);
-    //         attr_get(&att, &pair, NULL);
-    //         pair_content(att, &fg, &bg);
-    //         log() << (x == 0 ? "" : ", ") << pair;
-    //         // log() << "[" << att << ", " << pair << ", " << fg << ", " << bg << "]" << std::endl;
-    //     }
-    //     log() << "]" << std::endl;
-    // }
-    restartClock();
+    double toWait = ((1.0f / _frameLimit) * 1000) - (getFrameDuration() * 1000);
+    if (toWait > 0) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(static_cast<int>(toWait)));
+    }
+    _lastFrameTime = getFrameDuration();
     _eventFetched = false;
+    restartClock();
 }
 
 void LibNCRS::restartClock()
@@ -136,6 +107,11 @@ void LibNCRS::restartClock()
 }
 
 double LibNCRS::getDeltaTime()
+{
+    return _lastFrameTime;
+}
+
+double LibNCRS::getFrameDuration() const
 {
     return std::chrono::duration_cast
         <
@@ -199,47 +175,57 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::IText> &text)
     auto &t = reinterpret_cast<std::unique_ptr<TextNCRS> &>(text);
     auto pos = t->getPosition();
     auto org = t->getOrigin();
-    // init_color(1, t->getNcrsColor())
-    const char *content = t->getString();
+    int startX = pos.x - org.x;
+    int startY = pos.y - org.y;
+    auto win = getWindowSize();
     unsigned int size = t->getText().size();
-    move(pos.y - org.y, pos.x - org.x);
+    if (startY < 0 || startY >= static_cast<int>(win.y) || (startX + static_cast<int>(size) < 0) || (startX >= static_cast<int>(win.x))) {
+        return;
+    }
+    move(startY, startX);
+    const char *content = t->getString();
     attr_t att;
     NCURSES_PAIRS_T pair;
     short fg;
     short bg;
-    for (unsigned int i = 0; i < size; ++i, ++content) {
+    for (unsigned int i = 0; i < size; ++i, ++content, ++startX) {
+        if (startX < 0 || startX >= static_cast<int>(win.x)) {
+            move(startY, startX + 1);
+            continue;
+        }
         attr_get(&att, &pair, NULL);
         pair_content(att, &fg, &bg);
         pair = getNcrsColorPair(t->getNcrsColor(), bg);
         addch(*content | COLOR_PAIR(pair));
     }
-    // init_pair(t->getNcrsColorPair(), t->getNcrsColor(), bg);
-    // attron(COLOR_PAIR(t->getNcrsColorPair()));
-    // printw("%s", t->getString());
-    // attroff(COLOR_PAIR(t->getNcrsColorPair()));
-    // static int i = 0;
-    // mvprintw(i++, 0, "Fg %d Bg %d", fg, bg);
-
-
-    // static int tmp = 3;
-    // auto events = getEvents();
-    // if (events.size()) {
-    //     mvprintw(tmp++, 0, "%d", events.size());
-    //     for (unsigned int i = 0; i < events.size(); ++i) {
-    //         printw(" [%d, %d, %d, %d]", events[i].type, events[i].btn, events[i].x, events[i].y);
-    //     }
-    // }
 }
 
 void LibNCRS::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
 {
     auto &s = reinterpret_cast<std::unique_ptr<SpriteNCRS> &>(sprite);
     auto &img = s->getSprite();
-    for (auto &line : img) {
-        for (auto &pixel : line) {
-            log() << (char)pixel;
+    auto pos = s->getPosition();
+    auto org = s->getOrigin();
+    auto rect = s->getTextureRect();
+    auto win = getWindowSize();
+    int startX = pos.x - org.x;
+    int startY = pos.y - org.y;
+    int maxY = img.size();
+    for (int y = rect.top, fetchingY; y < rect.height; ++y, ++startY) {
+        move(startY, startX);
+        if (startY < 0 || startY >= static_cast<int>(win.y)) {
+            continue;
         }
-        log() << std::endl;
+        fetchingY = y < 0 ? 0 : (y >= maxY ? maxY - 1 : y);
+        int maxX = img[fetchingY].size();
+        for (int x = rect.left, fetchingX, counter = startX; x < rect.width; ++x, ++counter) {
+            fetchingX = x < 0 ? 0 : (x >= maxX ? maxX - 1 : x);
+            if (counter < 0 || counter >= static_cast<int>(win.x) || img[fetchingY][fetchingX] == '\r') {
+                move(startY, counter + 1);
+                continue;
+            }
+            addch(img[fetchingY][fetchingX]);
+        }
     }
 }
 
@@ -267,7 +253,7 @@ std::unique_ptr<arcade::displayer::ISprite> LibNCRS::createSprite(const std::str
 NCURSES_PAIRS_T LibNCRS::getNcrsColorPair(short fg, short bg)
 {
     static std::array<std::tuple<short, short, NCURSES_PAIRS_T>, 3> cache;
-    static std::vector<std::tuple<short, short, short>> pairs;
+    static std::vector<std::tuple<short, short, NCURSES_PAIRS_T>> pairs;
 
     auto itCache = std::find_if(cache.begin(), cache.end(),
                     [fg, bg](auto &tupple) {
@@ -329,4 +315,20 @@ std::pair<arcade::data::Color, NCURSES_PAIRS_T> LibNCRS::colorToNcrsColor(arcade
         pair.second = COLOR_BLACK;
     }
     return pair;
+}
+
+double LibNCRS::scaleMoveX(double time)
+{
+    if (!time) {
+        return 0;
+    }
+    return (getWindowSize().x / time) / (1.0f / getDeltaTime());
+}
+
+double LibNCRS::scaleMoveY(double time)
+{
+    if (!time) {
+        return 0;
+    }
+    return (getWindowSize().y / time) / (1.0f / getDeltaTime());
 }

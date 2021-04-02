@@ -20,27 +20,29 @@ void D_print_vect(std::vector<std::string> &vect, const std::string &sectionName
     std::cout << "---" << std::endl;
 }
 
-static bool setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
+static void setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
 {
-    arcade.setGraphicalLibList("./lib");
-    arcade.setGamesLibList("./games");
+    // arcade.setGraphicalLibList("./lib");
+    // arcade.setGamesLibList("./games");
+    arcade.setLibsList("./lib");
 
     // if (!arcade.getGalibsPath().size()) {
-    //     std::cerr << "Error: No games were found in the './games' folder." << std::endl;
-    //     return false;
+    //     throw Errors::Error("Error: No games were found in the './games' folder.");
     // }
     auto &grlibs = arcade.getGrlibsPath();
     if (!grlibs.size()) {
-        std::cerr << "Error: No graphical lib were found in the './games' folder." << std::endl;
-        return false;
+        throw Errors::Error("Error: No graphical lib were found in the './lib' folder.");
     }
-    for (unsigned int i = 0; i < grlibs.size(); ++i) {
+    unsigned int i = 0;
+    for (; i < grlibs.size(); ++i) {
         if (grlibs[0] == firstGrLib) {
             break;
         }
         std::rotate(grlibs.begin(), grlibs.begin() + 1, grlibs.end());
     }
-    return true;
+    if (i == grlibs.size()) {
+        throw Errors::Error("The lib '" + firstGrLib + "' could not been found.");
+    }
 }
 
 int main(int ac, char **av)
@@ -53,12 +55,13 @@ int main(int ac, char **av)
 
     std::string firstLib = av[1];
     firstLib = (Tools::Strings::startsWith(firstLib, "./") || firstLib[0] == '/' ? "" : "./") + firstLib;
-    if (!setArcade(arcade, firstLib)) {
-        return 84;
-    }
+    // if (!) {
+    //     return 84;
+    // }
     int status = 0;
     try
     {
+        setArcade(arcade, firstLib);
         status = arcade.run();
     }
     catch(const Errors::Error& e)

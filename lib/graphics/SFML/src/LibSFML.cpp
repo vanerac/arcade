@@ -9,24 +9,27 @@
 #include <unordered_map>
 #include "LibSFML.hpp"
 
-LibSFML::LibSFML()
+LibSFML::LibSFML() : stream("./log.txt")
 {
 }
 
 LibSFML::~LibSFML()
 {
+    if (isOpen()) {
+        stop();
+    }
 }
 
 int LibSFML::availableOptions() const
 {
-    return SET_CHARACTER_SIZE | MOUSE_MOVE;
+    return SET_CHARACTER_SIZE | MOUSE_MOVE | SETTING_FONTS;
 }
 
-void LibSFML::init()
+void LibSFML::init(const std::string &winName, unsigned int framesLimit)
 {
     std::cout << "Init" << std::endl;
-    _window.create(sf::VideoMode(1920, 1080), "SFML Window!", sf::Style::Fullscreen);
-    _window.setFramerateLimit(60);
+    _window.create(sf::VideoMode(1920, 1080), winName, sf::Style::Fullscreen);
+    _window.setFramerateLimit(framesLimit);
     restartClock();
 }
 
@@ -36,21 +39,46 @@ void LibSFML::stop()
     _window.close();
 }
 
-void LibSFML::restartClock()
+bool LibSFML::isOpen()
 {
-    _clock.restart();
+    return _window.isOpen();
 }
 
-double LibSFML::getDeltaTime()
-{
-    return _clock.getElapsedTime().asSeconds();
-}
+// void LibSFML::restartClock()
+// {
+//     _clock.restart();
+// }
+
+// double LibSFML::getDeltaTime()
+// {
+//     return _clock.getElapsedTime().asSeconds();
+// }
 
 void LibSFML::display()
 {
     _window.display();
+    _lastFrameTime = getFrameDuration();
     _eventsFetched = false;
     restartClock();
+}
+
+void LibSFML::restartClock()
+{
+    _timePoint = std::chrono::high_resolution_clock::now();
+}
+
+double LibSFML::getDeltaTime()
+{
+    return _lastFrameTime;
+}
+
+double LibSFML::getFrameDuration() const
+{
+    return std::chrono::duration_cast
+        <
+        std::chrono::duration<double, std::ratio<1>>
+        >
+            (std::chrono::high_resolution_clock::now() - _timePoint).count();
 }
 
 void LibSFML::clearWindow()
@@ -143,4 +171,20 @@ void LibSFML::draw(std::unique_ptr<arcade::displayer::IText> &text)
 void LibSFML::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
 {
     _window.draw((reinterpret_cast<std::unique_ptr<SpriteSFML> &>(sprite))->getSprite());
+}
+
+double LibSFML::scaleMoveX(double time)
+{
+    if (!time) {
+        return 0;
+    }
+    return (getWindowSize().x / time) / (1.0f / getDeltaTime());
+}
+
+double LibSFML::scaleMoveY(double time)
+{
+    if (!time) {
+        return 0;
+    }
+    return (getWindowSize().y / time) / (1.0f / getDeltaTime());
 }

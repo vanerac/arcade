@@ -23,7 +23,7 @@ class DLLoader {
 
         bool didLoad() const { return _handler != NULL; };
 
-        bool load(const std::string &path, int mode = RTLD_NOW)
+        bool load(const std::string &path, int mode = (RTLD_NOW | RTLD_NODELETE))
         {
             close();
             _handler = dlopen(path.c_str(), mode);

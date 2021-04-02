@@ -50,6 +50,11 @@ void SpriteSFML::move(arcade::data::Vector2f pos)
     _sprite.move(sf::Vector2f{pos.x, pos.y});
 }
 
+void SpriteSFML::move(float x, float y)
+{
+    _sprite.move(sf::Vector2f{x, y});
+}
+
 void SpriteSFML::setOrigin(arcade::data::Vector2f origin)
 {
     _sprite.setOrigin(sf::Vector2f{origin.x, origin.y});
@@ -96,6 +101,12 @@ void SpriteSFML::rotate(float angle)
 void SpriteSFML::setTextureRect(const arcade::data::IntRect &rect)
 {
     _sprite.setTextureRect(sf::IntRect{rect.left, rect.top, rect.width, rect.height});
+}
+
+arcade::data::IntRect SpriteSFML::getTextureRect() const
+{
+    auto rect = _sprite.getTextureRect();
+    return arcade::data::IntRect{rect.top, rect.left, rect.width, rect.height};
 }
 
 void SpriteSFML::setColor(arcade::data::Color color, const std::vector<std::vector<arcade::data::Color>> &asciiColors)
