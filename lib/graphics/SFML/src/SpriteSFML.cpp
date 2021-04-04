@@ -72,6 +72,12 @@ arcade::data::FloatRect SpriteSFML::getLocalBounds()
     return arcade::data::FloatRect{b.left, b.top, b.width, b.height};
 }
 
+arcade::data::FloatRect SpriteSFML::getGlobalBounds()
+{
+    auto rect = _sprite.getGlobalBounds();
+    return arcade::data::FloatRect{rect.top, rect.left, rect.width, rect.height};
+}
+
 void SpriteSFML::setScale(arcade::data::Vector2f scale)
 {
     _sprite.setScale(scale.x, scale.y);

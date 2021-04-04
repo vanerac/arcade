@@ -70,6 +70,12 @@ arcade::data::FloatRect TextSFML::getLocalBounds()
     return arcade::data::FloatRect{rect.top, rect.left, rect.width, rect.height};
 }
 
+arcade::data::FloatRect TextSFML::getGlobalBounds()
+{
+    auto rect = _text.getGlobalBounds();
+    return arcade::data::FloatRect{rect.top, rect.left, rect.width, rect.height};
+}
+
 void TextSFML::setOrigin(arcade::data::Vector2f origin)
 {
     _text.setOrigin(sf::Vector2f{origin.x, origin.y});

@@ -32,6 +32,7 @@ namespace arcade
                 virtual arcade::data::Color getColor() const = 0;
                 virtual void setCharacterSize(unsigned int size) = 0;
                 virtual arcade::data::FloatRect getLocalBounds() = 0;
+                virtual arcade::data::FloatRect getGlobalBounds() = 0;
                 virtual void setOrigin(arcade::data::Vector2f origin) = 0;
                 virtual arcade::data::Vector2f getOrigin() = 0;
         };
@@ -46,6 +47,7 @@ namespace arcade
                 virtual void setOrigin(arcade::data::Vector2f origin) = 0;
                 virtual arcade::data::Vector2f getOrigin() = 0;
                 virtual arcade::data::FloatRect getLocalBounds() = 0;
+                virtual arcade::data::FloatRect getGlobalBounds() = 0;
                 virtual void setScale(arcade::data::Vector2f scale) = 0;
                 virtual arcade::data::Vector2f getScale() = 0;
                 virtual void rotate(float anle) = 0;

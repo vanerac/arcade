@@ -11,29 +11,6 @@
 #include <thread>
 #include "LibNCRS.hpp"
 
-static const std::array<std::tuple<arcade::data::EventType, uint64_t>, 20> ncrsToArcadeMouseType = {
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON1_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON1_PRESSED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON1_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON1_DOUBLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON1_TRIPLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON2_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON2_PRESSED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON2_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON2_DOUBLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON2_TRIPLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON3_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON3_PRESSED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON3_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON3_DOUBLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON3_TRIPLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON4_RELEASED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         BUTTON4_PRESSED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        BUTTON4_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_DOUBLE_CLICKED,  BUTTON4_DOUBLE_CLICKED},
-    std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON4_TRIPLE_CLICKED},
-};
-
 LibNCRS::LibNCRS()
 {
     // stream.open("./log.txt");
@@ -127,7 +104,6 @@ arcade::data::Vector2u LibNCRS::getWindowSize()
     unsigned int width = 0;
     unsigned int height = 0;
     getmaxyx(stdscr, height, width);
-    // log() << " --- [" << width << ", " << height << "] --- " << std::endl;
     return arcade::data::Vector2u{width, height};
 }
 
@@ -142,8 +118,9 @@ std::vector<arcade::data::Event> LibNCRS::getEvents()
     if (c == KEY_MOUSE) {
         MEVENT event;
         if (getmouse(&event) == OK) {
+            log() << "Using Mouse: " << event.bstate << ", id:" << event.id << ", x:" << event.x << ", y:" << event.y << std::endl;
             if (event.bstate == REPORT_MOUSE_POSITION) {
-                printw("So yes there is a mov");
+                mvprintw(0, 0, "So yes there is a mov");
                 _events.emplace_back(arcade::data::EventType::MOUSE_MOVED, event.x, event.y);
             } else {
                 static const std::array<std::tuple<arcade::data::MouseBtn, uint64_t>, 4> ncrsBtsNb = {
@@ -157,10 +134,18 @@ std::vector<arcade::data::Event> LibNCRS::getEvents()
                                 return event.bstate >= std::get<1>(tupple);
                             });
                 if (it != ncrsBtsNb.end()) {
+                    static const std::array<std::tuple<arcade::data::EventType, uint64_t>, 5> ncrsToArcadeMouseType = {
+                        std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         NCURSES_DOUBLE_CLICKED},
+                        std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         NCURSES_TRIPLE_CLICKED},
+                        std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         NCURSES_BUTTON_CLICKED},
+                        std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_PRESSED,         NCURSES_BUTTON_PRESSED},
+                        std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_RELEASED,        NCURSES_BUTTON_RELEASED},
+                    };
                     auto itT = std::find_if(ncrsToArcadeMouseType.begin(), ncrsToArcadeMouseType.end(),
                                     [&event](auto &tupple) {
                                         return event.bstate == std::get<1>(tupple);
                                     });
+                    log() << (itT != ncrsToArcadeMouseType.end()) << (int)std::get<0>(*itT) << std::endl;
                     if (itT != ncrsToArcadeMouseType.end()) {
                         _events.emplace_back(std::get<0>(*itT), std::get<0>(*it), event.x, event.y);
                     }
@@ -188,7 +173,6 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::IText> &text)
     if (startY < 0 || startY >= static_cast<int>(win.y) || (startX + static_cast<int>(size) < 0) || (startX >= static_cast<int>(win.x))) {
         return;
     }
-    // move(startY, startX);
     const char *content = t->getString();
     attr_t att;
     NCURSES_PAIRS_T pair;
@@ -196,7 +180,6 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::IText> &text)
     short bg = COLOR_BLACK;
     for (unsigned int i = 0; i < size; ++i, ++content, ++startX) {
         if (startX < 0 || startX >= static_cast<int>(win.x) || *content == '\r') {
-            // move(startY, startX + 1);
             continue;
         }
         move(startY, startX);
@@ -222,7 +205,6 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
     int startY = pos.y - org.y;
     int maxY = img.size();
     for (int y = rect.top, fetchingY; y < rect.height; ++y, ++startY) {
-        move(startY, startX);
         if (startY < 0 || startY >= static_cast<int>(win.y)) {
             continue;
         }
@@ -231,9 +213,9 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
         for (int x = rect.left, fetchingX, counter = startX; x < rect.width; ++x, ++counter) {
             fetchingX = x < 0 ? 0 : (x >= maxX ? maxX - 1 : x);
             if (counter < 0 || counter >= static_cast<int>(win.x) || img[fetchingY][fetchingX] == '\r') {
-                move(startY, counter + 1);
                 continue;
             }
+            move(startY, counter);
             addch(img[fetchingY][fetchingX]);
         }
     }

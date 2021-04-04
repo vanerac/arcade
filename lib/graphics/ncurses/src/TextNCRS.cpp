@@ -64,6 +64,11 @@ void TextNCRS::setCharacterSize(unsigned int size)
 
 arcade::data::FloatRect TextNCRS::getLocalBounds()
 {
+    return arcade::data::FloatRect{0, 0, static_cast<float>(_text.size()), 1.0f};
+}
+
+arcade::data::FloatRect TextNCRS::getGlobalBounds()
+{
     return arcade::data::FloatRect{_pos.y - _origin.y, _pos.x - _origin.x, static_cast<float>(_text.size()), 1.0f};
 }
 

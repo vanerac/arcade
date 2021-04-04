@@ -30,6 +30,7 @@ class TextSFML : public arcade::displayer::IText {
         arcade::data::Color getColor() const override;
         void setCharacterSize(unsigned int size) override;
         arcade::data::FloatRect getLocalBounds() override;
+        arcade::data::FloatRect getGlobalBounds() override;
         void setOrigin(arcade::data::Vector2f origin) override;
         arcade::data::Vector2f getOrigin() override;
         
@@ -55,6 +56,7 @@ class SpriteSFML : public arcade::displayer::ISprite {
         void setOrigin(arcade::data::Vector2f origin) override;
         arcade::data::Vector2f getOrigin() override;
         arcade::data::FloatRect getLocalBounds() override;
+        arcade::data::FloatRect getGlobalBounds() override;
         void setScale(arcade::data::Vector2f scale) override;
         arcade::data::Vector2f getScale() override;
         void rotate(float angle) override;

@@ -85,6 +85,12 @@ arcade::data::Vector2f SpriteNCRS::getOrigin()
 
 arcade::data::FloatRect SpriteNCRS::getLocalBounds()
 {
+    float width = _originalSprite.size() ? _originalSprite[0].size() : 0;
+    return arcade::data::FloatRect{0, 0, width, static_cast<float>(_originalSprite.size())};
+}
+
+arcade::data::FloatRect SpriteNCRS::getGlobalBounds()
+{
     return arcade::data::FloatRect{_pos.y - _origin.y, _pos.x - _origin.x, static_cast<float>(_textureRect.width), static_cast<float>(_textureRect.height)};
 }
 

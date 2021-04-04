@@ -41,8 +41,8 @@ games:				shared									## Make all games
 .PHONY:	games
 
 graphicals:			shared									## Make all graphicals
-					make -C $(SFML_DIR) && mv $(SFML_DIR)/$(SFML_NAME) $(LIBS_DIR)
-					make -C $(NCRS_DIR) && mv $(NCRS_DIR)/$(NCRS_NAME) $(LIBS_DIR)
+					make -C $(SFML_DIR) && mv $(SFML_DIR)/$(SFML_NAME) $(LIBS_DIR) && cp $(LIBS_DIR)/$(SFML_NAME) $(LIBS_DIR)/arcade_sfml2.so
+					make -C $(NCRS_DIR) && mv $(NCRS_DIR)/$(NCRS_NAME) $(LIBS_DIR) && cp $(LIBS_DIR)/$(NCRS_NAME) $(LIBS_DIR)/arcade_ncursesthisis2.so
 .PHONY:	graphicals
 
 vclean:														## Delete *~ and *#*#* and .#* and vgcore.*
