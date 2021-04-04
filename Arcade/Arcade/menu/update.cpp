@@ -55,24 +55,24 @@ void arcade::Arcade::menuHandleEvents()
             _menuGamesListText[_menuSelectedGame]->setColor(arcade::data::Color::Cyan);
             menuSetHighScoresText();
         } else if (event.type == arcade::data::MOUSE_PRESSED) {
-            // auto it = std::find_if(_menuGamesListText.begin(), _menuGamesListText.end(),
-            //                     [&event](auto &text) {
-            //                         auto b = text->getLocalBounds();
-            //                         b.left = text->getPosition().x;
-            //                         b.top = text->getPosition().y;
-            //                         return arcade::isOverlap(b, event.x, event.y);
-            //                     });
-            // if (it != _menuGamesListText.end()) {
-            //     if (it - _menuGamesListText.begin() == _menuSelectedGame) {
-            //         setGaLib(_menuSelectedGame - _gameLoaded);
-            //         _status = ArcadeStatus::IN_GAME;
-            //     } else {
-            //         _menuGamesListText[_menuSelectedGame]->setColor(arcade::data::Color::White);
-            //         _menuSelectedGame = it - _menuGamesListText.begin();
-            //         _menuGamesListText[_menuSelectedGame]->setColor(arcade::data::Color::Cyan);
-            //         menuSetHighScoresText();
-            //     }
-            // }
+            auto it = std::find_if(_menuGamesListText.begin(), _menuGamesListText.end(),
+                                [&event](auto &text) {
+                                    auto b = text->getLocalBounds();
+                                    b.left = text->getPosition().x;
+                                    b.top = text->getPosition().y;
+                                    return arcade::isOverlap(b, event.x, event.y);
+                                });
+            if (it != _menuGamesListText.end()) {
+                if (it - _menuGamesListText.begin() == _menuSelectedGame) {
+                    setGaLib(_menuSelectedGame - _gameLoaded);
+                    _status = ArcadeStatus::IN_GAME;
+                } else {
+                    _menuGamesListText[_menuSelectedGame]->setColor(arcade::data::Color::White);
+                    _menuSelectedGame = it - _menuGamesListText.begin();
+                    _menuGamesListText[_menuSelectedGame]->setColor(arcade::data::Color::Cyan);
+                    menuSetHighScoresText();
+                }
+            }
         } else if (event.type == arcade::data::EventType::KEY_PRESSED &&
         (  (event.key >= 'a' && event.key <= 'z')
         || (event.key >= 'A' && event.key <= 'Z')

@@ -89,37 +89,37 @@ namespace arcade
         };
     } // namespace Displayer
 
-    // template<typename T, typename U>
-    // constexpr bool isOverlap(const arcade::data::Rect<T> &a, U x, U y) {
-    //     if (a.left <= x && x <= (a.left + a.width)
-    //     && a.top <= y && y <= (a.top + a.height)) {
-    //         return true;
-    //     }
-    //     return false;
-    // };
-    // template<typename T, typename U>
-    // constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Vector2<U> &b) {
-    //     if (a.left <= b.x && b.x <= (a.left + a.width)
-    //     && a.top <= b.y && b.y <= (a.top + a.height)) {
-    //         return true;
-    //     }
-    //     return false;
-    // };
-    // template<typename T, typename U>
-    // constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Rect<U> &b) {
-    //     if (
-    //     (  (a.left <= b.left && b.left <= (a.left + a.width))
-    //     || (a.left <= (b.left + b.width) && (b.left + b.width) <= (a.left + a.width))
-    //     )
-    //     &&
-    //     (  (a.top <= b.top && b.top <= (a.top + a.height))
-    //     || (a.top <= (b.top + b.height) && (b.top + b.height) <= (a.top + a.height))
-    //     )
-    //     ) {
-    //         return true;
-    //     }
-    //     return false;
-    // };
+    template<typename T, typename U>
+    constexpr bool isOverlap(const arcade::data::Rect<T> &a, U x, U y) {
+        if (a.left <= x && x <= (a.left + a.width)
+        && a.top <= y && y <= (a.top + a.height)) {
+            return true;
+        }
+        return false;
+    };
+    template<typename T, typename U>
+    constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Vector2<U> &b) {
+        if (a.left <= b.x && b.x <= (a.left + a.width)
+        && a.top <= b.y && b.y <= (a.top + a.height)) {
+            return true;
+        }
+        return false;
+    };
+    template<typename T, typename U>
+    constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Rect<U> &b) {
+        if (
+        (  (a.left <= b.left && b.left <= (a.left + a.width))
+        || (a.left <= (b.left + b.width) && (b.left + b.width) <= (a.left + a.width))
+        )
+        &&
+        (  (a.top <= b.top && b.top <= (a.top + a.height))
+        || (a.top <= (b.top + b.height) && (b.top + b.height) <= (a.top + a.height))
+        )
+        ) {
+            return true;
+        }
+        return false;
+    };
 } // namespace arcade
 
 #endif /* !DISPLAYER_HPP_ */

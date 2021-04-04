@@ -189,7 +189,7 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::IText> &text)
         return;
     }
     // move(startY, startX);
-    const char *content = t->getText().c_str();
+    const char *content = t->getString();
     attr_t att;
     NCURSES_PAIRS_T pair;
     short fg;

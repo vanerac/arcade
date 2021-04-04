@@ -35,6 +35,7 @@ class TextNCRS : public arcade::displayer::IText {
         arcade::data::Vector2f getOrigin() override;
 
         unsigned int getNcrsColor() const;
+        const char *getString() const;
 
     protected:
     private:

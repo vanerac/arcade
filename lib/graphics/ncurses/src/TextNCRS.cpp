@@ -81,3 +81,8 @@ unsigned int TextNCRS::getNcrsColor() const
 {
     return _ncrsColor;
 }
+
+const char *TextNCRS::getString() const
+{
+    return _text.c_str();
+}
