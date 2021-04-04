@@ -34,14 +34,13 @@ class TextNCRS : public arcade::displayer::IText {
         void setOrigin(arcade::data::Vector2f origin) override;
         arcade::data::Vector2f getOrigin() override;
 
-        const char *getString() const;
         unsigned int getNcrsColor() const;
 
     protected:
     private:
         std::string _text;
         arcade::data::Vector2f _pos;
-        arcade::data::Color _color;
+        arcade::data::Color _color = arcade::data::Color::White;
         unsigned int _ncrsColor = COLOR_WHITE;
         arcade::data::Vector2f _origin;
 };
@@ -62,9 +61,9 @@ class SpriteNCRS : public arcade::displayer::ISprite {
         arcade::data::FloatRect getLocalBounds() override;
         void setScale(arcade::data::Vector2f scale) override;
         arcade::data::Vector2f getScale() override;
-        float getRotation() override;
-        void setRotation(float angle) override;
         void rotate(float angle) override;
+        void setRotation(float angle) override;
+        float getRotation() override;
         void setTextureRect(const arcade::data::IntRect &rect) override;
         arcade::data::IntRect getTextureRect() const override;
         void setColor(arcade::data::Color color, const std::vector<std::vector<arcade::data::Color>> &asciiColors) override;

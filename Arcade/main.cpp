@@ -7,31 +7,29 @@
 
 #include <iostream>
 #include <algorithm>
+#include <cstring>
 #include "Arcade.hpp"
 #include "Tools.hpp"
 #include "Errors.hpp"
 
-void D_print_vect(std::vector<std::string> &vect, const std::string &sectionName)
+static void print_help()
 {
-    std::cout << sectionName << std::endl;
-    for (auto &t : vect) {
-        std::cout << t << std::endl;
-    }
-    std::cout << "---" << std::endl;
+    std::cout << '\n' << "Usage: ./arcade <first-graphic-lib-to-use>" << '\n';
+    std::cout << "  [./lib/]: the folder with all the necessary libs." << '\n';
+    std::cout << "  [./ressources/]: the folder with all the sprites and other ressources." << '\n';
+    arcade::Arcade::printLibconfHelp();
 }
 
 static void setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
 {
-    // arcade.setGraphicalLibList("./lib");
-    // arcade.setGamesLibList("./games");
     arcade.setLibsList("./lib");
 
-    // if (!arcade.getGalibsPath().size()) {
-    //     throw Errors::Error("Error: No games were found in the './games' folder.");
-    // }
+    if (!arcade.getGalibsPath().size()) {
+        throw Errors::LibError("No games were found in the './lib' folder.");
+    }
     auto &grlibs = arcade.getGrlibsPath();
     if (!grlibs.size()) {
-        throw Errors::Error("Error: No graphical lib were found in the './lib' folder.");
+        throw Errors::LibError("No graphical lib were found in the './lib' folder.");
     }
     unsigned int i = 0;
     for (; i < grlibs.size(); ++i) {
@@ -41,7 +39,7 @@ static void setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
         std::rotate(grlibs.begin(), grlibs.begin() + 1, grlibs.end());
     }
     if (i == grlibs.size()) {
-        throw Errors::Error("The lib '" + firstGrLib + "' could not been found.");
+        throw Errors::LibError("The lib '" + firstGrLib + "' could not been loaded.");
     }
 }
 
@@ -51,13 +49,14 @@ int main(int ac, char **av)
         std::cerr << "Error: You must give the first graphical lib to use." << std::endl;
         return 84;
     }
+    if (!strcmp(av[1], "-h") || !strcmp(av[1], "--help")) {
+        print_help();
+        return 0;
+    }
     arcade::Arcade arcade;
 
     std::string firstLib = av[1];
     firstLib = (Tools::Strings::startsWith(firstLib, "./") || firstLib[0] == '/' ? "" : "./") + firstLib;
-    // if (!) {
-    //     return 84;
-    // }
     int status = 0;
     try
     {
@@ -67,6 +66,13 @@ int main(int ac, char **av)
     catch(const Errors::Error& e)
     {
         std::cerr << e.what() << '\n';
+        status = 84;
+    }
+    catch(const Errors::LibError& e)
+    {
+        std::cerr << e.what() << '\n';
+        std::cerr << '\n' << "You should maybe check the 'lib.conf' file." << '\n';
+        std::cerr << "Get more info with the -h flag." << '\n';
         status = 84;
     }
     return status;

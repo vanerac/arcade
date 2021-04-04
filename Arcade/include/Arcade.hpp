@@ -15,65 +15,71 @@
 #include <memory>
 #include "DLLoader.hpp"
 #include "Displayer.hpp"
+#include "Games.hpp"
 
 namespace arcade
 {
-    // class Menu {
-    //     public:
-    //         Menu();
-    //         ~Menu();
-
-    //         void loadDisplayer(std::shared_ptr<arcade::displayer::IDisplay> displayer);
-    //         void draw();
-
-    //     protected:
-    //     private:
-    //         std::shared_ptr<arcade::displayer::IDisplay> _displayer;
-    //         std::vector<std::unique_ptr<arcade::displayer::IText>> _gamesList;
-    //         std::unique_ptr<arcade::displayer::IText> _quitText;
-    // };
-
     class Arcade {
         public:
             Arcade();
             ~Arcade();
 
             void setLibsList(const std::string &folder);
-            void setGraphicalLibList(const std::string &grlibsFolder);
-            void setGamesLibList(const std::string &galibsFolder);
+            void fetchHighScores();
+            static void saveHighScores(const std::string &gameName, const std::string &playerName, unsigned int score);
 
             std::vector<std::string> &getGrlibsPath();
             std::vector<std::string> &getGalibsPath();
 
+            static void printLibconfHelp(bool onCerr = false);
+
             int run();
 
             void setGrLib(int move);
-            void setGaLib();
+            void setGaLib(int move);
 
             void handleEvents();
 
             void menuLoadDisplayer();
+            void menuCreateBox(arcade::data::FloatRect rect, char corners = '#', char horizontal = '#', char vertical = '#', char fill = '\r');
+            void menuCreateBox(arcade::data::FloatRect rect, char corners, char top, char bottom, char left, char right, char fill = '\r');
             void menuInitElems();
+            void menuSetHighScoresText();
             void drawMenu();
+            void menuHandleEvents();
 
         protected:
         private:
             enum ArcadeStatus {
                 QUITTING,
                 MENU,
+                IN_GAME,
             };
             void setValidLibs();
 
             std::vector<std::string> _grlibValid;
             std::vector<std::string> _galibValid;
-            bool _validSet = false;
             std::vector<std::string> _grlibsPath;
             std::vector<std::string> _galibsPath;
+            int _gameLoaded = 0;
             DLLoader _grLoader;
             DLLoader _gaLoader;
+            std::unique_ptr<arcade::displayer::IDisplay> _displayer;
+            std::unique_ptr<arcade::games::IGame> _game;
             ArcadeStatus _status = ArcadeStatus::MENU;
-            std::shared_ptr<arcade::displayer::IDisplay> _displayer;
+            unsigned int _menuSelectedGame = 0;
+            std::vector<std::vector<std::pair<std::string, std::size_t>>> _highScores;
             std::vector<std::unique_ptr<arcade::displayer::IText>> _menuGamesListText;
+            std::vector<std::unique_ptr<arcade::displayer::IText>> _menuGrListText;
+            std::vector<std::unique_ptr<arcade::displayer::ISprite>> _menuBoxes;
+            std::vector<std::unique_ptr<arcade::displayer::IText>> _menuInstructions;
+            std::unique_ptr<arcade::displayer::IText> _menuHighScoreText;
+            std::vector<std::unique_ptr<arcade::displayer::IText>> _menuHighScoresText;
+            std::unique_ptr<arcade::displayer::IText> _menuNewGameText;
+            std::unique_ptr<arcade::displayer::IText> _menuAskPlayerNameText;
+            std::unique_ptr<arcade::displayer::IText> _menuPlayerNameText;
+            std::string _playerName{"player"};
+
             std::unique_ptr<arcade::displayer::IText> _menuQuitText;
             std::unique_ptr<arcade::displayer::ISprite> _pacman;
     };

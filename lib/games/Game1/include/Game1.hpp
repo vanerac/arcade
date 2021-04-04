@@ -16,6 +16,8 @@ class Game1 : public arcade::games::IGame {
         ~Game1();
 
         void init(std::unique_ptr<arcade::displayer::IDisplay> &disp) override;
+        void update() override;
+        void stop() override;
 
     protected:
     private:

@@ -7,8 +7,11 @@
 
 override SRC		=	main.cpp					\
 						Arcade/Arcade.cpp			\
-						Arcade/menu/drawMenu.cpp	\
+						Arcade/ArcadeInit.cpp		\
+						Arcade/menu/update.cpp		\
+						Arcade/menu/init.cpp		\
 						Errors/Error.cpp			\
+						Errors/LibError.cpp			\
 						Tools/Dirs.cpp				\
 						Tools/Strings.cpp			\
 

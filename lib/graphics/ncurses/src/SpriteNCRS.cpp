@@ -85,7 +85,7 @@ arcade::data::Vector2f SpriteNCRS::getOrigin()
 
 arcade::data::FloatRect SpriteNCRS::getLocalBounds()
 {
-    return arcade::data::FloatRect{_pos.x, _pos.y, static_cast<float>(_textureRect.width), static_cast<float>(_textureRect.height)};
+    return arcade::data::FloatRect{_pos.y - _origin.y, _pos.x - _origin.x, static_cast<float>(_textureRect.width), static_cast<float>(_textureRect.height)};
 }
 
 void SpriteNCRS::setScale(arcade::data::Vector2f scale) // TODO: (change also rect)
@@ -101,9 +101,9 @@ arcade::data::Vector2f SpriteNCRS::getScale()
     return _scale;
 }
 
-float SpriteNCRS::getRotation()
+void SpriteNCRS::rotate(float angle)
 {
-    return _rotation;
+    setRotation(getRotation() + angle);
 }
 
 void SpriteNCRS::setRotation(float angle)
@@ -136,9 +136,9 @@ void SpriteNCRS::setRotation(float angle)
     _actualRotation = rot;
 }
 
-void SpriteNCRS::rotate(float angle)
+float SpriteNCRS::getRotation()
 {
-    setRotation(getRotation() + angle);
+    return _rotation;
 }
 
 void SpriteNCRS::setTextureRect(const arcade::data::IntRect &rect)

@@ -57,24 +57,14 @@ arcade::data::Color TextNCRS::getColor() const
     return _color;
 }
 
-unsigned int TextNCRS::getNcrsColor() const
-{
-    return _ncrsColor;
-}
-
 void TextNCRS::setCharacterSize(unsigned int size)
 {
     (void)size;
 }
 
-const char *TextNCRS::getString() const
-{
-    return _text.data();
-}
-
 arcade::data::FloatRect TextNCRS::getLocalBounds()
 {
-    return arcade::data::FloatRect{_pos.y, _pos.x, static_cast<float>(_text.size()), 1.0f};
+    return arcade::data::FloatRect{_pos.y - _origin.y, _pos.x - _origin.x, static_cast<float>(_text.size()), 1.0f};
 }
 
 void TextNCRS::setOrigin(arcade::data::Vector2f origin)
@@ -85,4 +75,9 @@ void TextNCRS::setOrigin(arcade::data::Vector2f origin)
 arcade::data::Vector2f TextNCRS::getOrigin()
 {
     return _origin;
+}
+
+unsigned int TextNCRS::getNcrsColor() const
+{
+    return _ncrsColor;
 }

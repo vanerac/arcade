@@ -19,6 +19,7 @@ unit_test
 *[Tt][Oo][Dd][Ee][Ll]*
 *zip*
 log.txt
+log_save.txt
 
 # bin
 *.so

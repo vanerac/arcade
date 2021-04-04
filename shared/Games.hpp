@@ -19,6 +19,8 @@ namespace arcade
         class IGame {
             public:
                 virtual void init(std::unique_ptr<arcade::displayer::IDisplay> &disp) = 0;
+                virtual void update() = 0;
+                virtual void stop() = 0;
 
         };
     } // namespace games

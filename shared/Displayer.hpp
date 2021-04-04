@@ -48,9 +48,9 @@ namespace arcade
                 virtual arcade::data::FloatRect getLocalBounds() = 0;
                 virtual void setScale(arcade::data::Vector2f scale) = 0;
                 virtual arcade::data::Vector2f getScale() = 0;
-                virtual float getRotation() = 0;
-                virtual void setRotation(float angle) = 0;
                 virtual void rotate(float anle) = 0;
+                virtual void setRotation(float angle) = 0;
+                virtual float getRotation() = 0;
                 virtual void setTextureRect(const arcade::data::IntRect &rect) = 0;
                 virtual arcade::data::IntRect getTextureRect() const = 0;
                 virtual void setColor(arcade::data::Color color, const std::vector<std::vector<arcade::data::Color>> &asciiColors) = 0;
@@ -88,6 +88,38 @@ namespace arcade
                 virtual std::ofstream &log() = 0;
         };
     } // namespace Displayer
+
+    // template<typename T, typename U>
+    // constexpr bool isOverlap(const arcade::data::Rect<T> &a, U x, U y) {
+    //     if (a.left <= x && x <= (a.left + a.width)
+    //     && a.top <= y && y <= (a.top + a.height)) {
+    //         return true;
+    //     }
+    //     return false;
+    // };
+    // template<typename T, typename U>
+    // constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Vector2<U> &b) {
+    //     if (a.left <= b.x && b.x <= (a.left + a.width)
+    //     && a.top <= b.y && b.y <= (a.top + a.height)) {
+    //         return true;
+    //     }
+    //     return false;
+    // };
+    // template<typename T, typename U>
+    // constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Rect<U> &b) {
+    //     if (
+    //     (  (a.left <= b.left && b.left <= (a.left + a.width))
+    //     || (a.left <= (b.left + b.width) && (b.left + b.width) <= (a.left + a.width))
+    //     )
+    //     &&
+    //     (  (a.top <= b.top && b.top <= (a.top + a.height))
+    //     || (a.top <= (b.top + b.height) && (b.top + b.height) <= (a.top + a.height))
+    //     )
+    //     ) {
+    //         return true;
+    //     }
+    //     return false;
+    // };
 } // namespace arcade
 
 #endif /* !DISPLAYER_HPP_ */

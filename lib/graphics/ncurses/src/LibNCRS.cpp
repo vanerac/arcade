@@ -34,8 +34,10 @@ static const std::array<std::tuple<arcade::data::EventType, uint64_t>, 20> ncrsT
     std::tuple<arcade::data::EventType, uint64_t>{arcade::data::EventType::MOUSE_TRIPLE_CLICKED,  BUTTON4_TRIPLE_CLICKED},
 };
 
-LibNCRS::LibNCRS() : stream("./log.txt")
+LibNCRS::LibNCRS()
 {
+    // stream.open("./log.txt");
+    stream.open("./log.txt", std::ios_base::app);
 }
 
 LibNCRS::~LibNCRS()
@@ -125,6 +127,7 @@ arcade::data::Vector2u LibNCRS::getWindowSize()
     unsigned int width = 0;
     unsigned int height = 0;
     getmaxyx(stdscr, height, width);
+    // log() << " --- [" << width << ", " << height << "] --- " << std::endl;
     return arcade::data::Vector2u{width, height};
 }
 
@@ -172,6 +175,9 @@ std::vector<arcade::data::Event> LibNCRS::getEvents()
 
 void LibNCRS::draw(std::unique_ptr<arcade::displayer::IText> &text)
 {
+    if (!text) {
+        return;
+    }
     auto &t = reinterpret_cast<std::unique_ptr<TextNCRS> &>(text);
     auto pos = t->getPosition();
     auto org = t->getOrigin();
@@ -182,17 +188,18 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::IText> &text)
     if (startY < 0 || startY >= static_cast<int>(win.y) || (startX + static_cast<int>(size) < 0) || (startX >= static_cast<int>(win.x))) {
         return;
     }
-    move(startY, startX);
-    const char *content = t->getString();
+    // move(startY, startX);
+    const char *content = t->getText().c_str();
     attr_t att;
     NCURSES_PAIRS_T pair;
     short fg;
-    short bg;
+    short bg = COLOR_BLACK;
     for (unsigned int i = 0; i < size; ++i, ++content, ++startX) {
-        if (startX < 0 || startX >= static_cast<int>(win.x)) {
-            move(startY, startX + 1);
+        if (startX < 0 || startX >= static_cast<int>(win.x) || *content == '\r') {
+            // move(startY, startX + 1);
             continue;
         }
+        move(startY, startX);
         attr_get(&att, &pair, NULL);
         pair_content(att, &fg, &bg);
         pair = getNcrsColorPair(t->getNcrsColor(), bg);
@@ -202,6 +209,9 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::IText> &text)
 
 void LibNCRS::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
 {
+    if (!sprite) {
+        return;
+    }
     auto &s = reinterpret_cast<std::unique_ptr<SpriteNCRS> &>(sprite);
     auto &img = s->getSprite();
     auto pos = s->getPosition();
@@ -248,6 +258,22 @@ std::unique_ptr<arcade::displayer::ISprite> LibNCRS::createSprite(const std::str
 {
     (void)spritePath;
     return std::make_unique<SpriteNCRS>(asciiSprite, scale);
+}
+
+double LibNCRS::scaleMoveX(double time)
+{
+    if (!time) {
+        return 0;
+    }
+    return (getWindowSize().x / time) / (1.0f / getDeltaTime());
+}
+
+double LibNCRS::scaleMoveY(double time)
+{
+    if (!time) {
+        return 0;
+    }
+    return (getWindowSize().y / time) / (1.0f / getDeltaTime());
 }
 
 NCURSES_PAIRS_T LibNCRS::getNcrsColorPair(short fg, short bg)
@@ -315,20 +341,4 @@ std::pair<arcade::data::Color, NCURSES_PAIRS_T> LibNCRS::colorToNcrsColor(arcade
         pair.second = COLOR_BLACK;
     }
     return pair;
-}
-
-double LibNCRS::scaleMoveX(double time)
-{
-    if (!time) {
-        return 0;
-    }
-    return (getWindowSize().x / time) / (1.0f / getDeltaTime());
-}
-
-double LibNCRS::scaleMoveY(double time)
-{
-    if (!time) {
-        return 0;
-    }
-    return (getWindowSize().y / time) / (1.0f / getDeltaTime());
 }

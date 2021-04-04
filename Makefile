@@ -33,16 +33,16 @@ shared:														## Make the shared part of the arcade
 .PHONY:	shared
 
 core:				shared									## Make the core of the arcade
-					make -C $(ARCADE_DIR) && cp $(ARCADE_DIR)/$(ARCADE_NAME) .
+					make -C $(ARCADE_DIR) && mv $(ARCADE_DIR)/$(ARCADE_NAME) .
 .PHONY:	core
 
 games:				shared									## Make all games
-					make -C $(GAME1_DIR) && cp $(GAME1_DIR)/$(GAME1_NAME) $(LIBS_DIR)
+					make -C $(GAME1_DIR) && mv $(GAME1_DIR)/$(GAME1_NAME) $(LIBS_DIR) && cp $(LIBS_DIR)/$(GAME1_NAME) arcade_game2.so
 .PHONY:	games
 
 graphicals:			shared									## Make all graphicals
-					make -C $(SFML_DIR) && cp $(SFML_DIR)/$(SFML_NAME) $(LIBS_DIR)
-					make -C $(NCRS_DIR) && cp $(NCRS_DIR)/$(NCRS_NAME) $(LIBS_DIR)
+					make -C $(SFML_DIR) && mv $(SFML_DIR)/$(SFML_NAME) $(LIBS_DIR)
+					make -C $(NCRS_DIR) && mv $(NCRS_DIR)/$(NCRS_NAME) $(LIBS_DIR)
 .PHONY:	graphicals
 
 vclean:														## Delete *~ and *#*#* and .#* and vgcore.*

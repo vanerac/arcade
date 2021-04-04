@@ -14,7 +14,7 @@
 
 class DLLoader {
     public:
-        DLLoader(const std::string &path, int mode = RTLD_NOW)
+        DLLoader(const std::string &path, int mode = (RTLD_NOW | RTLD_NODELETE))
         {
             load(path, mode);
         };

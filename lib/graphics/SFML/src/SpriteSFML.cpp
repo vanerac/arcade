@@ -23,15 +23,15 @@ SpriteSFML::~SpriteSFML()
 {
 }
 
-sf::Sprite &SpriteSFML::getSprite()
-{
-    return _sprite;
-}
-
 void SpriteSFML::setSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite)
 {
     (void)asciiSprite;
     _texture.loadFromFile(spritePath);
+}
+
+sf::Sprite &SpriteSFML::getSprite()
+{
+    return _sprite;
 }
 
 void SpriteSFML::setPosition(arcade::data::Vector2f pos)
@@ -83,9 +83,9 @@ arcade::data::Vector2f SpriteSFML::getScale()
     return arcade::data::Vector2f{scale.x, scale.y};
 }
 
-float SpriteSFML::getRotation()
+void SpriteSFML::rotate(float angle)
 {
-    return _sprite.getRotation();
+    _sprite.rotate(angle);
 }
 
 void SpriteSFML::setRotation(float angle)
@@ -93,9 +93,9 @@ void SpriteSFML::setRotation(float angle)
     _sprite.setRotation(angle);
 }
 
-void SpriteSFML::rotate(float angle)
+float SpriteSFML::getRotation()
 {
-    _sprite.rotate(angle);
+    return _sprite.getRotation();
 }
 
 void SpriteSFML::setTextureRect(const arcade::data::IntRect &rect)

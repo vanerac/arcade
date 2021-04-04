@@ -64,11 +64,6 @@ void TextSFML::setCharacterSize(unsigned int size)
     _text.setCharacterSize(size);
 }
 
-sf::Text &TextSFML::getText()
-{
-    return _text;
-}
-
 arcade::data::FloatRect TextSFML::getLocalBounds()
 {
     auto rect = _text.getLocalBounds();
@@ -84,4 +79,9 @@ arcade::data::Vector2f TextSFML::getOrigin()
 {
     auto org = _text.getOrigin();
     return arcade::data::Vector2f{org.x, org.y};
+}
+
+sf::Text &TextSFML::getsfText()
+{
+    return _text;
 }

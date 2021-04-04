@@ -16,6 +16,7 @@ namespace arcade
     {
         enum EventType
         {
+            WNIDOW_CLOSED,
             KEY_PRESSED,
             MOUSE_MOVED,
             MOUSE_PRESSED,
@@ -25,6 +26,7 @@ namespace arcade
         };
         enum KeyCode
         {
+            ENTER               = 10,
             ESCAPE              = 27,
             SPACE               = 32,
             SPECIAL_KEYS_START  = 257,
@@ -32,7 +34,7 @@ namespace arcade
             UP                  = 259,
             LEFT                = 260,
             RIGHT               = 261,
-            ENTER               = 343,
+            BACKSPACE           = 263,
         };
         enum MouseBtn
         {
@@ -44,7 +46,8 @@ namespace arcade
 
         struct Event
         {
-            Event() {};
+            Event() : type(static_cast<EventType>(0)), x(0), y(0) {};
+            Event(EventType type) : type(type), x(0), y(0) {};
             Event(EventType type, MouseBtn btn, int x, int y) : type(type), btn(btn), x(x), y(y) {};
             Event(EventType type, int x, int y) : type(type), x(x), y(y) {};
             Event(EventType type, KeyCode keyCode) : type(type), keyCode(keyCode), x(0), y(0) {};
@@ -67,8 +70,8 @@ namespace arcade
         template<typename T>
         struct Vector2
         {
-            Vector2() {};
-            Vector2(T x) : x(x) {};
+            Vector2() : x(0), y(0) {};
+            Vector2(T x) : x(x), y(0) {};
             Vector2(T x, T y) : x(x), y(y) {};
             template<typename U>
             Vector2(const Vector2<U> &vect) : x(static_cast<T>(vect.x)), y(static_cast<T>(vect.y)) {};
@@ -86,6 +89,8 @@ namespace arcade
 
             Vector2<T> &move(T x) { this->x += x; return *this; };
             Vector2<T> &move(T x, T y) { this->x += x; this->y += y; return *this; };
+            template<typename U>
+            Vector2<T> &move(const Vector2<U> &other) { x = static_cast<T>(other.x); y = static_cast<T>(other.y); return *this; };
 
             T x;
             T y;
@@ -98,8 +103,8 @@ namespace arcade
         template<typename T>
         struct Rect
         {
-            Rect() {};
-            Rect(T width, T height) : width(width), height(height) {};
+            Rect() : top(0), left(0), width(0), height(0) {};
+            Rect(T width, T height) : top(0), left(0), width(width), height(height) {};
             Rect(T top, T left, T width, T height) : top(top), left(left), width(width), height(height) {};
             template<typename U>
             explicit Rect(U top, U left, U width, U height) : top(static_cast<T>(top)), left(static_cast<T>(left)),

@@ -33,7 +33,7 @@ class TextSFML : public arcade::displayer::IText {
         void setOrigin(arcade::data::Vector2f origin) override;
         arcade::data::Vector2f getOrigin() override;
         
-        sf::Text &getText();
+        sf::Text &getsfText();
 
     protected:
     private:
@@ -57,9 +57,9 @@ class SpriteSFML : public arcade::displayer::ISprite {
         arcade::data::FloatRect getLocalBounds() override;
         void setScale(arcade::data::Vector2f scale) override;
         arcade::data::Vector2f getScale() override;
-        float getRotation() override;
-        void setRotation(float angle) override;
         void rotate(float angle) override;
+        void setRotation(float angle) override;
+        float getRotation() override;
         void setTextureRect(const arcade::data::IntRect &rect) override;
         arcade::data::IntRect getTextureRect() const override;
         void setColor(arcade::data::Color color, const std::vector<std::vector<arcade::data::Color>> &asciiColors) override;

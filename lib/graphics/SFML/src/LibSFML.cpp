@@ -9,8 +9,10 @@
 #include <unordered_map>
 #include "LibSFML.hpp"
 
-LibSFML::LibSFML() : stream("./log.txt")
+LibSFML::LibSFML()
 {
+    // stream.open("./log.txt");
+    stream.open("./log.txt", std::ios_base::app);
 }
 
 LibSFML::~LibSFML()
@@ -44,15 +46,10 @@ bool LibSFML::isOpen()
     return _window.isOpen();
 }
 
-// void LibSFML::restartClock()
-// {
-//     _clock.restart();
-// }
-
-// double LibSFML::getDeltaTime()
-// {
-//     return _clock.getElapsedTime().asSeconds();
-// }
+void LibSFML::clearWindow()
+{
+    _window.clear();
+}
 
 void LibSFML::display()
 {
@@ -81,36 +78,10 @@ double LibSFML::getFrameDuration() const
             (std::chrono::high_resolution_clock::now() - _timePoint).count();
 }
 
-void LibSFML::clearWindow()
-{
-    _window.clear();
-}
-
 arcade::data::Vector2u LibSFML::getWindowSize()
 {
     auto size = _window.getSize();
     return arcade::data::Vector2u{size.x, size.y};
-}
-
-std::unique_ptr<arcade::displayer::IText> LibSFML::createText(const std::string &text)
-{
-    return std::make_unique<TextSFML>(text);
-}
-
-std::unique_ptr<arcade::displayer::IText> LibSFML::createText()
-{
-    return std::make_unique<TextSFML>();
-}
-
-std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale)
-{
-    (void)asciiSprite;
-    return std::make_unique<SpriteSFML>(spritePath, scale);
-}
-
-std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite()
-{
-    return std::make_unique<SpriteSFML>();
 }
 
 std::vector<arcade::data::Event> LibSFML::getEvents()
@@ -121,14 +92,33 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
     _eventsFetched = true;
     _events.clear();
     sf::Event event;
-    static const std::map<sf::Keyboard::Key, arcade::data::KeyCode> sfToArcadeKey {
-        {sf::Keyboard::Escape,  arcade::data::KeyCode::ESCAPE},
-        {sf::Keyboard::Space,   arcade::data::KeyCode::SPACE},
-        {sf::Keyboard::Down,    arcade::data::KeyCode::DOWN},
-        {sf::Keyboard::Up,      arcade::data::KeyCode::UP},
-        {sf::Keyboard::Left,    arcade::data::KeyCode::LEFT},
-        {sf::Keyboard::Right,   arcade::data::KeyCode::RIGHT},
-        {sf::Keyboard::Enter,   arcade::data::KeyCode::ENTER},
+    static const std::map<sf::Keyboard::Key, char> sfToArcadeKey {
+        {sf::Keyboard::LBracket,    '['},
+        {sf::Keyboard::RBracket,    ']'},
+        {sf::Keyboard::Semicolon,   ';'},
+        {sf::Keyboard::Comma,       ','},
+        {sf::Keyboard::Period,      '.'},
+        {sf::Keyboard::Quote,       '\''},
+        {sf::Keyboard::Slash,       '/'},
+        {sf::Keyboard::Backslash,   '\\'},
+        {sf::Keyboard::Tilde,       '~'},
+        {sf::Keyboard::Equal,       '='},
+        {sf::Keyboard::Hyphen,      '-'},
+        {sf::Keyboard::Add,         '+'},
+        {sf::Keyboard::Subtract,    '-'},
+        {sf::Keyboard::Multiply,    '*'},
+        {sf::Keyboard::Divide,      '/'},
+    };
+    static const std::map<sf::Keyboard::Key, arcade::data::KeyCode> sfToArcadeKeyCode {
+        {sf::Keyboard::Enter,     arcade::data::KeyCode::ENTER},
+        {sf::Keyboard::Backspace, arcade::data::KeyCode::BACKSPACE},
+        {sf::Keyboard::Escape,    arcade::data::KeyCode::ESCAPE},
+        {sf::Keyboard::Space,     arcade::data::KeyCode::SPACE},
+        {sf::Keyboard::Down,      arcade::data::KeyCode::DOWN},
+        {sf::Keyboard::Up,        arcade::data::KeyCode::UP},
+        {sf::Keyboard::Left,      arcade::data::KeyCode::LEFT},
+        {sf::Keyboard::Right,     arcade::data::KeyCode::RIGHT},
+        {sf::Keyboard::Enter,     arcade::data::KeyCode::ENTER},
     };
     static const std::map<sf::Event::EventType, arcade::data::EventType> sfToArcadeMouseType {
         {sf::Event::EventType::MouseButtonPressed,  arcade::data::EventType::MOUSE_PRESSED},
@@ -141,7 +131,9 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
         {sf::Mouse::Button::Right,  arcade::data::MouseBtn::BTN_3},
     };
     while (_window.pollEvent(event)) {
-        if (event.type == sf::Event::EventType::KeyPressed) {
+        if (event.type == sf::Event::Closed) {
+            _events.emplace_back(arcade::data::EventType::WNIDOW_CLOSED);
+        } else if (event.type == sf::Event::EventType::KeyPressed) {
             char key = event.key.code;
             if (key <= sf::Keyboard::Z) {
                 key += event.key.shift ? 'A' : 'a';
@@ -149,10 +141,12 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
             } else if ((key >= sf::Keyboard::Num0 && key <= sf::Keyboard::Num9) || (key >= sf::Keyboard::Numpad0 && key <= sf::Keyboard::Numpad9)) {
                 key = '0' + (key - (key >= sf::Keyboard::Numpad0 ? sf::Keyboard::Numpad0 : sf::Keyboard::Num0));
                 _events.emplace_back(arcade::data::EventType::KEY_PRESSED, key);
+            } else if (sfToArcadeKeyCode.find(event.key.code) != sfToArcadeKeyCode.end()) {
+                _events.emplace_back(arcade::data::EventType::KEY_PRESSED, sfToArcadeKeyCode.at(event.key.code));
             } else if (sfToArcadeKey.find(event.key.code) != sfToArcadeKey.end()) {
                 _events.emplace_back(arcade::data::EventType::KEY_PRESSED, sfToArcadeKey.at(event.key.code));
             }
-        } if (sfToArcadeMouseType.find(event.type) != sfToArcadeMouseType.end()) {
+        } else if (sfToArcadeMouseType.find(event.type) != sfToArcadeMouseType.end()) {
             if (event.type == sf::Event::EventType::MouseMoved) {
                 _events.emplace_back(arcade::data::EventType::MOUSE_MOVED, event.mouseMove.x, event.mouseMove.y);
             } else {
@@ -165,12 +159,39 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
 
 void LibSFML::draw(std::unique_ptr<arcade::displayer::IText> &text)
 {
-    _window.draw((reinterpret_cast<std::unique_ptr<TextSFML> &>(text))->getText());
+    if (!text) {
+        return;
+    }
+    _window.draw((reinterpret_cast<std::unique_ptr<TextSFML> &>(text))->getsfText());
 }
 
 void LibSFML::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
 {
+    if (!sprite) {
+        return;
+    }
     _window.draw((reinterpret_cast<std::unique_ptr<SpriteSFML> &>(sprite))->getSprite());
+}
+
+std::unique_ptr<arcade::displayer::IText> LibSFML::createText()
+{
+    return std::make_unique<TextSFML>();
+}
+
+std::unique_ptr<arcade::displayer::IText> LibSFML::createText(const std::string &text)
+{
+    return std::make_unique<TextSFML>(text);
+}
+
+std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite()
+{
+    return std::make_unique<SpriteSFML>();
+}
+
+std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale)
+{
+    (void)asciiSprite;
+    return std::make_unique<SpriteSFML>(spritePath, scale);
 }
 
 double LibSFML::scaleMoveX(double time)
