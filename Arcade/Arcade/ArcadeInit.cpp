@@ -212,6 +212,9 @@ void arcade::Arcade::setGrLib(int move)
     }
     _displayer->init("Arcade", 60);
     menuLoadDisplayer();
+    if (_status == ArcadeStatus::IN_GAME && _game) {
+        _game->init(_displayer);
+    }
 }
 
 void arcade::Arcade::setGaLib(int move)

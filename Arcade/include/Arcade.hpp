@@ -64,7 +64,7 @@ namespace arcade
             int _gameLoaded = 0;
             DLLoader _grLoader;
             DLLoader _gaLoader;
-            std::unique_ptr<arcade::displayer::IDisplay> _displayer;
+            std::shared_ptr<arcade::displayer::IDisplay> _displayer;
             std::unique_ptr<arcade::games::IGame> _game;
             ArcadeStatus _status = ArcadeStatus::MENU;
             unsigned int _menuSelectedGame = 0;

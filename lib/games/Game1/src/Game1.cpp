@@ -16,17 +16,21 @@ Game1::~Game1()
 {
 }
 
-void Game1::init(std::unique_ptr<arcade::displayer::IDisplay> &disp)
+void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
-    (void)disp;
-    std::cout << "Init Game1" << std::endl;
+    _displayer = disp;
+    _tmp = _displayer->createText("Hello World");
+    _tmp->setCharacterSize(20);
+    _tmp->setFont("ressources/font.ttf");
+    _displayer->log() << "Init Game1" << std::endl;
 }
 void Game1::update()
 {
-    std::cout << "Update Game1" << std::endl;
+    _displayer->draw(_tmp);
+    _displayer->log() << "Update Game1" << std::endl;
 }
 
 void Game1::stop()
 {
-    std::cout << "Stop Game1" << std::endl;
+    _displayer->log() << "Stop Game1" << std::endl;
 }
