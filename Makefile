@@ -17,6 +17,9 @@ GRAPHICS_DIR 		=	$(LIBS_DIR)/graphics
 SFML_DIR			=	$(GRAPHICS_DIR)/SFML
 SFML_NAME			=	arcade_sfml.so
 
+SDL2_DIR			=	$(GRAPHICS_DIR)/SDL2
+SDL2_NAME			=	arcade_sdl2.so
+
 NCRS_DIR			=	$(GRAPHICS_DIR)/ncurses
 NCRS_NAME			=	arcade_ncurses.so
 
@@ -41,14 +44,18 @@ games:				shared									## Make all games
 .PHONY:	games
 
 graphicals:			shared									## Make all graphicals
-					make -C $(SFML_DIR) && mv $(SFML_DIR)/$(SFML_NAME) $(LIBS_DIR) && cp $(LIBS_DIR)/$(SFML_NAME) $(LIBS_DIR)/arcade_sfml2.so
-					make -C $(NCRS_DIR) && mv $(NCRS_DIR)/$(NCRS_NAME) $(LIBS_DIR) && cp $(LIBS_DIR)/$(NCRS_NAME) $(LIBS_DIR)/arcade_ncursesthisis2.so
+					make -C $(SFML_DIR) && mv $(SFML_DIR)/$(SFML_NAME) $(LIBS_DIR)
+					## && cp $(LIBS_DIR)/$(SFML_NAME) $(LIBS_DIR)/arcade_sfml2.so
+					make -C $(SDL2_DIR) && mv $(SDL2_DIR)/$(SDL2_NAME) $(LIBS_DIR)
+					make -C $(NCRS_DIR) && mv $(NCRS_DIR)/$(NCRS_NAME) $(LIBS_DIR)
+					## && cp $(LIBS_DIR)/$(NCRS_NAME) $(LIBS_DIR)/arcade_ncursesthisis2.so
 .PHONY:	graphicals
 
 vclean:														## Delete *~ and *#*#* and .#* and vgcore.*
 					make vclean -C $(SHARED_DIR)
 					make vclean -C $(ARCADE_DIR)
 					make vclean -C $(SFML_DIR)
+					make vclean -C $(SDL2_DIR)
 					make vclean -C $(NCRS_DIR)
 					make vclean -C $(GAME1_DIR)
 .PHONY:	vclean
@@ -57,6 +64,7 @@ clean:														## Delete the build dir
 					make clean -C $(SHARED_DIR)
 					make clean -C $(ARCADE_DIR)
 					make clean -C $(SFML_DIR)
+					make clean -C $(SDL2_DIR)
 					make clean -C $(NCRS_DIR)
 					make clean -C $(GAME1_DIR)
 .PHONY:	clean
@@ -65,12 +73,15 @@ fclean:														## Delete the binary and call "clean"
 					make clean  -C $(SHARED_DIR)
 					make fclean -C $(ARCADE_DIR)
 					make fclean -C $(SFML_DIR)
+					make fclean -C $(SDL2_DIR)
 					make fclean -C $(NCRS_DIR)
 					make fclean -C $(GAME1_DIR)
 					$(RM) $(ARCADE_NAME)
 					$(RM) $(LIBS_DIR)/$(SFML_NAME)
+					$(RM) $(LIBS_DIR)/$(SDL2_NAME)
 					$(RM) $(LIBS_DIR)/$(NCRS_NAME)
 					$(RM) $(LIBS_DIR)/$(GAME1_NAME)
+					$(RM) $(LIBS_DIR)/arcade_game2.so
 .PHONY:	fclean
 
 re:					fclean all								## Delete everything from the previous compilation and compile
@@ -79,6 +90,7 @@ re:					fclean all								## Delete everything from the previous compilation and
 allclean:			fclean									## Call every function that delete something
 					make allclean -C $(ARCADE_DIR)
 					make allclean -C $(SFML_DIR)
+					make allclean -C $(SDL2_DIR)
 					make allclean -C $(NCRS_DIR)
 					make allclean -C $(GAME1_DIR)
 .PHONY:	allclean

@@ -132,7 +132,7 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
     };
     while (_window.pollEvent(event)) {
         if (event.type == sf::Event::Closed) {
-            _events.emplace_back(arcade::data::EventType::WNIDOW_CLOSED);
+            _events.emplace_back(arcade::data::EventType::WINDOW_CLOSED);
         } else if (event.type == sf::Event::EventType::KeyPressed) {
             char key = event.key.code;
             if (key <= sf::Keyboard::Z) {
