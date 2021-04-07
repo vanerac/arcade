@@ -19,12 +19,16 @@ class Game1 : public arcade::games::IGame {
         // void restart() override;
         void update() override; // return enum game state
         void stop() override;
+        std::vector<std::string> create_nibbler_map();
+        std::vector<std::string> create_nibbler_logo();
         // int getScore() override; for the arcade to store the score if it is a high score
 
     protected:
     private:
         std::shared_ptr<arcade::displayer::IDisplay> _displayer;
         std::unique_ptr<arcade::displayer::IText> _tmp;
+        std::unique_ptr<arcade::displayer::ISprite> _map;
+        std::unique_ptr<arcade::displayer::ISprite> _logo;
 };
 
 #endif /* !GAME1_HPP_ */
