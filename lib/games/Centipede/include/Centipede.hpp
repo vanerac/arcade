@@ -25,6 +25,7 @@ class Centipede : public arcade::games::IGame {
     void draw();
     void stop() override;
     // int getScore() override; for the arcade to store the score if it is a high score
+    // BITE
 
     protected:
     private:
