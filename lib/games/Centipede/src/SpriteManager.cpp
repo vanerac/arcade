@@ -86,7 +86,7 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getPlayer() const
 
 std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getShot() const
 {
-    return this->_shot;
+    return std::unique_ptr<arcade::displayer::ISprite>();
 }
 
 std::unique_ptr<arcade::displayer::IText> SpriteManager::getText(

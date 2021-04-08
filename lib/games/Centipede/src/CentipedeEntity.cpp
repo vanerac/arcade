@@ -39,6 +39,8 @@ CentipedeEntity *CentipedeEntity::splitAt(int tileIndex)
     auto ret = new CentipedeEntity(1);
     ret->setTiles(split_lo);
     ret->setPosition(v->getPosition().x, v->getPosition().y);
+    // TODO did it shrink ?
+    ret->setOrientation(orientation == RIGHT ? LEFT : RIGHT);
     return ret;
 }
 
@@ -54,4 +56,7 @@ std::vector<Entity *> CentipedeEntity::getTiles() const
 
 void CentipedeEntity::move()
 {
+    this->velocity = this->_tiles.size();
+    for (auto tile : _tiles)
+        tile->move();
 }

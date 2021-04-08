@@ -18,21 +18,30 @@ struct Position {
 
 class Entity {
     public:
-    Entity(int health);
-    ~Entity();
-    void setPosition(int x, int y);
-    struct Position getPosition() const;
-    void setHealth(int health);
-    int getHealth() const;
-    void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp);
-    void setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite);
-    std::unique_ptr<arcade::displayer::ISprite> getSprite() const;
+        Entity(int health);
+        ~Entity();
+        void setPosition(int x, int y);
+        struct Position getPosition() const;
+        void setHealth(int health);
+        int getHealth() const;
+        void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp);
+        void setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite);
+        std::unique_ptr<arcade::displayer::ISprite> &getSprite();
+        bool does_collide(Entity *target);
+        orientation getOrientation() const;
+        void setOrientation(enum orientation orientation);
+
+        virtual void move();
+        void setVecocity(arcade::data::Vector2f velocity); // todo
+        arcade::data::Vector2f getVecocity() const; // todo
+
+        struct Position pos; // todo change this
 
     protected:
-    struct Position pos;
-    int health;
-
-    std::unique_ptr<arcade::displayer::ISprite> sprite;
+        int health;
+        std::unique_ptr<arcade::displayer::ISprite> sprite;
+        enum orientation orientation;
+        arcade::data::Vector2f velocity;
 
 };
 
@@ -43,12 +52,12 @@ class CentipedeEntity : public Entity {
         void setTiles(const std::vector<Entity *>& tiles);
         std::vector<Entity*> getTiles() const;
         CentipedeEntity *splitAt(int tileIndex);
-        void move();
-        orientation getOrientation();
-        void getOrientation(orientation);
+        void move() override;
+
+
     private:
         std::vector<Entity*> _tiles;
-        orientation orientation;
+
 };
 
 #endif //B_OOP_400_BDX_4_1_ARCADE_HONORE_DUPIEU_ENTITIES_HPP

@@ -6,11 +6,11 @@
 */
 
 #include "../include/Entities.hpp"
-#include "../include/Centipede.hpp"
 
 Entity::Entity(int health)
 {
     this->health = health;
+    this->setPosition(0, 0);
 }
 
 Entity::~Entity()
@@ -38,17 +38,50 @@ int Entity::getHealth() const
     return this->health;
 }
 
-std::unique_ptr<arcade::displayer::ISprite> Entity::getSprite() const
+std::unique_ptr<arcade::displayer::ISprite> &Entity::getSprite()
 {
     return this->sprite;
 }
 
+// &&
 void Entity::setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite)
 {
-    this->sprite = sprite;
+    this->sprite = std::move(sprite);
 }
 
 void Entity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
 }
 
+bool Entity::does_collide(Entity *target)
+{
+    return arcade::isOverlap(this->getSprite()->getGlobalBounds(),
+        target->getSprite()->getGlobalBounds());
+}
+
+
+void Entity::move()
+{
+    // todo update position
+    // todo update sprite position
+}
+
+orientation Entity::getOrientation() const
+{
+    return this->orientation;
+}
+
+void Entity::setOrientation(enum orientation newOrientation)
+{
+    this->orientation = newOrientation;
+}
+
+void Entity::setVecocity(arcade::data::Vector2f velocity)
+{
+    this->velocity = velocity;
+}
+
+arcade::data::Vector2f Entity::getVecocity() const
+{
+    return this->velocity;
+}

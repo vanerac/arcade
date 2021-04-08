@@ -8,15 +8,6 @@
 #include <iostream>
 #include "../include/Centipede.hpp"
 
-bool Centipede::does_collide(arcade::data::Rect<float> first,
-    arcade::data::Rect<float> second
-)
-{
-
-    // todo check collision
-    return false;
-}
-
 Centipede::Centipede()
 {
 
@@ -65,14 +56,21 @@ void Centipede::handleMovement(
         return;
 
     switch (eventType[0].keyCode) {
-        // todo movement
     case arcade::data::UP:
+        this->player->setOrientation(UP);
+        this->player->setVecocity(1);
         break;
     case arcade::data::DOWN:
+        this->player->setOrientation(DOWN);
+        this->player->setVecocity(1);
         break;
     case arcade::data::LEFT:
+        this->player->setOrientation(LEFT);
+        this->player->setVecocity(1);
         break;
     case arcade::data::RIGHT:
+        this->player->setOrientation(RIGHT);
+        this->player->setVecocity(1);
         break;
     case arcade::data::SPACE:
         this->shoot();
@@ -86,34 +84,57 @@ void Centipede::update()
 {
     for (auto shot : _shots) {
         // Move & check collision with obstacles & centipedes
+        shot->move();
         for (auto centipede : _centipedes) {
+            int index = -1;
             for (auto body : centipede->getTiles()) {
-                if (!does_collide(shot->getSprite()->getLocalBounds(),
-                    body->getSprite()->getLocalBounds()))
-                    continue;
-                // todo place obstacle in collision spot
-                // todo split
+                ++index; // todo dirty
+                if (shot->does_collide(body)) {
+                    auto tmp = new Entity(3);
+                    tmp->setPosition(body->getPosition().x,
+                        body->getPosition().y);
+                    tmp->setSprite(
+                        spriteManager->getObstacle(tmp->getHealth()));
+                    this->_obstacles.push_back(tmp);
+                    this->_centipedes.push_back(centipede->splitAt(index));
+                }
+                // todo collides with wall -> destroyed
             }
         }
         for (auto obstacle : _obstacles) {
-            // check for bounds
-            if (!does_collide(shot->getSprite()->getLocalBounds(),
-                obstacle->getSprite()->getLocalBounds()))
+            obstacle->move(); // doesn't move doe -_-
+            if (!shot->does_collide(obstacle))
                 continue;
             obstacle->setHealth(obstacle->getHealth() - 1);
-            // todo update sprite ?
+            obstacle->setSprite(
+                spriteManager->getObstacle(obstacle->getHealth()));
+            if (obstacle->getHealth() == 0) {
+                // todo destroy
+            }
         }
     }
 
     for (auto centipede : _centipedes) {
-        centipede->move(); // todo centipede move speed depends on size;
+        centipede->move();
         // todo check collisions
+        for (auto body : centipede->getTiles()) {
+            // todo check if entity exits screen
+            if (body->does_collide(this->player)) {
+                // todo trigger game over
+            }
+            for (auto obstacle: _obstacles)
+                if (body->does_collide(obstacle) /* TODO OR A WALL */)
+                    centipede->setOrientation(centipede->getOrientation() ==
+                    RIGHT ? LEFT : RIGHT);
+
+
+        }
     }
 
     // User actions
     auto event = this->_displayer->getEvents();
     handleMovement(event);
-
+    player->move();
     // todo if no more centipedes, spawn new ones & level++
 
     _displayer->log() << "Update Game1" << std::endl;
