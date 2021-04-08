@@ -107,7 +107,6 @@ class LibSFML : public arcade::displayer::IDisplay {
         std::vector<arcade::data::Event> _events;
         std::ofstream stream;
         sf::RenderWindow _window;
-        sf::Font _font;
         std::chrono::time_point<std::chrono::high_resolution_clock> _timePoint;
         double _lastFrameTime;
 };
