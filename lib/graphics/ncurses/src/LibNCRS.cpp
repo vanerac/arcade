@@ -24,10 +24,10 @@ LibNCRS::~LibNCRS()
     }
 }
 
-std::ofstream &LibNCRS::log()
-{
-    return stream;
-}
+// std::ofstream &LibNCRS::log()
+// {
+//     return stream;
+// }
 
 int LibNCRS::availableOptions() const
 {

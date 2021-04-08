@@ -110,7 +110,7 @@ class LibNCRS : public arcade::displayer::IDisplay {
         double scaleMoveX(double time) override;
         double scaleMoveY(double time) override;
 
-        std::ofstream &log() override;
+        std::ofstream &log() { return stream; };
         static NCURSES_PAIRS_T getNcrsColorPair(short fg, short bg);
         static std::pair<arcade::data::Color, NCURSES_PAIRS_T> colorToNcrsColor(arcade::data::Color color);
 

@@ -16,7 +16,7 @@ namespace arcade
     {
         enum EventType
         {
-            WNIDOW_CLOSED,
+            WINDOW_CLOSED,
             KEY_PRESSED,
             MOUSE_MOVED,
             MOUSE_PRESSED,

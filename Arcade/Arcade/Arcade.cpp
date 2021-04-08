@@ -57,7 +57,7 @@ void arcade::Arcade::handleEvents()
     auto events = _displayer->getEvents();
 
     for (auto &event : events) {
-        if (event.type == arcade::data::EventType::WNIDOW_CLOSED
+        if (event.type == arcade::data::EventType::WINDOW_CLOSED
         || (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::ESCAPE)) {
             if (_status == ArcadeStatus::IN_GAME) {
                 if (_game) {

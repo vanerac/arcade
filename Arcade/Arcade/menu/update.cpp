@@ -55,7 +55,6 @@ void arcade::Arcade::menuHandleEvents()
             _menuGamesListText[_menuSelectedGame]->setColor(arcade::data::Color::Cyan);
             menuSetHighScoresText();
         } else if (event.type == arcade::data::MOUSE_PRESSED) {
-            _displayer->log() << "Mouse event" << std::endl;
             auto it = std::find_if(_menuGamesListText.begin(), _menuGamesListText.end(),
                                 [&event](auto &text) {
                                     return arcade::isOverlap(text->getGlobalBounds(), event.x, event.y);
