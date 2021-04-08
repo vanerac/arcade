@@ -92,7 +92,7 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
     _eventsFetched = true;
     _events.clear();
     sf::Event event;
-    static const std::map<sf::Keyboard::Key, char> sfToArcadeKey {
+    static const std::unordered_map<sf::Keyboard::Key, char> sfToArcadeKey {
         {sf::Keyboard::LBracket,    '['},
         {sf::Keyboard::RBracket,    ']'},
         {sf::Keyboard::Semicolon,   ';'},
@@ -109,7 +109,7 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
         {sf::Keyboard::Multiply,    '*'},
         {sf::Keyboard::Divide,      '/'},
     };
-    static const std::map<sf::Keyboard::Key, arcade::data::KeyCode> sfToArcadeKeyCode {
+    static const std::unordered_map<sf::Keyboard::Key, arcade::data::KeyCode> sfToArcadeKeyCode {
         {sf::Keyboard::Enter,     arcade::data::KeyCode::ENTER},
         {sf::Keyboard::Backspace, arcade::data::KeyCode::BACKSPACE},
         {sf::Keyboard::Escape,    arcade::data::KeyCode::ESCAPE},
@@ -118,14 +118,13 @@ std::vector<arcade::data::Event> LibSFML::getEvents()
         {sf::Keyboard::Up,        arcade::data::KeyCode::UP},
         {sf::Keyboard::Left,      arcade::data::KeyCode::LEFT},
         {sf::Keyboard::Right,     arcade::data::KeyCode::RIGHT},
-        {sf::Keyboard::Enter,     arcade::data::KeyCode::ENTER},
     };
-    static const std::map<sf::Event::EventType, arcade::data::EventType> sfToArcadeMouseType {
+    static const std::unordered_map<sf::Event::EventType, arcade::data::EventType> sfToArcadeMouseType {
         {sf::Event::EventType::MouseButtonPressed,  arcade::data::EventType::MOUSE_PRESSED},
         {sf::Event::EventType::MouseButtonReleased, arcade::data::EventType::MOUSE_RELEASED},
         {sf::Event::EventType::MouseMoved,          arcade::data::EventType::MOUSE_MOVED},
     };
-    static const std::map<sf::Mouse::Button, arcade::data::MouseBtn> sfToArcadeMouseBtn {
+    static const std::unordered_map<sf::Mouse::Button, arcade::data::MouseBtn> sfToArcadeMouseBtn {
         {sf::Mouse::Button::Left,   arcade::data::MouseBtn::BTN_1},
         {sf::Mouse::Button::Middle, arcade::data::MouseBtn::BTN_2},
         {sf::Mouse::Button::Right,  arcade::data::MouseBtn::BTN_3},

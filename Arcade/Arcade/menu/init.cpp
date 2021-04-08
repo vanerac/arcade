@@ -203,7 +203,7 @@ void arcade::Arcade::menuCreateBox(arcade::data::FloatRect rect, char corners, c
         }
         asciiScoreBoard.push_back(line);
     }
-    _menuBoxes.push_back(_displayer->createSprite("ressources/board.png", asciiScoreBoard));
+    _menuBoxes.push_back(_displayer->createSprite("ressources/board.bmp", asciiScoreBoard));
     auto &p = _menuBoxes[_menuBoxes.size() - 1];
     p->setScale(arcade::data::Vector2f{rect.width / p->getLocalBounds().width, rect.height / p->getLocalBounds().height});
     p->setPosition(arcade::data::Vector2f{rect.left, rect.top});

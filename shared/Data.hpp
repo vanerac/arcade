@@ -126,6 +126,8 @@ namespace arcade
             Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255)
                 : r(red), g(green), b(blue), a(alpha) {};
 
+            bool operator==(const Color &other) const { return r == other.r && g == other.g && b == other.b && a == other.a; };
+
             uint8_t r;
             uint8_t g;
             uint8_t b;

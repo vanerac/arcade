@@ -48,8 +48,6 @@ void SpriteNCRS::setSprite(const std::string &spritePath, const std::vector<std:
     _textureRect.left = 0;
     _textureRect.width = _sprite.size() ? _sprite[0].size() : 0;
     _textureRect.height = _sprite.size();
-    // endwin();
-    // std::cout << "[" << _textureRect.width << ", " << _textureRect.height << "]" << std::endl;
 }
 
 void SpriteNCRS::setPosition(arcade::data::Vector2f pos)
@@ -94,7 +92,7 @@ arcade::data::FloatRect SpriteNCRS::getGlobalBounds()
     return arcade::data::FloatRect{_pos.y - _origin.y, _pos.x - _origin.x, static_cast<float>(_textureRect.width), static_cast<float>(_textureRect.height)};
 }
 
-void SpriteNCRS::setScale(arcade::data::Vector2f scale) // TODO: (change also rect)
+void SpriteNCRS::setScale(arcade::data::Vector2f scale)
 {
     if (_scale == scale) {
         return;
