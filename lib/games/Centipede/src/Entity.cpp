@@ -6,6 +6,7 @@
 */
 
 #include "../include/Entities.hpp"
+#include "../include/Centipede.hpp"
 
 Entity::Entity(int health)
 {
@@ -36,3 +37,18 @@ int Entity::getHealth() const
 {
     return this->health;
 }
+
+std::unique_ptr<arcade::displayer::ISprite> Entity::getSprite() const
+{
+    return this->sprite;
+}
+
+void Entity::setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite)
+{
+    this->sprite = sprite;
+}
+
+void Entity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
+{
+}
+

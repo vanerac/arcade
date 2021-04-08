@@ -6,6 +6,7 @@
 */
 
 #include "../include/Centipede.hpp"
+#include "../include/Entities.hpp"
 
 CentipedeEntity::CentipedeEntity(int size) : Entity(1)
 {
@@ -18,7 +19,7 @@ CentipedeEntity::CentipedeEntity(int size) : Entity(1)
     }
     this->pos.x = 1;
     this->pos.y = 1;
-    goingRight = true;
+    orientation = RIGHT; // todo inherit when necessary
 }
 
 CentipedeEntity::~CentipedeEntity()
@@ -49,4 +50,8 @@ void CentipedeEntity::setTiles(const std::vector<Entity *>& tiles)
 std::vector<Entity *> CentipedeEntity::getTiles() const
 {
     return this->_tiles;
+}
+
+void CentipedeEntity::move()
+{
 }
