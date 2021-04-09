@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include "LibNCRS.hpp"
+#include "Errors.hpp"
 
 SpriteNCRS::SpriteNCRS()
 {
@@ -29,10 +30,13 @@ void SpriteNCRS::setSprite(const std::string &spritePath, const std::vector<std:
     _originalSprite.clear();
     if (asciiSprite.size()) {
         _originalSprite.reserve(asciiSprite.size());
-        int y = 0;
-        int width = asciiSprite[0].size();
+        unsigned int y = 0;
+        unsigned int width = asciiSprite[0].size();
         for (auto &line : asciiSprite) {
-            int x = 0;
+            if (line.size() < width) {
+                throw arcade::errors::Error("The given ascii sprite is not rectangular (spritePath: '" + spritePath + "').");
+            }
+            unsigned int x = 0;
             _originalSprite.emplace_back(width);
             for (auto c : line) {
                 if (x >= width) {

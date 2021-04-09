@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <thread>
 #include "LibSDL2.hpp"
+#include "Errors.hpp"
 
 RendererPtr LibSDL2::renderer = nullptr;
 
@@ -20,6 +21,7 @@ LibSDL2::LibSDL2()
 
 LibSDL2::~LibSDL2()
 {
+    std::cout << "SDL2 lib is being destroyed" << std::endl;
     if (isOpen()) {
         stop();
     }
@@ -33,10 +35,11 @@ int LibSDL2::availableOptions() const
 void LibSDL2::init(const std::string &winName, unsigned int framesLimit)
 {
     std::cout << "Init" << std::endl;
-    SDL_Init(SDL_INIT_VIDEO);
-    TTF_Init();
-    _window = make_window(SDL_CreateWindow(winName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 920, 580, SDL_WINDOW_FULLSCREEN_DESKTOP));
-    LibSDL2::renderer = make_renderer(SDL_CreateRenderer(_window.get(), -1, SDL_RENDERER_ACCELERATED));
+    if (SDL_Init(SDL_INIT_VIDEO) < 0 || TTF_Init() < 0
+    || !(_window = make_window(SDL_CreateWindow(winName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1080, SDL_WINDOW_FULLSCREEN_DESKTOP)))
+    || !(LibSDL2::renderer = make_renderer(SDL_CreateRenderer(_window.get(), -1, SDL_RENDERER_ACCELERATED)))) {
+        throw arcade::errors::Error(std::string{"The SDL2 graphic lib could not been initialize properly: "} + SDL_GetError());
+    }
     _frameLimit = framesLimit;
     _windowIsOpen = true;
     restartClock();
@@ -45,8 +48,8 @@ void LibSDL2::init(const std::string &winName, unsigned int framesLimit)
 void LibSDL2::stop()
 {
     std::cout << "Stop" << std::endl;
-    _window.release();
-    LibSDL2::renderer.release();
+    _window.reset();
+    LibSDL2::renderer.reset();
     SDL_Quit();
     TTF_Quit();
     _windowIsOpen = false;
@@ -59,7 +62,9 @@ bool LibSDL2::isOpen()
 
 void LibSDL2::clearWindow()
 {
-    SDL_RenderClear(LibSDL2::renderer.get());
+    if (SDL_RenderClear(LibSDL2::renderer.get()) < 0) {
+        throw arcade::errors::Error(std::string{"Could not clear the window: "} + SDL_GetError());
+    }
 }
 
 void LibSDL2::display()
@@ -109,13 +114,10 @@ std::vector<arcade::data::Event> LibSDL2::getEvents()
     _eventsFetched = true;
     _events.clear();
     static const std::unordered_map<int, char> sdl2ToArcadeKey {
-        {SDLK_RETURN,       '\n'},
-        {SDLK_RETURN2,      '\n'},
         {SDLK_KP_DIVIDE,    '/'},
         {SDLK_KP_MULTIPLY,  '*'},
         {SDLK_KP_MINUS,     '-'},
         {SDLK_KP_PLUS,      '+'},
-        {SDLK_KP_ENTER,     '\n'},
         {SDLK_KP_EQUALS,    '='},
         {SDLK_POWER,        '*'},
         {SDLK_KP_0,         '0'},
@@ -130,6 +132,9 @@ std::vector<arcade::data::Event> LibSDL2::getEvents()
         {SDLK_KP_9,         '9'},
     };
     static const std::unordered_map<int, arcade::data::KeyCode> sdl2ToArcadeKeyCode {
+        {SDLK_RETURN,    arcade::data::KeyCode::ENTER},
+        {SDLK_RETURN2,   arcade::data::KeyCode::ENTER},
+        {SDLK_KP_ENTER,  arcade::data::KeyCode::ENTER},
         {SDLK_BACKSPACE, arcade::data::KeyCode::BACKSPACE},
         {SDLK_ESCAPE,    arcade::data::KeyCode::ESCAPE},
         {SDLK_SPACE,     arcade::data::KeyCode::SPACE},
@@ -137,7 +142,6 @@ std::vector<arcade::data::Event> LibSDL2::getEvents()
         {SDLK_UP,        arcade::data::KeyCode::UP},
         {SDLK_LEFT,      arcade::data::KeyCode::LEFT},
         {SDLK_RIGHT,     arcade::data::KeyCode::RIGHT},
-        
     };
     static const std::unordered_map<int, arcade::data::MouseBtn> sdl2ToArcadeMouseBtn {
         {SDL_BUTTON_LEFT,   arcade::data::MouseBtn::BTN_1},

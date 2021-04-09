@@ -14,6 +14,9 @@ arcade::Arcade::Arcade()
 
 arcade::Arcade::~Arcade()
 {
+    if (_displayer) {
+        _displayer->stop();
+    }
 }
 
 std::vector<std::string> &arcade::Arcade::getGrlibsPath()
@@ -40,8 +43,9 @@ int arcade::Arcade::run()
             drawMenu();
         } else if (_status == ArcadeStatus::IN_GAME) {
             _displayer->clearWindow();
-            _game->update();
-            // _status = ArcadeStatus::MENU;
+            if (_game->update() == GameStatus::GAME_ENDED) {
+                _status = ArcadeStatus::MENU;
+            }
         }
         _displayer->display();
     }

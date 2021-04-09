@@ -36,11 +36,12 @@ void LibNCRS::init(const std::string &winName, unsigned int framesLimit)
     (void)winName;
     _frameLimit = framesLimit;
     initscr();
-    if (noecho() == ERR || curs_set(FALSE) == ERR || keypad(stdscr, TRUE) == ERR || refresh() == ERR) {
-        throw arcade::errors::Error("The ncurses lib could not been set properly.");
+    if (noecho() == ERR || curs_set(FALSE) == ERR || keypad(stdscr, TRUE) == ERR) {
+        throw arcade::errors::Error("The ncurses lib could not been initialize properly.");
     }
     mousemask(ALL_MOUSE_EVENTS, NULL);
     start_color();
+    refresh();
     timeout(0);
     restartClock();
 }

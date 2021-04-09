@@ -6,6 +6,7 @@
 */
 
 #include "LibSFML.hpp"
+#include "Errors.hpp"
 
 TextSFML::TextSFML()
 {
@@ -43,9 +44,10 @@ arcade::data::Vector2f TextSFML::getPosition() const
 
 void TextSFML::setFont(const std::string &fontPath)
 {
-    if (_font.loadFromFile(fontPath)) {
-        _text.setFont(_font);
+    if (!_font.loadFromFile(fontPath)) {
+        throw arcade::errors::Error("Failed to load font '" + fontPath + "'.");
     }
+    _text.setFont(_font);
 }
 
 void TextSFML::setColor(arcade::data::Color color)

@@ -6,6 +6,7 @@
 */
 
 #include "LibSDL2.hpp"
+#include "Errors.hpp"
 
 SpriteSDL2::SpriteSDL2()
 {
@@ -24,66 +25,70 @@ SpriteSDL2::~SpriteSDL2()
 void SpriteSDL2::setSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite)
 {
     (void)asciiSprite;
+    if (!LibSDL2::renderer) {
+        throw arcade::errors::Error("[SDL2::setSprite(" + spritePath + ", ...)]: No renderer were set.");
+    }
     auto surface = make_surface(SDL_LoadBMP(spritePath.c_str()));
-    _sprite = make_texture(SDL_CreateTextureFromSurface(LibSDL2::renderer.get(), surface.get()));
-    if (!_sprite) {
-        if (!surface) {
-            std::cout << "Double Fuck - ";
-        }
-        std::cout << "Fuck the sprite is null" << std::endl;
-        return;
+    if (!surface || !(_sprite = make_texture(SDL_CreateTextureFromSurface(LibSDL2::renderer.get(), surface.get())))) {
+        throw arcade::errors::Error("Failed to load sprite '" + spritePath + "': " + SDL_GetError());
     }
     auto r = surface->clip_rect;
     _texture.width = r.w;
     _texture.height = r.h;
     _originalSize.x = r.w;
     _originalSize.y = r.h;
-    _rect.w = r.w;
-    _rect.h = r.h;
+    _displayRect.x = r.w;
+    _displayRect.y = r.h;
     _scale = {1, 1};
 }
 
 void SpriteSDL2::draw()
 {
-    auto t = getTextureRect();
     SDL_Rect texture;
-    texture.x = t.left;
-    texture.y = t.top;
-    texture.w = t.width;
-    texture.h = t.height;
-    SDL_RenderCopy(LibSDL2::renderer.get(), _sprite.get(), &texture, &_rect);
+    texture.x = _texture.left;
+    texture.y = _texture.top;
+    texture.w = _texture.width;
+    texture.h = _texture.height;
+    SDL_Rect rect;
+    rect.x = _pos.x;
+    rect.y = _pos.y;
+    rect.w = _displayRect.x;
+    rect.h = _displayRect.y;
+    if (_sprite && SDL_RenderCopy(LibSDL2::renderer.get(), _sprite.get(), &texture, &rect) < 0) {
+        throw arcade::errors::Error(std::string{"Unexpected error while drawing a sprite: "} + SDL_GetError());
+    }
 }
 
 void SpriteSDL2::setPosition(arcade::data::Vector2f pos)
 {
-    _rect.x = pos.x - _origin.x;
-    _rect.y = pos.y - _origin.y;
+    _pos.x = pos.x - _origin.x;
+    _pos.y = pos.y - _origin.y;
 }
 
 arcade::data::Vector2f SpriteSDL2::getPosition() const
 {
-    return arcade::data::Vector2i{_rect.x + _origin.x, _rect.y + _origin.y};
+    return {_pos.x + _origin.x, _pos.y + _origin.y};
 }
 
 void SpriteSDL2::move(arcade::data::Vector2f pos)
 {
-    _rect.x += pos.x;
-    _rect.y += pos.y;
+    _pos.x += pos.x;
+    _pos.y += pos.y;
 }
 
 void SpriteSDL2::move(float x, float y)
 {
-    _rect.x += x;
-    _rect.y += y;
+    _pos.x += x;
+    _pos.y += y;
 }
 
 void SpriteSDL2::setOrigin(arcade::data::Vector2f origin)
 {
-    _rect.x += _origin.x / (_scale.x ? _scale.x : 1);
-    _rect.y += _origin.y / (_scale.y ? _scale.y : 1);
+    _pos.x += _origin.x / (_scale.x ? _scale.x : 1);
+    _pos.y += _origin.y / (_scale.y ? _scale.y : 1);
     _origin = origin;
-    _rect.x -= _origin.x * (_scale.x ? _scale.x : 1);
-    _rect.y -= _origin.y * (_scale.y ? _scale.y : 1);
+    _pos.x -= _origin.x * (_scale.x ? _scale.x : 1);
+    _pos.y -= _origin.y * (_scale.y ? _scale.y : 1);
 }
 
 arcade::data::Vector2f SpriteSDL2::getOrigin()
@@ -98,16 +103,16 @@ arcade::data::FloatRect SpriteSDL2::getLocalBounds()
 
 arcade::data::FloatRect SpriteSDL2::getGlobalBounds()
 {
-    return arcade::data::IntRect{_rect.y + _origin.y, _rect.x + _origin.x, _rect.w, _rect.h};
+    return arcade::data::FloatRect{_pos.y + _origin.y, _pos.x + _origin.x, _displayRect.x, _displayRect.y};
 }
 
 void SpriteSDL2::setScale(arcade::data::Vector2f scale)
 {
-    _rect.w /= _scale.x ? _scale.x : 1;
-    _rect.h /= _scale.y ? _scale.y : 1;
+    _displayRect.x /= _scale.x ? _scale.x : 1;
+    _displayRect.y /= _scale.y ? _scale.y : 1;
     _scale = scale;
-    _rect.w *= _scale.x;
-    _rect.h *= _scale.y;
+    _displayRect.x *= _scale.x;
+    _displayRect.y *= _scale.y;
 }
 
 arcade::data::Vector2f SpriteSDL2::getScale()

@@ -6,7 +6,7 @@
 */
 
 #ifndef ARCADE_HPP_
-#define ARCADvoidE_HPP_
+#define ARCADE_HPP_
 
 #include <iostream>
 

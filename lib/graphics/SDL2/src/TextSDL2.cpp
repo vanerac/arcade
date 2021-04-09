@@ -6,6 +6,7 @@
 */
 
 #include "LibSDL2.hpp"
+#include "Errors.hpp"
 
 TextSDL2::TextSDL2()
 {
@@ -22,7 +23,9 @@ TextSDL2::~TextSDL2()
 
 void TextSDL2::draw()
 {
-    SDL_RenderCopy(LibSDL2::renderer.get(), _text.get(), nullptr, &_rect);
+    if (_text && SDL_RenderCopy(LibSDL2::renderer.get(), _text.get(), nullptr, &_rect) < 0) {
+        throw arcade::errors::Error(std::string{"Unexpected error while drawing a text: "} + SDL_GetError());
+    }
 }
 
 void TextSDL2::setText(const std::string &text)
@@ -31,8 +34,11 @@ void TextSDL2::setText(const std::string &text)
     if (_font) {
         SDL_Color color = {.r = _color.r, .g = _color.g, .b = _color.b, .a = _color.a};
         SurfacePtr surface = make_surface(TTF_RenderText_Solid(_font.get(), text.c_str(), color));
-        _text = make_texture(SDL_CreateTextureFromSurface(LibSDL2::renderer.get(), surface.get()));
-        SDL_QueryTexture(_text.get(), NULL, NULL, &_rect.w, &_rect.h);
+        if (!surface
+        || !(_text = make_texture(SDL_CreateTextureFromSurface(LibSDL2::renderer.get(), surface.get())))
+        || SDL_QueryTexture(_text.get(), NULL, NULL, &_rect.w, &_rect.h) < 0) {
+            throw arcade::errors::Error("The text could not been set properly ('" + text.substr(0, 10) + (text.size() > 10 ? "[...]" : "") + "'): " + SDL_GetError());
+        }
     }
 }
 
@@ -55,10 +61,10 @@ arcade::data::Vector2f TextSDL2::getPosition() const
 void TextSDL2::setFont(const std::string &fontPath)
 {
     _fontPath = fontPath;
-    _font = make_font(TTF_OpenFont(fontPath.c_str(), characterSize));
-    if (_font) {
-        setText(_string);
+    if (!(_font = make_font(TTF_OpenFont(fontPath.c_str(), characterSize)))) {
+        throw arcade::errors::Error("Failed to load font '" + fontPath + "': " + SDL_GetError());
     }
+    setText(_string);
 }
 
 void TextSDL2::setColor(arcade::data::Color color)
@@ -75,7 +81,9 @@ arcade::data::Color TextSDL2::getColor() const
 void TextSDL2::setCharacterSize(unsigned int size)
 {
     characterSize = size;
-    setFont(_fontPath);
+    if (_fontPath.size()) {
+        setFont(_fontPath);
+    }
 }
 
 arcade::data::FloatRect TextSDL2::getLocalBounds()

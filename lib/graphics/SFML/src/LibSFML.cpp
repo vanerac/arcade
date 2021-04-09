@@ -8,6 +8,7 @@
 #include <iostream>
 #include <unordered_map>
 #include "LibSFML.hpp"
+#include "Errors.hpp"
 
 LibSFML::LibSFML()
 {
@@ -31,6 +32,9 @@ void LibSFML::init(const std::string &winName, unsigned int framesLimit)
 {
     std::cout << "Init" << std::endl;
     _window.create(sf::VideoMode(1920, 1080), winName, sf::Style::Fullscreen);
+    if (_window.isOpen() == false) {
+        throw arcade::errors::Error("The SFML graphic lib could not been initialize properly.");
+    }
     _window.setFramerateLimit(framesLimit);
     restartClock();
 }

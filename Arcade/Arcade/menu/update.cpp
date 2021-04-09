@@ -74,7 +74,7 @@ void arcade::Arcade::menuHandleEvents()
         (  (event.key >= 'a' && event.key <= 'z')
         || (event.key >= 'A' && event.key <= 'Z')
         || (event.key >= '0' && event.key <= '9')
-        || (event.key == '-' || event.key == '_' || event.keyCode == arcade::data::KeyCode::BACKSPACE))) {
+        || (event.key == '_' || event.keyCode == arcade::data::KeyCode::BACKSPACE))) {
             auto str = _menuPlayerNameText->getText();
             auto it = str.find('_');
             if (event.key == '\a') {

@@ -26,8 +26,6 @@ typedef std::unique_ptr<SDL_Texture, std::function<void(SDL_Texture*)>> TextureP
 #define make_texture(__value)               (TexturePtr{__value, SDL_DestroyTexture})
 typedef std::unique_ptr<SDL_Renderer, std::function<void(SDL_Renderer*)>> RendererPtr;
 #define make_renderer(__value)              (RendererPtr{__value, SDL_DestroyRenderer})
-// typedef std::shared_ptr<SDL_Renderer> RendererShrdPtr;
-// #define make_renderershrd(__value)          (RendererShrdPtr{__value, SDL_DestroyRenderer})
 
 class TextSDL2 : public arcade::displayer::IText {
     public:
@@ -97,9 +95,10 @@ class SpriteSDL2 : public arcade::displayer::ISprite {
         TexturePtr _sprite;
         arcade::data::Vector2f _originalSize;
         arcade::data::Vector2f _scale;
-        arcade::data::Vector2i _origin;
+        arcade::data::Vector2f _origin;
         arcade::data::FloatRect _texture;
-        SDL_Rect _rect;
+        arcade::data::Vector2f _pos;
+        arcade::data::Vector2f _displayRect;
 };
 
 class LibSDL2 : public arcade::displayer::IDisplay {
