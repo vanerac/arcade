@@ -10,7 +10,9 @@
 
 Centipede::Centipede()
 {
-    _displayer->log() << "CONSTRUCTOR IN" << std::endl;
+//    _displayer->log() << "CONSTRUCTOR IN" << std::endl;
+
+std::cout << "Constructor in" << std::endl;
 
     player = new Entity(1);
     this->current_level = 1;
@@ -22,8 +24,9 @@ Centipede::Centipede()
      * */
     player->setPosition(50, 50);
     newLevel();
+    std::cout << "Constructor out" << std::endl;
 
-    _displayer->log() << "CONSTRUCTOR OUT" << std::endl;
+//    _displayer->log() << "CONSTRUCTOR OUT" << std::endl;
 }
 
 Centipede::~Centipede()
@@ -33,8 +36,9 @@ Centipede::~Centipede()
 void Centipede::init(
     std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
-    _displayer->log() << "INIT IN" << std::endl;
     _displayer = disp;
+    std::cout << "init in" << std::endl;
+    _displayer->log() << "INIT IN" << std::endl;
     spriteManager = new SpriteManager(disp, current_level);
 
     player->setSprite(spriteManager->getPlayer());
