@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <thread>
 #include "LibNCRS.hpp"
+#include "Errors.hpp"
 
 LibNCRS::LibNCRS()
 {
@@ -24,11 +25,6 @@ LibNCRS::~LibNCRS()
     }
 }
 
-// std::ofstream &LibNCRS::log()
-// {
-//     return stream;
-// }
-
 int LibNCRS::availableOptions() const
 {
     return NO_OPTIONS;
@@ -38,29 +34,26 @@ void LibNCRS::init(const std::string &winName, unsigned int framesLimit)
 {
     std::cout << "Init" << std::endl;
     (void)winName;
-    _windowIsOpen = true;
     _frameLimit = framesLimit;
     initscr();
-    noecho();
-    curs_set(FALSE);
-    keypad(stdscr, TRUE);
+    if (noecho() == ERR || curs_set(FALSE) == ERR || keypad(stdscr, TRUE) == ERR || refresh() == ERR) {
+        throw arcade::errors::Error("The ncurses lib could not been set properly.");
+    }
     mousemask(ALL_MOUSE_EVENTS, NULL);
-    timeout(0);
     start_color();
-    refresh();
+    timeout(0);
     restartClock();
 }
 
 void LibNCRS::stop()
 {
     endwin();
-    _windowIsOpen = false;
     std::cout << "Stop" << std::endl;
 }
 
 bool LibNCRS::isOpen()
 {
-    return _windowIsOpen;
+    return isendwin();
 }
 
 void LibNCRS::clearWindow()
@@ -118,9 +111,7 @@ std::vector<arcade::data::Event> LibNCRS::getEvents()
     if (c == KEY_MOUSE) {
         MEVENT event;
         if (getmouse(&event) == OK) {
-            log() << "Using Mouse: " << event.bstate << ", id:" << event.id << ", x:" << event.x << ", y:" << event.y << std::endl;
             if (event.bstate == REPORT_MOUSE_POSITION) {
-                mvprintw(0, 0, "So yes there is a mov");
                 _events.emplace_back(arcade::data::EventType::MOUSE_MOVED, event.x, event.y);
             } else {
                 static const std::array<std::tuple<arcade::data::MouseBtn, uint64_t>, 4> ncrsBtsNb = {

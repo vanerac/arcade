@@ -60,7 +60,9 @@ bool Entity::does_collide(Entity *target)
     auto &thisSprite = this->getSprite();
     auto &targetSprite = target->getSprite();
 
-    if (!(thisSprite) || !(targetSprite))
+    if (!(targetSprite))
+        return false;
+    if (!(thisSprite))
         return false;
 
     return

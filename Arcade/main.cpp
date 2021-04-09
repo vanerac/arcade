@@ -10,7 +10,7 @@
 #include <cstring>
 #include "Arcade.hpp"
 #include "Tools.hpp"
-#include "Errors.hpp"
+#include "ArcErrors.hpp"
 
 static void print_help()
 {
@@ -25,11 +25,11 @@ static void setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
     arcade.setLibsList("./lib");
 
     if (!arcade.getGalibsPath().size()) {
-        throw Errors::LibError("No games were found in the './lib' folder.");
+        throw arcade::errors::LibError("No games were found in the './lib' folder.");
     }
     auto &grlibs = arcade.getGrlibsPath();
     if (!grlibs.size()) {
-        throw Errors::LibError("No graphical lib were found in the './lib' folder.");
+        throw arcade::errors::LibError("No graphical lib were found in the './lib' folder.");
     }
     unsigned int i = 0;
     for (; i < grlibs.size(); ++i) {
@@ -39,7 +39,7 @@ static void setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
         std::rotate(grlibs.begin(), grlibs.begin() + 1, grlibs.end());
     }
     if (i == grlibs.size()) {
-        throw Errors::LibError("The lib '" + firstGrLib + "' could not been loaded.");
+        throw arcade::errors::LibError("The lib '" + firstGrLib + "' could not been loaded.");
     }
 }
 
@@ -63,12 +63,12 @@ int main(int ac, char **av)
         setArcade(arcade, firstLib);
         status = arcade.run();
     }
-    catch(const Errors::Error& e)
+    catch(const arcade::errors::Error& e)
     {
         std::cerr << e.what() << '\n';
         status = 84;
     }
-    catch(const Errors::LibError& e)
+    catch(const arcade::errors::LibError& e)
     {
         std::cerr << e.what() << '\n';
         std::cerr << '\n' << "You should maybe check the 'lib.conf' file." << '\n';
