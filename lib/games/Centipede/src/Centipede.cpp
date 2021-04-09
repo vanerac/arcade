@@ -10,9 +10,9 @@
 
 Centipede::Centipede()
 {
-//    _displayer->log() << "CONSTRUCTOR IN" << std::endl;
+    //    _displayer->log() << "CONSTRUCTOR IN" << std::endl;
 
-std::cout << "Constructor in" << std::endl;
+    std::cout << "Constructor in" << std::endl;
 
     player = new Entity(1);
     this->current_level = 1;
@@ -26,15 +26,14 @@ std::cout << "Constructor in" << std::endl;
     newLevel();
     std::cout << "Constructor out" << std::endl;
 
-//    _displayer->log() << "CONSTRUCTOR OUT" << std::endl;
+    //    _displayer->log() << "CONSTRUCTOR OUT" << std::endl;
 }
 
 Centipede::~Centipede()
 {
 }
 
-void Centipede::init(
-    std::shared_ptr<arcade::displayer::IDisplay> &disp)
+void Centipede::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     _displayer = disp;
     std::cout << "init in" << std::endl;
@@ -105,8 +104,11 @@ void Centipede::update()
         // Move & check collision with obstacles & centipedes
         shot->move();
         for (auto centipede : _centipedes) {
+            if (!centipede)
+                continue;
             if (centipede->getTiles().empty()) {
                 delete centipede;
+                centipede = nullptr;
                 continue;
             }
             int index = -1;
@@ -122,10 +124,12 @@ void Centipede::update()
                     this->_centipedes.push_back(centipede->splitAt(index));
                     // todo explosion animation ?
                     delete shot;
+                    shot = nullptr;
                     continue;
                 } else if (arcade::isOverlap(mapLimit,
                     shot->getSprite()->getGlobalBounds())) {
                     delete shot;
+                    shot = nullptr;
                     continue;
                 }
             }
@@ -139,13 +143,17 @@ void Centipede::update()
                 spriteManager->getObstacle(obstacle->getHealth()));
             if (obstacle->getHealth() == 0) {
                 delete obstacle;
+                obstacle = nullptr;
             }
         }
     }
     _displayer->log() << "UPDATE MOVE CENTIPEDE" << std::endl;
     for (auto centipede : _centipedes) {
+        if (!centipede)
+            continue;
         if (centipede->getTiles().empty()) {
             delete centipede;
+            centipede = nullptr;
             continue;
         }
         for (auto body : centipede->getTiles()) {
