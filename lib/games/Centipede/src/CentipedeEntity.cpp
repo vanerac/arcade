@@ -17,7 +17,7 @@ CentipedeEntity::CentipedeEntity(int size) : Entity(1)
     }
     this->pos.x = 1;
     this->pos.y = 1;
-    orientation = RIGHT;
+    _orientation = RIGHT;
 }
 
 CentipedeEntity::~CentipedeEntity()
@@ -38,7 +38,7 @@ CentipedeEntity *CentipedeEntity::splitAt(int tileIndex)
     ret->setTiles(split_lo);
     ret->setPosition(v->getPosition().x, v->getPosition().y);
     // TODO did it shrink ?
-    ret->setOrientation(orientation == RIGHT ? LEFT : RIGHT);
+    ret->setOrientation(_orientation == RIGHT ? LEFT : RIGHT);
     return ret;
 }
 

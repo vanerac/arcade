@@ -13,8 +13,6 @@ SpriteManager::SpriteManager(
 {
     this->_level = level;
     displayer = disp;
-
-    // todo load file
 }
 
 SpriteManager::~SpriteManager()

@@ -32,15 +32,15 @@ class Entity {
         void setOrientation(enum orientation orientation);
 
         virtual void move();
-        void setVelocity(float velocity); // todo
-        float getVelocity() const; // todo
+        void setVelocity(float velocity);
+        float getVelocity() const;
 
         struct Position pos; // todo change this
 
     protected:
         int health;
         std::unique_ptr<arcade::displayer::ISprite> sprite;
-        enum orientation orientation;
+        enum orientation _orientation = STATIC;
         float velocity;
 
 };

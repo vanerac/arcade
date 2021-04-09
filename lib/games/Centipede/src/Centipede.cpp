@@ -19,6 +19,7 @@ Centipede::Centipede()
      *  - centipede
      *  - Player
      * */
+    newLevel();
 
 }
 
@@ -162,6 +163,7 @@ void Centipede::update()
     if (_centipedes.empty())
         this->newLevel();
 
+    draw();
     _displayer->log() << "Update Game1" << std::endl;
 }
 

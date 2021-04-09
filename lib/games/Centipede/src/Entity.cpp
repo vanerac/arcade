@@ -11,7 +11,7 @@ Entity::Entity(int health)
 {
     this->health = health;
     this->setPosition(0, 0);
-    this->orientation = STATIC;
+    this->_orientation = STATIC;
 }
 
 Entity::~Entity()
@@ -61,23 +61,39 @@ bool Entity::does_collide(Entity *target)
         target->getSprite()->getGlobalBounds());
 }
 
-
 void Entity::move()
 {
     // todo update position
     // todo update sprite position
+    switch (_orientation) {
+    case UP:
+        break;
+    case RIGHT:
+        break;
+    case RIGHT_DOWN:
+        break;
+    case LEFT:
+        break;
+    case LEFT_DOWN:
+        break;
+    case DOWN:
+        break;
+    case STATIC:
+        break;
+    }
 
-    // todo move depending on orientation
+    // todo move depending on _orientation
+    // todo prevent moving beyond window ?
 }
 
 orientation Entity::getOrientation() const
 {
-    return this->orientation;
+    return this->_orientation;
 }
 
 void Entity::setOrientation(enum orientation newOrientation)
 {
-    this->orientation = newOrientation;
+    this->_orientation = newOrientation;
 }
 
 void Entity::setVelocity(float velocity)
