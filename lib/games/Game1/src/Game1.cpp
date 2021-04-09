@@ -50,14 +50,16 @@ Game1::~Game1()
 
 void Game1::createBlock(arcade::data::Vector2f pos, bool isApple)
 {
-    std::string blockPath{"ressources/block.bmp"};
+    std::string blockPath;
     std::vector<std::string> blockAscii;
 
     if (isApple == true){
+        blockPath = {"ressources/picture.bmp"};
         blockAscii = {"oo", "oo"};
         _apple = _displayer->createSprite(blockPath, blockAscii, {0.08f, 0.08});
         _apple->setPosition(pos);
     } else {
+        blockPath = {"ressources/block.bmp"};
         blockAscii = {"##", "##"};
         _blocks.push_back(_displayer->createSprite(blockPath, blockAscii, {0.08f, 0.08}));
         auto &b = _blocks[_blocks.size() - 1];
@@ -116,8 +118,8 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     snake.clear();
 
     createBlock({0, 0}, false);
-    _unit.x = _blocks[0]->getGlobalBounds().width;
-    _unit.y = _blocks[0]->getGlobalBounds().height;
+    _unit.x = _blocks[0]->getGlobalBounds().width + 0.02f;
+    _unit.y = _blocks[0]->getGlobalBounds().height + 0.02f;
     _player.clear();
     _blocks.clear();
 
@@ -135,7 +137,7 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
         ypos.move(0, _unit.y);
         pos = ypos;
     }
-    arcade::data::Vector2f initPosSnake{winSize.x * 0.40f + _unit.x, winSize.y * 0.89f};
+    arcade::data::Vector2f initPosSnake{initPos.x + _unit.x, initPos.y + ((map.size() - 2) * _unit.y)};
     create_snake(initPosSnake, true);
     //create_snake(initPosSnake, false);
     //create_snake(initPosSnake, false);
@@ -268,19 +270,26 @@ void Game1::update()
     auto pbounds = _player[0]->getGlobalBounds();
     auto abounds = _apple->getGlobalBounds();
 
-    abounds.left += adjustment;
-    abounds.top += adjustment;
-    abounds.width += adjustment * 2;
-    abounds.height += adjustment * 2;
-
-    pbounds.left += adjustment;
-    pbounds.top += adjustment;
+    //abounds.left += adjustment;
+    //abounds.top += adjustment;
+    //abounds.width += adjustment * 2;
+    //abounds.height += adjustment * 2;
+//
+    //pbounds.left += adjustment;
+    //pbounds.top += adjustment;
     pbounds.width -= adjustment * 2;
     pbounds.height -= adjustment * 2;
 
     if (arcade::isOverlap(pbounds, abounds)){
         this->_displayer->log() << "APPLE" << std::endl;
         create_snake({0, 0}, false);
+        int finalPos = 0;
+        for (finalPos = std::rand() % (map.size() * map[0].size());
+                map[finalPos % map.size()][finalPos / map.size()];
+                finalPos = std::rand() % (map.size() * map[0].size()));
+        auto winSize = _displayer->getWindowSize();
+        arcade::data::Vector2f initPos{winSize.x * 0.40f, winSize.y * 0.17f};
+        createBlock(initPos + arcade::data::Vector2f{(finalPos / map.size()) * _unit.x, (finalPos % map.size()) * _unit.y}, true);
     }
     else {
         for (auto &b : _blocks) {
@@ -295,7 +304,8 @@ void Game1::update()
     if (getElapsedTime() > automaticMoveTimer){
         automaticMove();
         this->_displayer->log() << automaticMoveTimer << std::endl;
-        automaticMoveTimer -= 0.01;
+        if (automaticMoveTimer >= 0.3)
+            automaticMoveTimer -= 0.01;
         restartClock();
     }
 
@@ -303,23 +313,14 @@ void Game1::update()
     for (auto &event : events) {
         if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::UP) {
             direction = arcade::data::KeyCode::UP;
-        //    snakeMoveUP();
-        }
         if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::LEFT) {
             direction = arcade::data::KeyCode::LEFT;
-        //    snakeMoveLEFT();
-        }
         if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::RIGHT) {
             direction = arcade::data::KeyCode::RIGHT;
-        //    snakeMoveRIGHT();
-        }
         if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::DOWN) {
             direction = arcade::data::KeyCode::DOWN;
-        //    snakeMoveDOWN();
-        }
     }
     this->_displayer->draw(_logo);
-    //this->_displayer->log() << "Update Game1" << std::endl;
     for (auto &b : _blocks) {
         _displayer->draw(b);
     }
