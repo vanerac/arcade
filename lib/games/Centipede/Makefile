@@ -9,7 +9,7 @@ override SRC		=	entry_point.cpp		\
 						src/Centipede.cpp		\
 						src/CentipedeEntity.cpp		\
 						src/Entity.cpp			\
-						src/SpriteManager;cpp
+						src/SpriteManager.cpp
 
 SHARED_DIR			= ../../../shared
 

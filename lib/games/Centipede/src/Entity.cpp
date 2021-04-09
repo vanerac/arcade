@@ -67,16 +67,24 @@ void Entity::move()
     // todo update sprite position
     switch (_orientation) {
     case UP:
+        this->setPosition(getPosition().x, getPosition().y + getVelocity());
         break;
     case RIGHT:
+        this->setPosition(getPosition().x + getVelocity(), getPosition().y);
         break;
     case RIGHT_DOWN:
+        this->setPosition(getPosition().x + getVelocity(),
+            getPosition().y - getVelocity());
         break;
     case LEFT:
+        this->setPosition(getPosition().x - getVelocity(), getPosition().y);
         break;
     case LEFT_DOWN:
+        this->setPosition(getPosition().x - getVelocity(),
+            getPosition().y - getVelocity());
         break;
     case DOWN:
+        this->setPosition(getPosition().x, getPosition().y - getVelocity());
         break;
     case STATIC:
         break;
