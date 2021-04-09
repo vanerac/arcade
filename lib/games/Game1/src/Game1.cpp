@@ -311,13 +311,13 @@ void Game1::update()
 
     auto events = _displayer->getEvents();
     for (auto &event : events) {
-        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::UP) {
+        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::UP)
             direction = arcade::data::KeyCode::UP;
-        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::LEFT) {
+        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::LEFT)
             direction = arcade::data::KeyCode::LEFT;
-        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::RIGHT) {
+        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::RIGHT)
             direction = arcade::data::KeyCode::RIGHT;
-        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::DOWN) {
+        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::DOWN)
             direction = arcade::data::KeyCode::DOWN;
     }
     this->_displayer->draw(_logo);
