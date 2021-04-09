@@ -107,9 +107,9 @@ namespace arcade
         }
         return false;
     };
-    template<typename T, typename U>
-    constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Rect<U> &b) {
-        if (
+    template<typename T>
+    constexpr bool isOverlap(const arcade::data::Rect<T> &a, const arcade::data::Rect<T> &b) {
+        if ((
         (  (a.left <= b.left && b.left <= (a.left + a.width))
         || (a.left <= (b.left + b.width) && (b.left + b.width) <= (a.left + a.width))
         )
@@ -117,7 +117,17 @@ namespace arcade
         (  (a.top <= b.top && b.top <= (a.top + a.height))
         || (a.top <= (b.top + b.height) && (b.top + b.height) <= (a.top + a.height))
         )
-        ) {
+        )
+        ||
+        (
+        (  (b.left <= a.left && a.left <= (b.left + b.width))
+        || (b.left <= (a.left + a.width) && (a.left + a.width) <= (b.left + b.width))
+        )
+        &&
+        (  (b.top <= a.top && a.top <= (b.top + b.height))
+        || (b.top <= (a.top + a.height) && (a.top + a.height) <= (b.top + b.height))
+        )
+        )) {
             return true;
         }
         return false;
