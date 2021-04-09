@@ -6,7 +6,6 @@
 */
 
 #include "../include/Centipede.hpp"
-#include "../include/Entities.hpp"
 
 CentipedeEntity::CentipedeEntity(int size) : Entity(1)
 {

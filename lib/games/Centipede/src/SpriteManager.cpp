@@ -31,16 +31,16 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getCentipedeHead(
     switch (orientation) {
     case RIGHT:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/head_right.png"), {"X"});
+            std::string("ressources/Centipede/head_right.jpg"), {"X"});
     case RIGHT_DOWN:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/head_right_down.png"), {"X"});
+            std::string("ressources/Centipede/head_right_down.jpg"), {"X"});
     case LEFT:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/head_left.png"), {"X"});
+            std::string("ressources/Centipede/head_right.jpg"), {"X"});
     case LEFT_DOWN:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/head_left_down.png"), {"X"});
+            std::string("ressources/Centipede/head_left_down.jpg"), {"X"});
     default:
         return nullptr;
     }
@@ -53,17 +53,17 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getCentipedeBody(
     switch (orientation) {
     case RIGHT:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/body_right.png"), {"x"});
+            std::string("ressources/Centipede/body_left.jpg"), {"x"});
 
     case RIGHT_DOWN:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/body_down_right.png"), {"x"});
+            std::string("ressources/Centipede/body_down_right.jpg"), {"x"});
     case LEFT:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/body_left.png"), {"x"});
+            std::string("ressources/Centipede/body_left.jpg"), {"x"});
     case LEFT_DOWN:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/body_down_left.png"), {"x"});
+            std::string("ressources/Centipede/body_down_left.jpg"), {"x"});
     default:
         return nullptr;
     }
@@ -77,16 +77,16 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getObstacle(
     switch (health) {
     case 4:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/obstacle_4.png"), {"O"});
+            std::string("ressources/Centipede/obstacle_4.jpg"), {"O"});
     case 3:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/obstacle_3.png"), {"O"});
+            std::string("ressources/Centipede/obstacle_3.jpg"), {"O"});
     case 2:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/obstacle_2.png"), {"O"});
+            std::string("ressources/Centipede/obstacle_2.jpg"), {"O"});
     case 1:
         return this->displayer->createSprite(
-            std::string("ressorces/Centipede/obstacle_1.png"), {"O"});
+            std::string("ressources/Centipede/obstacle_1.jpg"), {"O"});
     default:
         return nullptr;
     }
@@ -97,13 +97,13 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getObstacle(
 std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getPlayer() const
 {
     return this->displayer->createSprite(
-        std::string("ressorces/Centipede/player.png"), {"X"});
+        std::string("ressources/Centipede/player.jpg"), {"X"});
 }
 
 std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getShot() const
 {
     return this->displayer->createSprite(
-        std::string("ressorces/Centipede/shot.png"), {"|"});
+        std::string("ressources/Centipede/shot.jpg"), {"|"});
 }
 
 std::unique_ptr<arcade::displayer::IText> SpriteManager::getText(
@@ -111,7 +111,7 @@ std::unique_ptr<arcade::displayer::IText> SpriteManager::getText(
 ) const
 {
     auto tmp = this->displayer->createText();
-    tmp->setFont("ressources/8-BIT WONDER.TTF");
+    tmp->setFont("ressources/Centipede/8-BIT WONDER.TTF");
     // todo set color
     // todo set Char size
     tmp->setText(text);

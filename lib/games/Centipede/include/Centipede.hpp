@@ -39,7 +39,7 @@ class Centipede : public arcade::games::IGame {
 
     void shoot();
     void handleMovement(
-        std::vector<arcade::data::Event, std::allocator<arcade::data::Event>> eventType
+        std::vector<arcade::data::Event, std::allocator<arcade::data::Event>> events
     );
     void newLevel();
 };
