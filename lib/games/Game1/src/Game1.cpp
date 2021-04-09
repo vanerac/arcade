@@ -74,7 +74,7 @@ void Game1::create_snake(arcade::data::Vector2f pos, bool isFirstCell)
     //if (isFirstCell == true)
     //   snake_path = {"ressources/green_round_new.png"};
     //else 
-        snake_path = {"ressources/red_round.png"};
+        snake_path = {"ressources/red_round.bmp"};
 
     std::vector<std::string> snake_ascii = {"xx", "xx"};
     getPosSnake();
@@ -104,12 +104,17 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     this->_displayer = disp;
 
-    //this->_tmp = _displayer->createText("Hello World");
-    //this->_tmp->setCharacterSize(20);
-    //this->_tmp->setFont("ressources/font.ttf");
-    this->_logo = _displayer->createSprite("./ressources/nibbler_logo.png", _map_logo, {0.4, 0.4});
+    winSize = _displayer->getWindowSize();
+    score = _displayer->createText("YOUR SCORE IS : ");
+    score->setPosition({winSize.x / 20.0f, winSize.y / 2.0f});
+    score->setCharacterSize(40);
+    score->setFont("ressources/font.ttf");
+    intScore = _displayer->createText(std::to_string(totScore));
+    intScore->setPosition({winSize.x / 3.5f, winSize.y / 2.0f});
+    intScore->setCharacterSize(40);
+    intScore->setFont("ressources/font.ttf");
+    this->_logo = _displayer->createSprite("./ressources/nibbler_logo.bmp", _map_logo, {0.4, 0.4});
 
-    auto winSize = _displayer->getWindowSize();
     _logo->setPosition({winSize.x * 0.50f, winSize.y * 0.02f});
     _logo->setOrigin({_logo->getLocalBounds().width / 2, 0});
     this->_displayer->log() << "Init Game1" << std::endl;
@@ -139,9 +144,6 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     }
     arcade::data::Vector2f initPosSnake{initPos.x + _unit.x, initPos.y + ((map.size() - 2) * _unit.y)};
     create_snake(initPosSnake, true);
-    //create_snake(initPosSnake, false);
-    //create_snake(initPosSnake, false);
-    //create_snake(initPosSnake, false);
     int finalPos = 0;
     for (finalPos = std::rand() % (map.size() * map[0].size());
             map[finalPos % map.size()][finalPos / map.size()];
@@ -245,43 +247,24 @@ void Game1::automaticMove()
         snakeMoveDOWN();
 }
 
-void Game1::update()
+GameStatus Game1::update()
 {
-    //this->_displayer->draw(_tmp);
-    // gerer les inputs
-    // move player
-    // Detecter collision
-    //auto playerbounds = _player[0]->getGlobalBounds();
-    //auto it = std::find_if(_blocks.begin(), _blocks.end(),
-    //                [&playerbounds](auto &block) {
-    //                    return arcade::isOverlap(block->getGlobalBounds(), playerbounds);
-    //                });
-    //// _player->move(_unit.x, 0);
-    //if (it != _blocks.end()) {
-    //    std::cout << "collision" << std::endl;
-    //    // There is collision so lost
-    //} else if (arcade::isOverlap(playerbounds, _apple->getGlobalBounds())) {
-    //    std::cout << "apple" << std::endl;
-    //    // You won a point
-    //}
     getPosSnake();
 
     float adjustment = 0.01;
     auto pbounds = _player[0]->getGlobalBounds();
     auto abounds = _apple->getGlobalBounds();
 
-    //abounds.left += adjustment;
-    //abounds.top += adjustment;
-    //abounds.width += adjustment * 2;
-    //abounds.height += adjustment * 2;
-//
-    //pbounds.left += adjustment;
-    //pbounds.top += adjustment;
     pbounds.width -= adjustment * 2;
     pbounds.height -= adjustment * 2;
 
     if (arcade::isOverlap(pbounds, abounds)){
-        this->_displayer->log() << "APPLE" << std::endl;
+        totScore += 1;
+        // this->_displayer->log() << "APPLE" << std::endl;
+        intScore = _displayer->createText(std::to_string(totScore));
+        intScore->setPosition({winSize.x / 3.5f, winSize.y / 2.0f});
+        intScore->setCharacterSize(40);
+        intScore->setFont("ressources/font.ttf");
         create_snake({0, 0}, false);
         int finalPos = 0;
         for (finalPos = std::rand() % (map.size() * map[0].size());
@@ -295,9 +278,8 @@ void Game1::update()
         for (auto &b : _blocks) {
             //_displayer->log() << " Block: pos[" << b->getGlobalBounds().left << ", " << b->getGlobalBounds().top << "] - size[" << b->getGlobalBounds().width << ", " << b->getGlobalBounds().height << "]" << std::endl;
             //_displayer->log() << "Player: pos[" << pbounds.left << ", " << pbounds.top << "] - size[" << pbounds.width << ", " << pbounds.height << "]" << std::endl;
-            if (arcade::isOverlap(b->getGlobalBounds(), pbounds)){
-                this->_displayer->log() << "HITED" << std::endl;
-            }
+            if (arcade::isOverlap(b->getGlobalBounds(), pbounds))
+                return(GameStatus::GAME_ENDED);
         }
     }
 
@@ -326,6 +308,8 @@ void Game1::update()
     }
 
     _displayer->draw(_apple);
+    _displayer->draw(score);
+    _displayer->draw(intScore);
     //arcade::data::Vector2f initPosSnake{_displayer->getWindowSize().x * 0.40f + _unit.x, _displayer->getWindowSize().y * 0.89f};
     //initPosSnake.x += _unit.x;
     //create_snake(initPosSnake);
@@ -333,6 +317,8 @@ void Game1::update()
     for (auto &b : _player) {
         _displayer->draw(b);
     }
+
+    return(GameStatus::PLAYING);
 }
 
 void Game1::stop()

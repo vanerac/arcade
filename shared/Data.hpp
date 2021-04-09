@@ -22,7 +22,7 @@ namespace arcade
             MOUSE_PRESSED,
             MOUSE_RELEASED,
         };
-        enum KeyCode
+        enum        KeyCode
         {
             ENTER               = 10,
             ESCAPE              = 27,

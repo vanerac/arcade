@@ -18,7 +18,8 @@ class Game1 : public arcade::games::IGame {
 
         void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) override; // maybe call it reloadDisplayer and create a second func initGame which just set pos lives and etc
         // void restart() override;
-        void update() override; // return enum game state
+        GameStatus update() override; // return enum game state
+        //GameStatus update() override; // return enum game state
         void stop() override;
         // int getScore() override; for the arcade to store the score if it is a high score
         void create_snake(arcade::data::Vector2f pos, bool isFirstCell);
@@ -35,7 +36,8 @@ class Game1 : public arcade::games::IGame {
     protected:
     private:
         std::shared_ptr<arcade::displayer::IDisplay> _displayer;
-        std::unique_ptr<arcade::displayer::IText> _tmp;
+        std::unique_ptr<arcade::displayer::IText> score;
+        std::unique_ptr<arcade::displayer::IText> intScore;
         std::vector<std::string> _map_logo;
         std::vector<arcade::data::Vector2f> posSnake;
         std::vector<std::vector<int>> map;
@@ -50,6 +52,8 @@ class Game1 : public arcade::games::IGame {
         arcade::data::KeyCode direction;
         std::chrono::time_point<std::chrono::high_resolution_clock> _clock = std::chrono::high_resolution_clock::now();
         double automaticMoveTimer = 0.8;
+        arcade::data::Vector2u winSize;
+        int totScore = 0;
 };
 
 #endif /* !GAME1_HPP_ */

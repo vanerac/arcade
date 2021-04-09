@@ -10,16 +10,19 @@
 
 #include "Displayer.hpp"
 
+enum GameStatus {
+    PLAYING,
+    GAME_ENDED,
+};
 namespace arcade
-{
-    namespace games
+{    namespace games
     {
         #define GAMES_ENTRY_POINT       entry_point
 
         class IGame {
             public:
                 virtual void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) = 0;
-                virtual void update() = 0;
+                virtual GameStatus update() = 0;
                 virtual void stop() = 0;
 
         };
