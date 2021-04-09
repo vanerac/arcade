@@ -100,13 +100,14 @@ void Centipede::update()
             for (auto body : centipede->getTiles()) {
                 ++index; // todo too dirty
                 if (shot->does_collide(body)) {
-                    auto tmp = new Entity(3);
+                    auto tmp = new Entity(4);
                     tmp->setPosition(body->getPosition().x,
                         body->getPosition().y);
                     tmp->setSprite(
                         spriteManager->getObstacle(tmp->getHealth()));
                     this->_obstacles.push_back(tmp);
                     this->_centipedes.push_back(centipede->splitAt(index));
+                    // todo explosion animation ?
                     delete shot;
                     continue;
                 } else if (arcade::isOverlap(mapLimit,

@@ -42,6 +42,7 @@ class SpriteManager  {
     private:
     int _level;
     std::shared_ptr<arcade::displayer::IDisplay> displayer;
+    std::unique_ptr<arcade::displayer::ISprite> _spriteSheet;
 
 };
 
