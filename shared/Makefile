@@ -6,6 +6,7 @@
 ##
 
 override SRC		=	src/Data.cpp				\
+						src/Error.cpp				\
 
 override CPPFLAGS	+=	-I.
 

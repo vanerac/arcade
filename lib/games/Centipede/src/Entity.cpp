@@ -57,8 +57,19 @@ void Entity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 
 bool Entity::does_collide(Entity *target)
 {
-    return arcade::isOverlap(this->getSprite()->getGlobalBounds(),
-        target->getSprite()->getGlobalBounds());
+    auto &thisSprite = this->getSprite();
+    auto &targetSprite = target->getSprite();
+
+    if (!(targetSprite))
+        return false;
+    if (!(thisSprite))
+        return false;
+
+    return
+    arcade::isOverlap(
+        (thisSprite)->getGlobalBounds(),
+        (targetSprite)->getGlobalBounds()
+        );
 }
 
 void Entity::move()
@@ -89,6 +100,8 @@ void Entity::move()
     case STATIC:
         break;
     }
+
+    this->getSprite()->setPosition((getPosition().x, getPosition().y));
 
     // todo move depending on _orientation
     // todo prevent moving beyond window ?

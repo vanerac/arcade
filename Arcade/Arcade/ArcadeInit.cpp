@@ -9,7 +9,7 @@
 #include <regex>
 #include "Arcade.hpp"
 #include "Tools.hpp"
-#include "Errors.hpp"
+#include "ArcErrors.hpp"
 
 void arcade::Arcade::printLibconfHelp(bool onCerr)
 {
@@ -30,7 +30,7 @@ void arcade::Arcade::setValidLibs()
 {
     std::ifstream stream{"./lib.conf"};
     if (!stream) {
-        throw Errors::LibError("Could not read the file 'lib.conf'.");
+        throw arcade::errors::LibError("Could not read the file 'lib.conf'.");
     }
     std::regex findSection{"(?:\n|^)([\\w]+):[ \t]*(?:#|\n|$)"};
     std::regex nullLineFinder("(?:\n|^)[ \t]*(?:#|\n|$)");
@@ -44,7 +44,7 @@ void arcade::Arcade::setValidLibs()
             auto setcion = match[1].str();
             int tmpstatus = setcion == "graphics" ? 1 : (setcion == "games" ? 4 : -1);
             if (tmpstatus == -1) {
-                throw Errors::LibError("Unknown section '" + setcion + "'.", "lib.conf");
+                throw arcade::errors::LibError("Unknown section '" + setcion + "'.", "lib.conf");
             }
             save |= tmpstatus;
             status = tmpstatus;
@@ -56,13 +56,13 @@ void arcade::Arcade::setValidLibs()
             } else if (status & 4) {
                 _galibValid.emplace_back(match[1].str());
             } else {
-                throw Errors::LibError("Unexpected error while parsing.", "lib.conf");
+                throw arcade::errors::LibError("Unexpected error while parsing.", "lib.conf");
             }
         } else {
             if (status == 0) {
-                throw Errors::LibError("No section were set before: '" + line + "'.", "lib.conf");
+                throw arcade::errors::LibError("No section were set before: '" + line + "'.", "lib.conf");
             } else {
-                throw Errors::LibError("Invalid line '" + line + "'.", "lib.conf");
+                throw arcade::errors::LibError("Invalid line '" + line + "'.", "lib.conf");
             }
         }
     }
@@ -71,7 +71,7 @@ void arcade::Arcade::setValidLibs()
         which += (save & 1 && _grlibValid.size()) ? "" : "'graphics'";
         which += (save & 4 && _galibValid.size()) ? "" : (save & 1 && _grlibValid.size() ? "" : " and ");
         which += (save & 4 && _galibValid.size()) ? "" : "'games'";
-        throw Errors::LibError("No valid " + which + " were set.", "lib.conf");
+        throw arcade::errors::LibError("No valid " + which + " were set.", "lib.conf");
     }
 }
 
@@ -182,7 +182,7 @@ void arcade::Arcade::fetchHighScores()
 void arcade::Arcade::setGrLib(int move)
 {
     if (!_grlibsPath.size()) {
-        throw Errors::LibError("No libs set.");
+        throw arcade::errors::LibError("No libs set.");
     }
     if (_grlibsPath.size() > 1 && move) {
         if (move > 0) {
@@ -196,19 +196,19 @@ void arcade::Arcade::setGrLib(int move)
         _displayer->stop();
     }
     if (!_grLoader.load(path)) {
-        throw Errors::Error(_grLoader.getErrorMsg());
+        throw arcade::errors::Error(_grLoader.getErrorMsg());
     }
     #define str(s)  #s
     #define xstr(s) str(s)
     auto entry = _grLoader.getFunc<std::unique_ptr<arcade::displayer::IDisplay> (*)()>(xstr(DISPLAYER_ENTRY_POINT));
     if (!entry) {
-        throw Errors::Error("No entry point were found for the lib '" + path + "' (searching: '" + xstr(DISPLAYER_ENTRY_POINT) + "'.");
+        throw arcade::errors::Error("No entry point were found for the lib '" + path + "' (searching: '" + xstr(DISPLAYER_ENTRY_POINT) + "'.");
     }
     #undef  str
     #undef  xstr
     _displayer = entry();
     if (!_displayer) {
-        throw Errors::Error("The entry point returned a null pointer ('" + path + "').");
+        throw arcade::errors::Error("The entry point returned a null pointer ('" + path + "').");
     }
     _displayer->init("Arcade", 60);
     menuLoadDisplayer();
@@ -220,10 +220,10 @@ void arcade::Arcade::setGrLib(int move)
 void arcade::Arcade::setGaLib(int move)
 {
     if (!_galibsPath.size()) {
-        throw Errors::LibError("No libs set.");
+        throw arcade::errors::LibError("No libs set.");
     }
     if (!_displayer) {
-        throw Errors::LibError("No graphic libs set.");
+        throw arcade::errors::LibError("No graphic libs set.");
     }
     _gameLoaded += move;
     _gameLoaded %= _galibsPath.size();
@@ -233,19 +233,19 @@ void arcade::Arcade::setGaLib(int move)
         _game->stop();
     }
     if (!_gaLoader.load(path)) {
-        throw Errors::Error(_gaLoader.getErrorMsg());
+        throw arcade::errors::Error(_gaLoader.getErrorMsg());
     }
     #define str(s)  #s
     #define xstr(s) str(s)
     auto entry = _gaLoader.getFunc<std::unique_ptr<arcade::games::IGame> (*)()>(xstr(GAMES_ENTRY_POINT));
     if (!entry) {
-        throw Errors::Error("No entry point were found for the lib '" + path + "' (searching: '" + xstr(GAMES_ENTRY_POINT) + "'.");
+        throw arcade::errors::Error("No entry point were found for the lib '" + path + "' (searching: '" + xstr(GAMES_ENTRY_POINT) + "'.");
     }
     #undef  str
     #undef  xstr
     _game = entry();
     if (!_game) {
-        throw Errors::Error("The entry point returned a null pointer ('" + path + "').");
+        throw arcade::errors::Error("The entry point returned a null pointer ('" + path + "').");
     }
     _game->init(_displayer);
 }

@@ -17,6 +17,7 @@ CentipedeEntity::CentipedeEntity(int size) : Entity(1)
     this->pos.x = 1;
     this->pos.y = 1;
     _orientation = RIGHT;
+    this->velocity = 1;
 }
 
 CentipedeEntity::~CentipedeEntity()
@@ -68,6 +69,10 @@ void CentipedeEntity::move()
         tile->move();
         previous = buffer;
         prevOrientation = bufferOrientation;
+        if (bufferOrientation == RIGHT_DOWN)
+            tile->setOrientation(RIGHT);
+        else if (bufferOrientation == LEFT_DOWN)
+            tile->setOrientation(LEFT);
     }
 }
 

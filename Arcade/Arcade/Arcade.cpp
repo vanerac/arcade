@@ -6,7 +6,7 @@
 */
 
 #include "Arcade.hpp"
-#include "Errors.hpp"
+#include "ArcErrors.hpp"
 
 arcade::Arcade::Arcade()
 {
@@ -29,7 +29,7 @@ std::vector<std::string> &arcade::Arcade::getGalibsPath()
 int arcade::Arcade::run()
 {
     if (!_grlibsPath.size() || !_galibsPath.size()) {
-        throw Errors::LibError("Not enought libs.");
+        throw arcade::errors::LibError("Not enought libs.");
     }
     setGrLib(0);
     menuInitElems();

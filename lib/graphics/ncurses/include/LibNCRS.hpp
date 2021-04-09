@@ -10,7 +10,6 @@
 
 #include <fstream>
 
-// #include <png.h>
 #include <ncurses.h>
 #include <chrono>
 #include <tuple>
@@ -116,7 +115,6 @@ class LibNCRS : public arcade::displayer::IDisplay {
 
     protected:
     private:
-        bool _windowIsOpen = false;
         bool _eventFetched = false;
         std::vector<arcade::data::Event> _events;
         std::ofstream stream;

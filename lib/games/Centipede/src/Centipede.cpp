@@ -10,7 +10,9 @@
 
 Centipede::Centipede()
 {
-    _displayer->log() << "CONSTRUCTOR IN" << std::endl;
+    //    _displayer->log() << "CONSTRUCTOR IN" << std::endl;
+
+    std::cout << "Constructor in" << std::endl;
 
     player = new Entity(1);
     this->current_level = 1;
@@ -22,19 +24,20 @@ Centipede::Centipede()
      * */
     player->setPosition(50, 50);
     newLevel();
+    std::cout << "Constructor out" << std::endl;
 
-    _displayer->log() << "CONSTRUCTOR OUT" << std::endl;
+    //    _displayer->log() << "CONSTRUCTOR OUT" << std::endl;
 }
 
 Centipede::~Centipede()
 {
 }
 
-void Centipede::init(
-    std::shared_ptr<arcade::displayer::IDisplay> &disp)
+void Centipede::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
-    _displayer->log() << "INIT IN" << std::endl;
     _displayer = disp;
+    std::cout << "init in" << std::endl;
+    _displayer->log() << "INIT IN" << std::endl;
     spriteManager = new SpriteManager(disp, current_level);
 
     player->setSprite(spriteManager->getPlayer());
@@ -95,20 +98,23 @@ void Centipede::update()
         this->_displayer->getWindowSize().x,
         this->_displayer->getWindowSize().y);
 
-    for (auto shot : _shots) {
+    for (auto &shot : _shots) {
         if (!shot)
             continue;
         // Move & check collision with obstacles & centipedes
         shot->move();
         for (auto centipede : _centipedes) {
+            if (!centipede)
+                continue;
             if (centipede->getTiles().empty()) {
                 delete centipede;
+                centipede = nullptr;
                 continue;
             }
             int index = -1;
             for (auto body : centipede->getTiles()) {
                 ++index; // todo too dirty
-                if (shot->does_collide(body)) {
+                if (shot && shot->does_collide(body)) {
                     auto tmp = new Entity(4);
                     tmp->setPosition(body->getPosition().x,
                         body->getPosition().y);
@@ -118,10 +124,12 @@ void Centipede::update()
                     this->_centipedes.push_back(centipede->splitAt(index));
                     // todo explosion animation ?
                     delete shot;
+                    shot = nullptr;
                     continue;
-                } else if (arcade::isOverlap(mapLimit,
+                } else if (shot && arcade::isOverlap(mapLimit,
                     shot->getSprite()->getGlobalBounds())) {
                     delete shot;
+                    shot = nullptr;
                     continue;
                 }
             }
@@ -135,13 +143,17 @@ void Centipede::update()
                 spriteManager->getObstacle(obstacle->getHealth()));
             if (obstacle->getHealth() == 0) {
                 delete obstacle;
+                obstacle = nullptr;
             }
         }
     }
     _displayer->log() << "UPDATE MOVE CENTIPEDE" << std::endl;
     for (auto centipede : _centipedes) {
+        if (!centipede)
+            continue;
         if (centipede->getTiles().empty()) {
             delete centipede;
+            centipede = nullptr;
             continue;
         }
         for (auto body : centipede->getTiles()) {
@@ -190,8 +202,10 @@ void Centipede::draw()
         centipede->draw(this->_displayer);
     for (auto obstacles : _obstacles)
         obstacles->draw(this->_displayer);
-    for (auto shot : _shots)
-        shot->draw(this->_displayer);
+    for (auto shot : _shots) {
+        if (shot)
+            shot->draw(this->_displayer);
+    }
     player->draw(this->_displayer);
     _displayer->log() << "DRAW OUT" << std::endl;
 }

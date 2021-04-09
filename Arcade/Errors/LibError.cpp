@@ -5,21 +5,21 @@
 ** LibError
 */
 
-#include "Errors.hpp"
+#include "ArcErrors.hpp"
 
-Errors::LibError::LibError(const std::string &msg) : _msg("Lib Error: " + msg)
+arcade::errors::LibError::LibError(const std::string &msg) : _msg("Lib Error: " + msg)
 {
 }
 
-Errors::LibError::LibError(const std::string &msg, const std::string &cause) : _msg("Lib Error in '" + cause + "': " + msg)
+arcade::errors::LibError::LibError(const std::string &msg, const std::string &cause) : _msg("Lib Error in '" + cause + "': " + msg)
 {
 }
 
-Errors::LibError::~LibError()
+arcade::errors::LibError::~LibError()
 {
 }
 
-const char *Errors::LibError::what() const noexcept
+const char *arcade::errors::LibError::what() const noexcept
 {
     return _msg.c_str();
 }
