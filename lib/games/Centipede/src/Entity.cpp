@@ -11,6 +11,7 @@ Entity::Entity(int health)
 {
     this->health = health;
     this->setPosition(0, 0);
+    this->orientation = STATIC;
 }
 
 Entity::~Entity()
@@ -51,6 +52,7 @@ void Entity::setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite)
 
 void Entity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
+    disp->draw(this->getSprite());
 }
 
 bool Entity::does_collide(Entity *target)
@@ -64,6 +66,8 @@ void Entity::move()
 {
     // todo update position
     // todo update sprite position
+
+    // todo move depending on orientation
 }
 
 orientation Entity::getOrientation() const
@@ -76,12 +80,12 @@ void Entity::setOrientation(enum orientation newOrientation)
     this->orientation = newOrientation;
 }
 
-void Entity::setVecocity(arcade::data::Vector2f velocity)
+void Entity::setVelocity(float velocity)
 {
     this->velocity = velocity;
 }
 
-arcade::data::Vector2f Entity::getVecocity() const
+float Entity::getVelocity() const
 {
     return this->velocity;
 }

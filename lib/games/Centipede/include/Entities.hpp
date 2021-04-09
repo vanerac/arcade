@@ -24,7 +24,7 @@ class Entity {
         struct Position getPosition() const;
         void setHealth(int health);
         int getHealth() const;
-        void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp);
+        virtual void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp);
         void setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite);
         std::unique_ptr<arcade::displayer::ISprite> &getSprite();
         bool does_collide(Entity *target);
@@ -32,8 +32,8 @@ class Entity {
         void setOrientation(enum orientation orientation);
 
         virtual void move();
-        void setVecocity(arcade::data::Vector2f velocity); // todo
-        arcade::data::Vector2f getVecocity() const; // todo
+        void setVelocity(float velocity); // todo
+        float getVelocity() const; // todo
 
         struct Position pos; // todo change this
 
@@ -41,7 +41,7 @@ class Entity {
         int health;
         std::unique_ptr<arcade::displayer::ISprite> sprite;
         enum orientation orientation;
-        arcade::data::Vector2f velocity;
+        float velocity;
 
 };
 
@@ -53,6 +53,7 @@ class CentipedeEntity : public Entity {
         std::vector<Entity*> getTiles() const;
         CentipedeEntity *splitAt(int tileIndex);
         void move() override;
+        void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp) override;
 
 
     private:

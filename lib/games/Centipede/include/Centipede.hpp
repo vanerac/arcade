@@ -41,6 +41,7 @@ class Centipede : public arcade::games::IGame {
     void handleMovement(
         std::vector<arcade::data::Event, std::allocator<arcade::data::Event>> eventType
     );
+    void newLevel();
 };
 
 #endif /* !GAME1_HPP_ */
