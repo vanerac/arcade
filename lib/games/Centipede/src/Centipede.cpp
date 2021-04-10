@@ -96,7 +96,7 @@ void Centipede::handleMovement(
     }
 }
 
-GameStatus Centipede::update()
+arcade::games::GameStatus Centipede::update()
 {
     _displayer->log() << "Update IN" << std::endl;
     auto mapLimit = arcade::data::FloatRect(
@@ -210,7 +210,7 @@ GameStatus Centipede::update()
     _displayer->log() << "UPDATE DRAW" << std::endl;
     draw();
     _displayer->log() << "Update OUT" << std::endl;
-    return GameStatus::PLAYING;
+    return arcade::games::GameStatus::PLAYING;
 }
 
 void Centipede::stop()
