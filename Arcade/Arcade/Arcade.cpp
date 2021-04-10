@@ -35,7 +35,6 @@ int arcade::Arcade::run()
         throw arcade::errors::LibError("Not enought libs.");
     }
     setGrLib(0);
-    menuInitElems();
     _displayer->restartClock();
     while (_status != ArcadeStatus::QUITTING) {
         handleEvents();
@@ -44,7 +43,7 @@ int arcade::Arcade::run()
         } else if (_status == ArcadeStatus::IN_GAME) {
             _displayer->clearWindow();
             if (_game->update() == GameStatus::GAME_ENDED) {
-                _status = ArcadeStatus::MENU;
+                goBackToMenu();
             }
         }
         _displayer->display();

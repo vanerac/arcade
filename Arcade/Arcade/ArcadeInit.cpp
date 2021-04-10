@@ -225,6 +225,7 @@ void arcade::Arcade::setGaLib(int move)
     if (!_displayer) {
         throw arcade::errors::LibError("No graphic libs set.");
     }
+    _scoreIsToDisplay = false;
     _gameLoaded += move;
     _gameLoaded %= _galibsPath.size();
     _gameLoaded = _gameLoaded < 0 ? _galibsPath.size() + _gameLoaded : _gameLoaded;

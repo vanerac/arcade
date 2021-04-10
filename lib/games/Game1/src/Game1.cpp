@@ -325,3 +325,8 @@ void Game1::stop()
 {
     this->_displayer->log() << "Stop Game1" << std::endl;
 }
+
+unsigned int Game1::getScore()
+{
+    return this->totScore;
+}

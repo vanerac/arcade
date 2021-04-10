@@ -120,18 +120,47 @@ void arcade::Arcade::menuLoadDisplayer()
     _menuAskPlayerNameText->setPosition({_menuNewGameText->getPosition().x + yOffset, _menuNewGameText->getPosition().y + (yOffset * 2) + characterSize});
     _menuPlayerNameText = _displayer->createText("________");
     _menuPlayerNameText->setCharacterSize(characterSize);
+    _menuPlayerNameText->setOrigin({0.0f, static_cast<float>(characterSize)});
     _menuPlayerNameText->setFont(font);
     _menuPlayerNameText->setPosition({_menuAskPlayerNameText->getPosition().x + _menuAskPlayerNameText->getLocalBounds().width,
-                                        _menuAskPlayerNameText->getPosition().y});
+                                        _menuAskPlayerNameText->getPosition().y + characterSize});
 
     rect.top = _menuNewGameText->getPosition().y - boxMarigin.y;
     rect.left = _menuNewGameText->getPosition().x - boxMarigin.x;
     rect.height = _menuAskPlayerNameText->getPosition().y + boxMarigin.x - rect.top;
-    rect.width = _menuAskPlayerNameText->getLocalBounds().width + _menuPlayerNameText->getLocalBounds().width + (boxMarigin.x * 2);
+    rect.width = _menuPlayerNameText->getGlobalBounds().left + _menuPlayerNameText->getGlobalBounds().width - rect.left + boxMarigin.x;
     menuCreateBox(rect, '+', '-', '|');
     auto name = _playerName;
     for (unsigned int i = name.size(); i < 8; ++i, name.push_back('_'));
     _menuPlayerNameText->setText(name);
+
+
+
+    // --- Ended Game ---
+    _menuGameEndedText = _displayer->createText("Game ended");
+    _menuGameEndedText->setCharacterSize(characterSize);
+    _menuGameEndedText->setFont(font);
+    _menuGameEndedText->setPosition({winSize.x * 0.45f, _menuNewGameText->getPosition().y});
+    _menuYourScoreText = _displayer->createText("Your score: ");
+    _menuYourScoreText->setCharacterSize(characterSize);
+    _menuYourScoreText->setFont(font);
+    _menuYourScoreText->setPosition({_menuGameEndedText->getPosition().x + yOffset, _menuGameEndedText->getPosition().y + (yOffset * 2) + characterSize});
+    _menuScoreText = _displayer->createText(std::to_string(_score));
+    _menuScoreText->setCharacterSize(characterSize);
+    _menuScoreText->setFont(font);
+    _menuScoreText->setPosition({_menuYourScoreText->getPosition().x + _menuYourScoreText->getLocalBounds().width,
+                                        _menuYourScoreText->getPosition().y});
+
+    rect.top = _menuGameEndedText->getPosition().y - boxMarigin.y;
+    rect.left = _menuGameEndedText->getPosition().x - boxMarigin.x;
+    rect.height = _menuYourScoreText->getPosition().y + boxMarigin.x - rect.top;
+    rect.width = _menuScoreText->getGlobalBounds().left + _menuScoreText->getGlobalBounds().width - rect.left + boxMarigin.x;
+    menuCreateBox(rect, '*', '*', '*');
+    {
+        auto it = _menuBoxes.end() - 1;
+        _menuGameEndedBox = std::move(*it);
+        _menuBoxes.erase(it);
+    }
 
 
 

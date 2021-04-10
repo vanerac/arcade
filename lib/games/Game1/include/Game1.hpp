@@ -21,7 +21,7 @@ class Game1 : public arcade::games::IGame {
         GameStatus update() override; // return enum game state
         //GameStatus update() override; // return enum game state
         void stop() override;
-        // int getScore() override; for the arcade to store the score if it is a high score
+        unsigned int getScore() override;
         void create_snake(arcade::data::Vector2f pos, bool isFirstCell);
         void createBlock(arcade::data::Vector2f pos, bool isApple);
         void snakeMoveUP();

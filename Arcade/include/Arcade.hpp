@@ -43,10 +43,10 @@ namespace arcade
             void menuLoadDisplayer();
             void menuCreateBox(arcade::data::FloatRect rect, char corners = '#', char horizontal = '#', char vertical = '#', char fill = '\r');
             void menuCreateBox(arcade::data::FloatRect rect, char corners, char top, char bottom, char left, char right, char fill = '\r');
-            void menuInitElems();
             void menuSetHighScoresText();
             void drawMenu();
             void menuHandleEvents();
+            void goBackToMenu();
 
         protected:
         private:
@@ -79,6 +79,12 @@ namespace arcade
             std::unique_ptr<arcade::displayer::IText> _menuAskPlayerNameText;
             std::unique_ptr<arcade::displayer::IText> _menuPlayerNameText;
             std::string _playerName{"player"};
+            unsigned int _score = 250;
+            std::unique_ptr<arcade::displayer::ISprite> _menuGameEndedBox;
+            std::unique_ptr<arcade::displayer::IText> _menuGameEndedText;
+            std::unique_ptr<arcade::displayer::IText> _menuYourScoreText;
+            std::unique_ptr<arcade::displayer::IText> _menuScoreText;
+            bool _scoreIsToDisplay = false;
 
             std::unique_ptr<arcade::displayer::IText> _menuQuitText;
             std::unique_ptr<arcade::displayer::ISprite> _pacman;

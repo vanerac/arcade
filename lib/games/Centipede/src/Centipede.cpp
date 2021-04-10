@@ -33,6 +33,11 @@ Centipede::~Centipede()
 {
 }
 
+unsigned int Centipede::getScore()
+{
+    return 0;
+}
+
 void Centipede::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     _displayer = disp;

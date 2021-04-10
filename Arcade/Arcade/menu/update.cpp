@@ -8,8 +8,34 @@
 #include <algorithm>
 #include "Arcade.hpp"
 
-void arcade::Arcade::menuInitElems()
+void arcade::Arcade::goBackToMenu()
 {
+    _status = ArcadeStatus::MENU;
+    _score = _game->getScore();
+    _scoreIsToDisplay = true;
+    _menuScoreText->setText(std::to_string(_score));
+    if (_score == 0) {
+        return;
+    }
+    auto &gameHighScores = _highScores[_menuSelectedGame];
+    auto it = gameHighScores.begin();
+    for (; it != gameHighScores.end(); ++it) {
+        auto &highScore = *it;
+        if (_score == highScore.second && _playerName == highScore.first) {
+            break;
+        } else if (_score <= highScore.second) {
+            continue;
+        }
+        saveHighScores(_menuGamesListText[_menuSelectedGame]->getText(), _playerName, _score);
+        gameHighScores.emplace(it, std::pair<std::string, std::size_t>{_playerName, _score});
+        menuSetHighScoresText();
+        break;
+    }
+    if (it == gameHighScores.end() && gameHighScores.size() < _menuHighScoresText.size()) {
+        saveHighScores(_menuGamesListText[_menuSelectedGame]->getText(), _playerName, _score);
+        gameHighScores.emplace(it, std::pair<std::string, std::size_t>{_playerName, _score});
+        menuSetHighScoresText();
+    }
 }
 
 void arcade::Arcade::drawMenu()
@@ -38,6 +64,12 @@ void arcade::Arcade::drawMenu()
     for (auto &text : _menuInstructions) {
         _displayer->draw(text);
     }
+    if (_scoreIsToDisplay) {
+        _displayer->draw(_menuGameEndedBox);
+        _displayer->draw(_menuGameEndedText);
+        _displayer->draw(_menuYourScoreText);
+        _displayer->draw(_menuScoreText);
+    }
 }
 
 void arcade::Arcade::menuHandleEvents()
@@ -61,8 +93,10 @@ void arcade::Arcade::menuHandleEvents()
                                 });
             if (it != _menuGamesListText.end()) {
                 if (it - _menuGamesListText.begin() == _menuSelectedGame) {
-                    setGaLib(_menuSelectedGame - _gameLoaded);
-                    _status = ArcadeStatus::IN_GAME;
+                    if (_playerName.size()) {
+                        setGaLib(_menuSelectedGame - _gameLoaded);
+                        _status = ArcadeStatus::IN_GAME;
+                    }
                 } else {
                     _menuGamesListText[_menuSelectedGame]->setColor(arcade::data::Color::White);
                     _menuSelectedGame = it - _menuGamesListText.begin();
@@ -90,8 +124,10 @@ void arcade::Arcade::menuHandleEvents()
             }
             _playerName = str.substr(0, it);
         } else if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::ENTER) {
-            setGaLib(_menuSelectedGame - _gameLoaded);
-            _status = ArcadeStatus::IN_GAME;
+            if (_playerName.size()) {
+                setGaLib(_menuSelectedGame - _gameLoaded);
+                _status = ArcadeStatus::IN_GAME;
+            }
         }
     }
 }
