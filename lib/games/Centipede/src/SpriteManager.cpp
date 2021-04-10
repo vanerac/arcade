@@ -21,6 +21,7 @@ SpriteManager::~SpriteManager()
 
 void SpriteManager::change_level(int level)
 {
+    (void)level;
 }
 
 std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getCentipedeHead(

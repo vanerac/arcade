@@ -44,7 +44,7 @@ core:				shared									## Make the core of the arcade
 
 games:				shared									## Make all games
 					make -C $(GAME1_DIR) && mv $(GAME1_DIR)/$(GAME1_NAME) $(LIBS_DIR) && cp $(LIBS_DIR)/$(GAME1_NAME) $(LIBS_DIR)/arcade_game2.so
-					# make -C $(CTP_DIR) && mv $(CTP_DIR)/$(CTP_NAME) $(LIBS_DIR)
+					make -C $(CTP_DIR) && mv $(CTP_DIR)/$(CTP_NAME) $(LIBS_DIR)
 .PHONY:	games
 
 graphicals:			shared									## Make all graphicals

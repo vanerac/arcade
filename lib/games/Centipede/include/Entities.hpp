@@ -27,7 +27,7 @@ class Entity {
         virtual void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp);
         void setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite);
         std::unique_ptr<arcade::displayer::ISprite> &getSprite();
-        bool does_collide(Entity *target);
+        bool does_collide(std::unique_ptr<Entity> &target);
         orientation getOrientation() const;
         void setOrientation(enum orientation orientation);
 
@@ -49,15 +49,15 @@ class CentipedeEntity : public Entity {
     public:
         CentipedeEntity(int size);
         ~CentipedeEntity();
-        void setTiles(const std::vector<Entity *>& tiles);
-        std::vector<Entity*> getTiles() const;
-        CentipedeEntity *splitAt(int tileIndex);
+        void setTiles(std::vector<std::unique_ptr<Entity>> tiles);
+        std::vector<std::unique_ptr<Entity>> &getTiles();
+        std::unique_ptr<CentipedeEntity> splitAt(int tileIndex);
         void move() override;
         void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp) override;
 
 
     private:
-        std::vector<Entity*> _tiles;
+        std::vector<std::unique_ptr<Entity>> _tiles;
 
 };
 

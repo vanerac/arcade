@@ -8,6 +8,7 @@
 #ifndef CENTIPEDE_HPP_
 #define CENTIPEDE_HPP_
 
+#include <memory>
 #include "Games.hpp"
 #include "Entities.hpp"
 #include "SpriteManager.hpp"
@@ -21,7 +22,7 @@ class Centipede : public arcade::games::IGame {
     void init(std::shared_ptr<arcade::displayer::IDisplay> &disp
     ) override; // maybe call it reloadDisplayer and create a second func initGame which just set pos lives and etc
     // void restart() override;
-    void update() override; // return enum game state
+    GameStatus update() override; // return enum game state
     void draw();
     void stop() override;
     // int getScore() override; for the arcade to store the score if it is a high score
@@ -31,11 +32,11 @@ class Centipede : public arcade::games::IGame {
     private:
     int current_level;
     std::shared_ptr<arcade::displayer::IDisplay> _displayer;
-    std::vector<CentipedeEntity *> _centipedes;
-    std::vector<Entity *> _obstacles;
-    SpriteManager  *spriteManager = nullptr;
-    std::vector<Entity *> _shots;
-    Entity *player = nullptr;
+    std::vector<std::unique_ptr<CentipedeEntity>> _centipedes;
+    std::vector<std::unique_ptr<Entity>> _obstacles;
+    std::unique_ptr<SpriteManager> spriteManager = nullptr;
+    std::vector<std::unique_ptr<Entity>> _shots;
+    std::unique_ptr<Entity> player = nullptr;
 
     void shoot();
     void handleMovement(

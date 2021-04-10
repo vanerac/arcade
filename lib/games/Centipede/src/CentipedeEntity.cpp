@@ -11,8 +11,8 @@ CentipedeEntity::CentipedeEntity(int size) : Entity(1)
 {
 
     for (int i = 0; i < size; ++i) {
-        auto tmp = new Entity(1);
-        _tiles.push_back(tmp);
+        // auto tmp = new Entity(1);
+        _tiles.push_back(std::make_unique<Entity>(1));
     }
     this->pos.x = 1;
     this->pos.y = 1;
@@ -24,30 +24,36 @@ CentipedeEntity::~CentipedeEntity()
 {
 }
 
-CentipedeEntity *CentipedeEntity::splitAt(int tileIndex)
+std::unique_ptr<CentipedeEntity> CentipedeEntity::splitAt(int tileIndex)
 {
     // return t
-    std::vector<Entity *> tiles = getTiles();
-    std::vector<Entity *> split_hi(tiles.begin(), tiles.begin() + tileIndex);
-    std::vector<Entity *> split_lo(tiles.begin() + tileIndex, tiles.end());
-    this->setTiles(split_hi);
-    Entity *v = split_lo.front();
-    if (!v)
+    std::vector<std::unique_ptr<Entity>> &tiles = getTiles();
+    std::vector<std::unique_ptr<Entity>> split_hi;//(tiles.begin(), tiles.begin() + tileIndex);
+    split_hi.insert(split_hi.end(), std::make_move_iterator(tiles.begin()),
+                std::make_move_iterator(tiles.begin() + tileIndex));
+    std::vector<std::unique_ptr<Entity>> split_lo;//(tiles.begin() + tileIndex, tiles.end());
+    split_lo.insert(split_lo.end(), std::make_move_iterator(tiles.begin() + tileIndex),
+                std::make_move_iterator(tiles.end()));
+    this->setTiles(std::move(split_hi));
+    if (!split_lo.size())
         return nullptr;
-    auto ret = new CentipedeEntity(1);
-    ret->setTiles(split_lo);
+    std::unique_ptr<Entity> &v = split_lo.front();
+    // if (!v)
+    //     return nullptr;
+    auto ret = std::make_unique<CentipedeEntity>(1);
+    ret->setTiles(std::move(split_lo));
     ret->setPosition(v->getPosition().x, v->getPosition().y);
     // TODO did it shrink ?
     ret->setOrientation(_orientation == RIGHT ? LEFT : RIGHT);
     return ret;
 }
 
-void CentipedeEntity::setTiles(const std::vector<Entity *> &tiles)
+void CentipedeEntity::setTiles(std::vector<std::unique_ptr<Entity>> tiles)
 {
-    this->_tiles = tiles;
+    this->_tiles = std::move(tiles);
 }
 
-std::vector<Entity *> CentipedeEntity::getTiles() const
+std::vector<std::unique_ptr<Entity>> &CentipedeEntity::getTiles()
 {
     return this->_tiles;
 }
@@ -60,7 +66,7 @@ void CentipedeEntity::move()
     enum orientation prevOrientation = _tiles[0]->getOrientation();
     enum orientation bufferOrientation;
 
-    for (auto tile : _tiles) {
+    for (auto &tile : _tiles) {
         buffer = tile->getPosition();
         bufferOrientation = tile->getOrientation();
         tile->setVelocity(1.0f / this->_tiles.size());
@@ -80,7 +86,7 @@ void CentipedeEntity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     SpriteManager spriteManager(disp, 0); // todo use current level
     int index = 0;
-    for (auto body : _tiles) {
+    for (auto &body : _tiles) {
         auto orientation = body->getOrientation();
         if (!body->getSprite()) {
             body->setSprite(

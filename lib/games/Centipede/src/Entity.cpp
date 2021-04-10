@@ -55,7 +55,7 @@ void Entity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     disp->draw(this->getSprite());
 }
 
-bool Entity::does_collide(Entity *target)
+bool Entity::does_collide(std::unique_ptr<Entity> &target)
 {
     auto &thisSprite = this->getSprite();
     auto &targetSprite = target->getSprite();
