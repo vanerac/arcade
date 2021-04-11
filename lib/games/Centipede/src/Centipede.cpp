@@ -120,7 +120,9 @@ arcade::games::GameStatus Centipede::update()
             auto &centipede = *itCentipede;
             if (!centipede)
                 continue;
-            if (centipede->getTiles().empty()) {
+            if (centipede->
+            getTiles()
+            .empty()) {
                 _centipedes.erase(itCentipede);
                 --itCentipede;
                 continue;
