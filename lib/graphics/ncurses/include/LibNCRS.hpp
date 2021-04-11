@@ -8,11 +8,8 @@
 #ifndef LIBNCRS_HPP_
 #define LIBNCRS_HPP_
 
-#include <fstream>
-
 #include <ncurses.h>
 #include <chrono>
-#include <tuple>
 #include "Displayer.hpp"
 
 class TextNCRS : public arcade::displayer::IText {
@@ -110,7 +107,6 @@ class LibNCRS : public arcade::displayer::IDisplay {
         double scaleMoveX(double time) const override;
         double scaleMoveY(double time) const override;
 
-        std::ofstream &log() { return stream; };
         static NCURSES_PAIRS_T getNcrsColorPair(short fg, short bg);
         static std::pair<arcade::data::Color, NCURSES_PAIRS_T> colorToNcrsColor(arcade::data::Color color);
 
@@ -118,7 +114,6 @@ class LibNCRS : public arcade::displayer::IDisplay {
     private:
         bool _eventFetched = false;
         std::vector<arcade::data::Event> _events;
-        std::ofstream stream;
         unsigned int _frameLimit = 60;
         std::chrono::time_point<std::chrono::high_resolution_clock> _timePoint;
         double _lastFrameTime = 0;

@@ -5,6 +5,7 @@
 ** CentipedeEntity.c file
 */
 
+#include <iostream>
 #include "../include/Centipede.hpp"
 
 CentipedeEntity::CentipedeEntity(int size) : Entity(1)
@@ -26,25 +27,27 @@ CentipedeEntity::~CentipedeEntity()
 
 std::unique_ptr<CentipedeEntity> CentipedeEntity::splitAt(int tileIndex)
 {
-    // return t
+
+    std::cout << "split at index " << tileIndex << std::endl;
     std::vector<std::unique_ptr<Entity>> &tiles = getTiles();
+
     std::vector<std::unique_ptr<Entity>> split_hi;//(tiles.begin(), tiles.begin() + tileIndex);
-    split_hi.insert(split_hi.end(), std::make_move_iterator(tiles.begin()),
-                std::make_move_iterator(tiles.begin() + tileIndex));
     std::vector<std::unique_ptr<Entity>> split_lo;//(tiles.begin() + tileIndex, tiles.end());
-    split_lo.insert(split_lo.end(), std::make_move_iterator(tiles.begin() + tileIndex),
-                std::make_move_iterator(tiles.end()));
+
+    for (int i = 0; i < tileIndex; ++i)
+        split_hi.push_back(std::move(tiles[i]));
+
+    for (int i = tileIndex; tileIndex != 0 && i < tiles.size(); ++i)
+        split_lo.push_back(std::move(tiles[i]));
+
     this->setTiles(std::move(split_hi));
-    if (!split_lo.size())
-        return nullptr;
-    std::unique_ptr<Entity> &v = split_lo.front();
-    // if (!v)
-    //     return nullptr;
+
     auto ret = std::make_unique<CentipedeEntity>(1);
+
     ret->setTiles(std::move(split_lo));
-    ret->setPosition(v->getPosition().x, v->getPosition().y);
-    // TODO did it shrink ?
+
     ret->setOrientation(_orientation == RIGHT ? LEFT : RIGHT);
+
     return ret;
 }
 
@@ -63,30 +66,44 @@ void CentipedeEntity::move()
     this->velocity = 1.0f / this->_tiles.size();
     arcade::data::Vector2f previous = _tiles[0]->getPosition();
     arcade::data::Vector2f buffer = {};
-    enum orientation prevOrientation = _tiles[0]->getOrientation();
+    enum orientation prevOrientation = this->getOrientation();
     enum orientation bufferOrientation;
 
     for (auto &tile : _tiles) {
         buffer = tile->getPosition();
         bufferOrientation = tile->getOrientation();
-        tile->setVelocity(/*5.0f / */this->_tiles.size());
-        tile->setPosition(previous.x, previous.y);
+
+        if (tile != _tiles[0] && tile->getPosition() == previous)
+            continue;
+
+        // std::cout << i << " " << tile->getPosition() << " ";
+        tile->setVelocity(this->_tiles.size() +
+            tile->getSprite()->getLocalBounds().width / 2);
         tile->setOrientation(prevOrientation);
         tile->move();
+
         previous = buffer;
         prevOrientation = bufferOrientation;
+
         if (bufferOrientation == RIGHT_DOWN)
             tile->setOrientation(RIGHT);
         else if (bufferOrientation == LEFT_DOWN)
             tile->setOrientation(LEFT);
     }
+    //    if (_tiles[0]->getOrientation() != this->getOrientation())
+    this->setOrientation(_tiles[0]->getOrientation());
+    if (this->getOrientation() == RIGHT_DOWN)
+        this->setOrientation(RIGHT);
+    else if (this->getOrientation() == LEFT_DOWN)
+        this->setOrientation(LEFT);
 }
 
 void CentipedeEntity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
-    SpriteManager spriteManager(disp, 0); // todo use current level
+    SpriteManager spriteManager(disp, 0);
     int index = 0;
     for (auto &body : _tiles) {
+        // todo head sprite
         auto orientation = body->getOrientation();
         if (!body->getSprite()) {
             body->setSprite(

@@ -6,7 +6,7 @@
 ##
 
 override SRC		=	entry_point.cpp		\
-						src/Game1.cpp		\
+						src/Nibbler.cpp		\
 
 SHARED_DIR			= ../../../shared
 
@@ -16,7 +16,7 @@ override CXXFLAGS	+=	-W -Wall -Wextra -fPIC -g
 
 override LDFLAGS	+=	-shared
 
-NAME				=	arcade_game1.so
+NAME				=	arcade_nibbler.so
 
 BUILDDIR			=	obj
 

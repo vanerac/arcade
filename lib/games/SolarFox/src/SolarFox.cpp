@@ -21,7 +21,6 @@ solarfox::SolarFox::~SolarFox()
 
 void solarfox::SolarFox::stop()
 {
-    // this->_displayer->log() << "Stop SolarFox" << std::endl;
 }
 
 void solarfox::SolarFox::loadLevel()

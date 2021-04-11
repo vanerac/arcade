@@ -21,13 +21,16 @@ Entity::~Entity()
 
 void Entity::setPosition(int new_x, int new_y)
 {
-    this->pos.x = new_x;
-    this->pos.y = new_y;
+    if (this->getSprite())
+        this->getSprite()->setPosition(arcade::data::Vector2f(new_x, new_y));
+    this->pos = arcade::data::Vector2f(new_x, new_y);
 }
 
-arcade::data::Vector2f Entity::getPosition() const
+arcade::data::Vector2f Entity::getPosition()
 {
-    return this->_sprite->getPosition();
+    if (this->getSprite())
+        return this->getSprite()->getPosition();
+    return this->pos;
 }
 
 void Entity::setHealth(int health)
@@ -53,8 +56,8 @@ void Entity::setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite)
 
 void Entity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
-//    this->getSprite()->setPosition(arcade::data::Vector2f(getPosition().x,
-//        getPosition().y));
+    //    this->getSprite()->setPosition(arcade::data::Vector2f(getPosition().x,
+    //        getPosition().y));
     disp->draw(this->getSprite());
 }
 
@@ -75,43 +78,28 @@ bool Entity::does_collide(std::unique_ptr<Entity> &target)
 void Entity::move()
 {
     switch (_orientation) {
-    // todo use delta
+        // todo use delta
     case UP:
-        this->setPosition(getPosition().x, getPosition().y - getVelocity());
         this->getSprite()->move(0, -velocity);
         break;
     case RIGHT:
-        this->setPosition(getPosition().x + getVelocity(), getPosition().y);
         this->getSprite()->move(velocity, 0);
         break;
     case RIGHT_DOWN:
-        this->setPosition(getPosition().x + getVelocity(),
-            getPosition().y + getVelocity());
         this->getSprite()->move(velocity, velocity);
         break;
     case LEFT:
-        this->setPosition(getPosition().x - getVelocity(), getPosition().y);
         this->getSprite()->move(-velocity, 0);
         break;
     case LEFT_DOWN:
-        this->setPosition(this->getPosition().x - getVelocity(),
-            this->getPosition().y + getVelocity());
         this->getSprite()->move(-velocity, velocity);
         break;
     case DOWN:
-
-        this->setPosition(getPosition().x, getPosition().y + getVelocity());
         this->getSprite()->move(0, velocity);
         break;
     case STATIC:
         break;
     }
-//    this->getSprite()->setPosition(
-//        arcade::data::Vector2f(getPosition().x, getPosition().y));
-//    getSprite()->move(arcade::data::Vector2f(getPosition().x, getPosition()
-//    .y));
-
-    // todo prevent moving beyond window ?
 }
 
 orientation Entity::getOrientation() const

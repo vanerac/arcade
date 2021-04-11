@@ -20,7 +20,7 @@ override CXXFLAGS	+=	-W -Wall -Wextra -fPIC -g
 
 override LDFLAGS	+=	-shared
 
-NAME				=	arcade_asolarfox.so
+NAME				=	arcade_solarfox.so
 
 BUILDDIR			=	obj
 

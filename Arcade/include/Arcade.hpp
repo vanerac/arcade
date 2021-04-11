@@ -8,8 +8,6 @@
 #ifndef ARCADE_HPP_
 #define ARCADE_HPP_
 
-#include <iostream>
-
 #include <string>
 #include <vector>
 #include <memory>

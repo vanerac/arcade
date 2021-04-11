@@ -2,14 +2,13 @@
 ** EPITECH PROJECT, 2021
 ** B-OOP-400-BDX-4-1-arcade-honore.dupieu
 ** File description:
-** Game1
+** Nibbler
 */
 
-#include <iostream>
 #include <algorithm>
-#include "Game1.hpp"
+#include "Nibbler.hpp"
 
-Game1::Game1()
+Nibbler::Nibbler()
 {
     map = {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -43,11 +42,11 @@ Game1::Game1()
                  "#     ##   #####   #####   #####   ######   ######   #   # "};
 }
 
-Game1::~Game1()
+Nibbler::~Nibbler()
 {
 }
 
-void Game1::createBlock(arcade::data::Vector2f pos, bool isApple)
+void Nibbler::createBlock(arcade::data::Vector2f pos, bool isApple)
 {
     std::string blockPath;
     std::vector<std::string> blockAscii;
@@ -66,7 +65,7 @@ void Game1::createBlock(arcade::data::Vector2f pos, bool isApple)
     }
 }
 
-void Game1::create_snake(arcade::data::Vector2f pos, bool isFirstCell)
+void Nibbler::create_snake(arcade::data::Vector2f pos, bool isFirstCell)
 {
     std::string snake_path;
 
@@ -99,7 +98,7 @@ void Game1::create_snake(arcade::data::Vector2f pos, bool isFirstCell)
     b->setPosition(pos);
 }
 
-void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
+void Nibbler::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     this->_displayer = disp;
     direction = arcade::data::KeyCode::RIGHT;
@@ -117,7 +116,6 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 
     _logo->setPosition({winSize.x * 0.50f, winSize.y * 0.02f});
     _logo->setOrigin({_logo->getLocalBounds().width / 2, 0});
-    this->_displayer->log() << "Init Game1" << std::endl;
 
     _blocks.clear();
     snake.clear();
@@ -154,7 +152,7 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     createBlock(initPos + arcade::data::Vector2f{(finalPos / map.size()) * _unit.x, (finalPos % map.size()) * _unit.y}, true);
 }
 
-void Game1::restart()
+void Nibbler::restart()
 {
     posSnake.clear();
     _player.clear();
@@ -163,7 +161,7 @@ void Game1::restart()
     init(_displayer);
 }
 
-void Game1::snakeMoveRIGHT()
+void Nibbler::snakeMoveRIGHT()
 {
     int i = -1;
 
@@ -178,7 +176,7 @@ void Game1::snakeMoveRIGHT()
     }
 }
 
-void Game1::snakeMoveLEFT()
+void Nibbler::snakeMoveLEFT()
 {
     int i = -1;
 
@@ -193,7 +191,7 @@ void Game1::snakeMoveLEFT()
     }
 }
 
-void Game1::snakeMoveDOWN()
+void Nibbler::snakeMoveDOWN()
 {
     int i = -1;
 
@@ -208,7 +206,7 @@ void Game1::snakeMoveDOWN()
     }
 }
 
-void Game1::snakeMoveUP()
+void Nibbler::snakeMoveUP()
 {
     int i = -1;
 
@@ -223,7 +221,7 @@ void Game1::snakeMoveUP()
     }
 }
 
-void Game1::getPosSnake()
+void Nibbler::getPosSnake()
 {
     posSnake.clear();
 
@@ -232,18 +230,18 @@ void Game1::getPosSnake()
     }
 }
 
-void Game1::restartClock()
+void Nibbler::restartClock()
 {
     _clock = std::chrono::high_resolution_clock::now();
 }
 
-double Game1::getElapsedTime()
+double Nibbler::getElapsedTime()
 {
     return std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>
             (std::chrono::high_resolution_clock::now() - _clock).count();
 }
 
-void Game1::automaticMove()
+void Nibbler::automaticMove()
 {
     if (direction == arcade::data::KeyCode::UP)
         snakeMoveUP();
@@ -255,7 +253,7 @@ void Game1::automaticMove()
         snakeMoveDOWN();
 }
 
-arcade::games::GameStatus Game1::update()
+arcade::games::GameStatus Nibbler::update()
 {
     float adjustment = 0.01;
     auto pbounds = _player[0]->getGlobalBounds();
@@ -326,12 +324,11 @@ arcade::games::GameStatus Game1::update()
     return(arcade::games::GameStatus::PLAYING);
 }
 
-void Game1::stop()
+void Nibbler::stop()
 {
-    this->_displayer->log() << "Stop Game1" << std::endl;
 }
 
-unsigned int Game1::getScore() const
+unsigned int Nibbler::getScore() const
 {
     return this->totScore;
 }

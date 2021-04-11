@@ -5,7 +5,6 @@
 ** LibNCRS
 */
 
-#include <iostream>
 #include <array>
 #include <algorithm>
 #include <thread>
@@ -14,8 +13,6 @@
 
 LibNCRS::LibNCRS()
 {
-    // stream.open("./log.txt");
-    stream.open("./log.txt", std::ios_base::app);
 }
 
 LibNCRS::~LibNCRS()
@@ -32,7 +29,6 @@ int LibNCRS::availableOptions() const
 
 void LibNCRS::init(const std::string &winName, unsigned int framesLimit)
 {
-    std::cout << "Init" << std::endl;
     (void)winName;
     _frameLimit = framesLimit;
     initscr();
@@ -49,7 +45,6 @@ void LibNCRS::init(const std::string &winName, unsigned int framesLimit)
 void LibNCRS::stop()
 {
     endwin();
-    std::cout << "Stop" << std::endl;
 }
 
 bool LibNCRS::isOpen() const

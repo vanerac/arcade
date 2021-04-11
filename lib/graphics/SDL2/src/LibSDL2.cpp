@@ -5,7 +5,6 @@
 ** LibSDL2
 */
 
-#include <iostream>
 #include <unordered_map>
 #include <thread>
 #include "LibSDL2.hpp"
@@ -15,13 +14,10 @@ RendererPtr LibSDL2::renderer = nullptr;
 
 LibSDL2::LibSDL2()
 {
-    // stream.open("./log.txt");
-    stream.open("./log.txt", std::ios_base::app);
 }
 
 LibSDL2::~LibSDL2()
 {
-    std::cout << "SDL2 lib is being destroyed" << std::endl;
     if (isOpen()) {
         stop();
     }
@@ -34,7 +30,6 @@ int LibSDL2::availableOptions() const
 
 void LibSDL2::init(const std::string &winName, unsigned int framesLimit)
 {
-    std::cout << "Init" << std::endl;
     if (SDL_Init(SDL_INIT_VIDEO) < 0 || TTF_Init() < 0
     || !(_window = make_window(SDL_CreateWindow(winName.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1920, 1080, SDL_WINDOW_FULLSCREEN_DESKTOP)))
     || !(LibSDL2::renderer = make_renderer(SDL_CreateRenderer(_window.get(), -1, SDL_RENDERER_ACCELERATED)))) {
@@ -47,7 +42,6 @@ void LibSDL2::init(const std::string &winName, unsigned int framesLimit)
 
 void LibSDL2::stop()
 {
-    std::cout << "Stop" << std::endl;
     _window.reset();
     LibSDL2::renderer.reset();
     SDL_Quit();

@@ -14,7 +14,7 @@
 namespace arcade
 {
     namespace errors
-    {    
+    {
         class Error : public std::exception {
             public:
                 Error(const std::string &msg);

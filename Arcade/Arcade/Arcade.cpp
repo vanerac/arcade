@@ -80,6 +80,7 @@ void arcade::Arcade::handleEvents()
             } else if (_status == ArcadeStatus::IN_GAME && event.key == '9') {
                 setGaLib(1);
             } else if (_status == ArcadeStatus::IN_GAME && event.key == '-') {
+                
                 _game->restart();
             }
         }
