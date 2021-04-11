@@ -24,9 +24,6 @@ namespace solarfox
             std::unique_ptr<arcade::displayer::ISprite> &getSprite();
             float getSpeed();
 
-            bool doesCollide(arcade::data::FloatRect rect);
-            bool doesCollide(std::vector<std::unique_ptr<arcade::displayer::ISprite>> &objects);
-
         protected:
         private:
             std::unique_ptr<arcade::displayer::ISprite> _sprite;

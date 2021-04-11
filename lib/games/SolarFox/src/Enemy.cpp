@@ -44,17 +44,18 @@ std::unique_ptr<arcade::displayer::ISprite> &solarfox::Enemy::getSprite()
 
 void solarfox::Enemy::resetPos()
 {
-    float diff = std::sqrt(std::pow(_end.x - _start.x, 2) + std::pow(_end.y - _start.y, 2));    
-    float off = (diff * 0.15f) + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / ((diff * (1 - 0.15f)) - (diff * 0.15f))));
-    if (_rotation == direction::Going_Up) {
-        _sprite->setPosition(_start + arcade::data::Vector2f{-off, 0});
-    } else if (_rotation == direction::Going_Right) {
-        _sprite->setPosition(_start + arcade::data::Vector2f{0, -off});
-    } else if (_rotation == direction::Going_Down) {
-        _sprite->setPosition(_start + arcade::data::Vector2f{off, 0});
-    } else if (_rotation == direction::Going_Left) {
-        _sprite->setPosition(_start + arcade::data::Vector2f{0, off});
-    }
+    // float diff = std::sqrt(std::pow(_end.x - _start.x, 2) + std::pow(_end.y - _start.y, 2));    
+    // float off = (diff * 0.15f) + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / ((diff * (1 - 0.15f)) - (diff * 0.15f))));
+    // if (_rotation == direction::Going_Up) {
+    //     _sprite->setPosition(_start + arcade::data::Vector2f{-off, 0});
+    // } else if (_rotation == direction::Going_Right) {
+    //     _sprite->setPosition(_start + arcade::data::Vector2f{0, -off});
+    // } else if (_rotation == direction::Going_Down) {
+    //     _sprite->setPosition(_start + arcade::data::Vector2f{off, 0});
+    // } else if (_rotation == direction::Going_Left) {
+    //     _sprite->setPosition(_start + arcade::data::Vector2f{0, off});
+    // }
+    _sprite->setPosition(_start);
 }
 
 void solarfox::Enemy::shot()
@@ -100,10 +101,10 @@ void solarfox::Enemy::update()
     auto pos = _sprite->getPosition();
 
     if (
-        (_unitMove.x < 0 && (pos.x < _end.x || pos.x > _start.x))
-    ||  (_unitMove.x > 0 && (pos.x > _end.x || pos.x < _start.x))
-    ||  (_unitMove.y < 0 && (pos.y < _end.y || pos.y > _start.y))
-    ||  (_unitMove.y > 0 && (pos.y > _end.y || pos.y < _start.y))
+        (_unitMove.x < 0 && ((pos.x < _end.x && _direction > 0) || (pos.x > _start.x && _direction < 0)))
+    ||  (_unitMove.x > 0 && ((pos.x > _end.x && _direction > 0) || (pos.x < _start.x && _direction < 0)))
+    ||  (_unitMove.y < 0 && ((pos.y < _end.y && _direction > 0) || (pos.y > _start.y && _direction < 0)))
+    ||  (_unitMove.y > 0 && ((pos.y > _end.y && _direction > 0) || (pos.y < _start.y && _direction < 0)))
     ) {
         _direction = -_direction;
         _shot = false;

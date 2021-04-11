@@ -50,13 +50,3 @@ float solarfox::Bullet::getSpeed()
 {
     return _speed;
 }
-
-bool solarfox::Bullet::doesCollide(arcade::data::FloatRect rect)
-{
-    return false;
-}
-
-bool solarfox::Bullet::doesCollide(std::vector<std::unique_ptr<arcade::displayer::ISprite>> &objects)
-{
-    return false;
-}

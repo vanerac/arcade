@@ -137,7 +137,6 @@ std::vector<arcade::data::Event> LibNCRS::getEvents()
                                     [&event](auto &tupple) {
                                         return event.bstate == std::get<1>(tupple);
                                     });
-                    log() << (itT != ncrsToArcadeMouseType.end()) << (int)std::get<0>(*itT) << std::endl;
                     if (itT != ncrsToArcadeMouseType.end()) {
                         _events.emplace_back(std::get<0>(*itT), std::get<0>(*it), event.x, event.y);
                     }

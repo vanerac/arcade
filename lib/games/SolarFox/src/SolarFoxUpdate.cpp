@@ -59,7 +59,6 @@ void solarfox::SolarFox::updateEnemies()
         float speed = 3.5f - (0.125 * _level);
         float x = (unitMove.x * speed) == 0 ? 0 : ((10 * _unit.x) / (unitMove.x * speed)) / (1.0f / _displayer->getDeltaTime());
         float y = (unitMove.y * speed) == 0 ? 0 : ((10 * _unit.y) / (unitMove.y * speed)) / (1.0f / _displayer->getDeltaTime());
-        _displayer->log() << "Moving by: " << arcade::data::Vector2f{x, y} << std::endl;
         enemy->getSprite()->move(x, y);
         enemy->update();
         if (enemy->shouldShot()) {
@@ -93,7 +92,7 @@ bool solarfox::SolarFox::updateBullets()
     };
     moveBullets(_pbullets);
     moveBullets(_ebullets);
-    static const float ajustement = 0.01f;
+    static const float ajustement = _unit.x * 0.40f;
     for (auto itPbullet = _pbullets.begin(); itPbullet != _pbullets.end(); ++itPbullet) {
         auto &pbullet = *itPbullet;
         auto pbbound = pbullet->getSprite()->getGlobalBounds();
@@ -186,7 +185,7 @@ bool solarfox::SolarFox::updatePlayer()
     _player->move(x * speedBoost, y * speedBoost);
 
     auto pbounds = _player->getGlobalBounds();
-    static const float ajustement = 0.01f;
+    static const float ajustement = _unit.x * 0.40f;
     pbounds.left += ajustement;
     pbounds.top += ajustement;
     pbounds.width -= ajustement * 2;
@@ -224,7 +223,6 @@ bool solarfox::SolarFox::updatePlayer()
                     return true;
                 }
                 loadLevel();
-                return false;
             }
         }
     }

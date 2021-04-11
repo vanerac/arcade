@@ -54,7 +54,10 @@ void SpriteSDL2::draw()
     rect.y = _pos.y;
     rect.w = _displayRect.x;
     rect.h = _displayRect.y;
-    if (_sprite && SDL_RenderCopy(LibSDL2::renderer.get(), _sprite.get(), &texture, &rect) < 0) {
+    SDL_Point center;
+    center.x = _origin.x;
+    center.y = _origin.y;
+    if (_sprite && SDL_RenderCopyEx(LibSDL2::renderer.get(), _sprite.get(), &texture, &rect, _angle, &center, SDL_FLIP_NONE) < 0) {
         throw arcade::errors::Error(std::string{"Unexpected error while drawing a sprite: "} + SDL_GetError());
     }
 }
@@ -84,16 +87,18 @@ void SpriteSDL2::move(float x, float y)
 
 void SpriteSDL2::setOrigin(arcade::data::Vector2f origin)
 {
-    _pos.x += _origin.x / (_scale.x ? _scale.x : 1);
-    _pos.y += _origin.y / (_scale.y ? _scale.y : 1);
+    _pos.x += _origin.x;
+    _pos.y += _origin.y;
     _origin = origin;
-    _pos.x -= _origin.x * (_scale.x ? _scale.x : 1);
-    _pos.y -= _origin.y * (_scale.y ? _scale.y : 1);
+    _origin.x *= (_scale.x ? _scale.x : 1);
+    _origin.y *= (_scale.y ? _scale.y : 1);
+    _pos.x -= _origin.x;
+    _pos.y -= _origin.y;
 }
 
 arcade::data::Vector2f SpriteSDL2::getOrigin()
 {
-    return _origin;
+    return {_origin.x * _scale.x, _origin.y * _scale.y};
 }
 
 arcade::data::FloatRect SpriteSDL2::getLocalBounds()
@@ -103,16 +108,18 @@ arcade::data::FloatRect SpriteSDL2::getLocalBounds()
 
 arcade::data::FloatRect SpriteSDL2::getGlobalBounds()
 {
-    return arcade::data::FloatRect{_pos.y + _origin.y, _pos.x + _origin.x, _displayRect.x, _displayRect.y};
+    return arcade::data::FloatRect{_pos.y, _pos.x, _displayRect.x, _displayRect.y};
 }
 
 void SpriteSDL2::setScale(arcade::data::Vector2f scale)
 {
-    _displayRect.x /= _scale.x ? _scale.x : 1;
-    _displayRect.y /= _scale.y ? _scale.y : 1;
+    _origin.x /= (_scale.x ? _scale.x : 1);
+    _origin.y /= (_scale.y ? _scale.y : 1);
     _scale = scale;
-    _displayRect.x *= _scale.x;
-    _displayRect.y *= _scale.y;
+    _origin.x *= (_scale.x ? _scale.x : 1);
+    _origin.y *= (_scale.y ? _scale.y : 1);
+    _displayRect.x = _originalSize.x * _scale.x;
+    _displayRect.y = _originalSize.y * _scale.y;
 }
 
 arcade::data::Vector2f SpriteSDL2::getScale()
@@ -127,12 +134,12 @@ void SpriteSDL2::rotate(float angle)
 
 void SpriteSDL2::setRotation(float angle)
 {
-    (void)angle;
+    _angle = angle;
 }
 
 float SpriteSDL2::getRotation()
 {
-    return 0;
+    return _angle;
 }
 
 void SpriteSDL2::setTextureRect(const arcade::data::IntRect &rect)

@@ -10,10 +10,6 @@
 
 #include <iostream>
 
-// #include <SFML/Audio.hpp>
-// #include <SFML/Graphics.hpp>
-// #include <SFML/System.hpp>
-// #include <SFML/Window.hpp>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <chrono>
@@ -99,6 +95,7 @@ class SpriteSDL2 : public arcade::displayer::ISprite {
         arcade::data::FloatRect _texture;
         arcade::data::Vector2f _pos;
         arcade::data::Vector2f _displayRect;
+        double _angle = 0;
 };
 
 class LibSDL2 : public arcade::displayer::IDisplay {
