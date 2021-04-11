@@ -11,26 +11,25 @@
 
 Game1::Game1()
 {
-    direction = arcade::data::KeyCode::RIGHT;
     map = {
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+        {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1},
+        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1},
+        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1},
+        {1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
@@ -71,9 +70,9 @@ void Game1::create_snake(arcade::data::Vector2f pos, bool isFirstCell)
 {
     std::string snake_path;
 
-    //if (isFirstCell == true)
-    //   snake_path = {"ressources/green_round_new.png"};
-    //else 
+    if (isFirstCell == true)
+        snake_path = {"ressources/pngegg.bmp"};
+    else 
         snake_path = {"ressources/red_round.bmp"};
 
     std::vector<std::string> snake_ascii = {"xx", "xx"};
@@ -103,6 +102,7 @@ void Game1::create_snake(arcade::data::Vector2f pos, bool isFirstCell)
 void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     this->_displayer = disp;
+    direction = arcade::data::KeyCode::RIGHT;
 
     winSize = _displayer->getWindowSize();
     score = _displayer->createText("YOUR SCORE IS : ");
@@ -123,13 +123,8 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     snake.clear();
 
     createBlock({0, 0}, false);
-    auto oldUnit = _unit;
     _unit.x = _blocks[0]->getGlobalBounds().width + 0.02f;
     _unit.y = _blocks[0]->getGlobalBounds().height + 0.02f;
-    for (auto &b : posSnake){
-        b.x = b.x / oldUnit.x * _unit.x;
-        b.y = b.y / oldUnit.y * _unit.y;
-    }
     _player.clear();
     _blocks.clear();
 
@@ -148,15 +143,10 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
         pos = ypos;
     }
     arcade::data::Vector2f initPosSnake{initPos.x + (_unit.x * 4), initPos.y + ((map.size() - 2) * _unit.y)};
-    if (!posSnake.empty())
-        initPosSnake = posSnake[0]; 
     create_snake(initPosSnake, true);
-    for (long unsigned int i = 1; i != totScore + 4; i++){
-        if (!posSnake.empty())
-            create_snake({posSnake[i].x, posSnake[i].y}, false);
-        else
-            create_snake({0, 0}, false);
-    }
+    create_snake({0, 0}, false);
+    create_snake({0, 0}, false);
+    create_snake({0, 0}, false);
     int finalPos = 0;
     for (finalPos = std::rand() % (map.size() * map[0].size());
             map[finalPos % map.size()][finalPos / map.size()];
@@ -258,14 +248,17 @@ void Game1::automaticMove()
 
 arcade::games::GameStatus Game1::update()
 {
-    //getPosSnake();
-
     float adjustment = 0.01;
     auto pbounds = _player[0]->getGlobalBounds();
     auto abounds = _apple->getGlobalBounds();
 
     pbounds.width -= adjustment * 2;
     pbounds.height -= adjustment * 2;
+
+    for(long unsigned int inc = 1; inc != _player.size(); inc++){
+        if (arcade::isOverlap(_player[inc]->getGlobalBounds(), pbounds))
+            return(arcade::games::GameStatus::GAME_ENDED);
+    }
 
     if (arcade::isOverlap(pbounds, abounds)){
         totScore += 1;
@@ -281,8 +274,7 @@ arcade::games::GameStatus Game1::update()
         auto winSize = _displayer->getWindowSize();
         arcade::data::Vector2f initPos{winSize.x * 0.40f, winSize.y * 0.17f};
         createBlock(initPos + arcade::data::Vector2f{(finalPos / map.size()) * _unit.x, (finalPos % map.size()) * _unit.y}, true);
-    }
-    else {
+    } else {
         for (auto &b : _blocks) {
             if (arcade::isOverlap(b->getGlobalBounds(), pbounds))
                 return(arcade::games::GameStatus::GAME_ENDED);
@@ -315,9 +307,6 @@ arcade::games::GameStatus Game1::update()
     _displayer->draw(_apple);
     _displayer->draw(score);
     _displayer->draw(intScore);
-    //arcade::data::Vector2f initPosSnake{_displayer->getWindowSize().x * 0.40f + _unit.x, _displayer->getWindowSize().y * 0.89f};
-    //initPosSnake.x += _unit.x;
-    //create_snake(initPosSnake);
 
     for (auto &b : _player) {
         _displayer->draw(b);
