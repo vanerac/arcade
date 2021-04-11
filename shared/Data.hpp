@@ -154,4 +154,10 @@ std::ostream &operator<<(std::ostream &s, const arcade::data::Vector2<T> &vect) 
     return s;
 }
 
+template<typename T>
+std::ostream &operator<<(std::ostream &s, const arcade::data::Rect<T> &rect) {
+    s << "pos:[" << rect.left << ", " << rect.top << "]-size[" << rect.width << ", " << rect.height << "]";
+    return s;
+}
+
 #endif /* !DATA_HPP_ */

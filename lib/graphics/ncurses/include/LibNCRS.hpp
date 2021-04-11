@@ -80,8 +80,8 @@ class SpriteNCRS : public arcade::displayer::ISprite {
         arcade::data::Vector2f _pos;
         arcade::data::Vector2f _origin;
         arcade::data::Vector2f _scale = arcade::data::Vector2f{1, 1};
-        float _actualRotation;
-        float _rotation;
+        float _actualRotation = 0;
+        float _rotation = 0;
         arcade::data::IntRect _textureRect;
 };
 
@@ -121,7 +121,7 @@ class LibNCRS : public arcade::displayer::IDisplay {
         std::ofstream stream;
         unsigned int _frameLimit = 60;
         std::chrono::time_point<std::chrono::high_resolution_clock> _timePoint;
-        double _lastFrameTime;
+        double _lastFrameTime = 0;
 };
 
 #endif /* !LIBNCRS_HPP_ */
