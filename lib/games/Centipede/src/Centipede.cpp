@@ -109,8 +109,10 @@ arcade::games::GameStatus Centipede::update()
         this->_displayer->getWindowSize().x,
         this->_displayer->getWindowSize().y);
 
-    // for (auto &shot : _shots) {
+    int i = -1;
     for (auto itShot = _shots.begin(); itShot != _shots.end(); ++itShot) {
+        ++i;
+        std::cout << i << std::endl;
         auto &shot = *itShot;
         if (!shot)
             continue;
@@ -120,9 +122,7 @@ arcade::games::GameStatus Centipede::update()
             auto &centipede = *itCentipede;
             if (!centipede)
                 continue;
-            if (centipede->
-            getTiles()
-            .empty()) {
+            if (centipede->getTiles().empty()) {
                 _centipedes.erase(itCentipede);
                 --itCentipede;
                 continue;
@@ -133,18 +133,20 @@ arcade::games::GameStatus Centipede::update()
                     continue;
                 ++index; // todo too dirty
                 if (shot && shot->does_collide(body)) {
+                    std::cout << "hit" << std::endl;
                     this->_obstacles.push_back(std::make_unique<Entity>(4));
                     auto &tmp = this->_obstacles[_obstacles.size() - 1];
-                    tmp->setPosition(body->getPosition().x,
-                        body->getPosition().y);
                     tmp->setSprite(
                         spriteManager->getObstacle(tmp->getHealth()));
-                    this->_centipedes.push_back(centipede->splitAt(index));
+                    tmp->setPosition(body->getPosition().x,
+                        body->getPosition().y);
+                    // centipede->splitAt(index);
+                    // this->_centipedes.push_back(centipede->splitAt(index));
                     // todo explosion animation ?
                     _shots.erase(itShot);
                     // _displayer->log() << "SHOT DELETED BY CENTIPEDE" << std::endl;
                     --itShot;
-                    continue;
+                    break;
                 }
             }
             if (shot && !arcade::isOverlap(mapLimit,
@@ -158,6 +160,8 @@ arcade::games::GameStatus Centipede::update()
         for (auto itObstacle = _obstacles.begin();
             itObstacle != _obstacles.end(); ++itObstacle) {
             auto &obstacle = *itObstacle;
+            if (!obstacle)
+                continue;
             obstacle->move(); // doesn't move doe -_-
             if (!shot->does_collide(obstacle))
                 continue;

@@ -25,19 +25,19 @@ CentipedeEntity::~CentipedeEntity()
 {
 }
 
-std::unique_ptr<CentipedeEntity> CentipedeEntity::splitAt(int tileIndex)
+std::unique_ptr<CentipedeEntity> CentipedeEntity::splitAt(unsigned long int tileIndex)
 {
 
-    std::cout << "split at index " << tileIndex << std::endl;
     std::vector<std::unique_ptr<Entity>> &tiles = getTiles();
 
-    std::vector<std::unique_ptr<Entity>> split_hi;//(tiles.begin(), tiles.begin() + tileIndex);
-    std::vector<std::unique_ptr<Entity>> split_lo;//(tiles.begin() + tileIndex, tiles.end());
+    std::vector<std::unique_ptr<Entity>> split_hi(0);//(tiles.begin(), tiles
+    // .begin() + tileIndex);
+    std::vector<std::unique_ptr<Entity>> split_lo(0);//(tiles.begin() + tileIndex, tiles.end());
 
-    for (int i = 0; i < tileIndex; ++i)
+    for (unsigned long int i = 0; i < tileIndex; ++i)
         split_hi.push_back(std::move(tiles[i]));
 
-    for (int i = tileIndex; tileIndex != 0 && i < tiles.size(); ++i)
+    for (unsigned long int i = tileIndex; tileIndex != 0 && i < tiles.size(); ++i)
         split_lo.push_back(std::move(tiles[i]));
 
     this->setTiles(std::move(split_hi));
@@ -47,6 +47,7 @@ std::unique_ptr<CentipedeEntity> CentipedeEntity::splitAt(int tileIndex)
     ret->setTiles(std::move(split_lo));
 
     ret->setOrientation(_orientation == RIGHT ? LEFT : RIGHT);
+    ret->setPosition(this->getPosition().x, this->getPosition().y);
 
     return ret;
 }
@@ -110,7 +111,8 @@ void CentipedeEntity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
                 index != 0 ? spriteManager.getCentipedeBody(orientation) :
                     spriteManager.getCentipedeHead(orientation));
             body->getSprite()->setPosition(
-                arcade::data::Vector2f(body->getPosition().x,
+                arcade::data::Vector2f(
+                    body->getPosition().x,
                     body->getPosition().y));
         }
         body->draw(disp);
