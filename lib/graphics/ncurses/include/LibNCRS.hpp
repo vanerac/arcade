@@ -74,6 +74,7 @@ class SpriteNCRS : public arcade::displayer::ISprite {
 
     protected:
     private:
+        std::string sprtPath;
         std::vector<std::vector<chtype>> _sprite;
         std::vector<std::vector<chtype>> _originalSprite;
         arcade::data::Vector2f _pos;

@@ -26,6 +26,7 @@ class Centipede : public arcade::games::IGame {
     void draw();
     void stop() override;
     unsigned int getScore() override;
+    void restart() override {};
     // BITE
 
     protected:

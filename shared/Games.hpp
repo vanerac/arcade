@@ -24,7 +24,7 @@ namespace arcade
                 virtual void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) = 0;
                 virtual GameStatus update() = 0;
                 virtual void stop() = 0;
-                // virtual void restart() = 0;
+                virtual void restart() = 0;
                 virtual unsigned int getScore() = 0;
 
         };

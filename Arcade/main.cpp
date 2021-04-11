@@ -53,6 +53,7 @@ int main(int ac, char **av)
         print_help();
         return 0;
     }
+    std::srand(time(0));
     arcade::Arcade arcade;
 
     std::string firstLib = av[1];

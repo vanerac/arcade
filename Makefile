@@ -28,6 +28,9 @@ GAMES_DIR			=	$(LIBS_DIR)/games
 GAME1_DIR			=	$(GAMES_DIR)/Game1
 GAME1_NAME			=	arcade_game1.so
 
+SLFX_DIR			=	$(GAMES_DIR)/SolarFox
+SLFX_NAME			=	arcade_asolarfox.so
+
 CTP_DIR				=	$(GAMES_DIR)/Centipede
 CTP_NAME			=	arcade_centipede.so
 
@@ -44,6 +47,7 @@ core:				shared									## Make the core of the arcade
 
 games:				shared									## Make all games
 					make -C $(GAME1_DIR) && mv $(GAME1_DIR)/$(GAME1_NAME) $(LIBS_DIR) && cp $(LIBS_DIR)/$(GAME1_NAME) $(LIBS_DIR)/arcade_game2.so
+					make -C $(SLFX_DIR) && mv $(SLFX_DIR)/$(SLFX_NAME) $(LIBS_DIR)
 					make -C $(CTP_DIR) && mv $(CTP_DIR)/$(CTP_NAME) $(LIBS_DIR)
 .PHONY:	games
 
@@ -60,6 +64,7 @@ vclean:														## Delete *~ and *#*#* and .#* and vgcore.*
 					make vclean -C $(SDL2_DIR)
 					make vclean -C $(NCRS_DIR)
 					make vclean -C $(GAME1_DIR)
+					make vclean -C $(SLFX_DIR)
 					make vclean -C $(CTP_DIR)
 .PHONY:	vclean
 
@@ -70,6 +75,7 @@ clean:														## Delete the build dir
 					make clean -C $(SDL2_DIR)
 					make clean -C $(NCRS_DIR)
 					make clean -C $(GAME1_DIR)
+					make clean -C $(SLFX_DIR)
 					make clean -C $(CTP_DIR)
 .PHONY:	clean
 
@@ -80,12 +86,14 @@ fclean:														## Delete the binary and call "clean"
 					make fclean -C $(SDL2_DIR)
 					make fclean -C $(NCRS_DIR)
 					make fclean -C $(GAME1_DIR)
+					make fclean -C $(SLFX_DIR)
 					make fclean -C $(CTP_DIR)
 					$(RM) $(ARCADE_NAME)
 					$(RM) $(LIBS_DIR)/$(SFML_NAME)
 					$(RM) $(LIBS_DIR)/$(SDL2_NAME)
 					$(RM) $(LIBS_DIR)/$(NCRS_NAME)
 					$(RM) $(LIBS_DIR)/$(GAME1_NAME)
+					$(RM) $(LIBS_DIR)/$(SLFX_NAME)
 					$(RM) $(LIBS_DIR)/$(CTP_NAME)
 					$(RM) $(LIBS_DIR)/arcade_game2.so
 .PHONY:	fclean
@@ -99,6 +107,7 @@ allclean:			fclean									## Call every function that delete something
 					make allclean -C $(SDL2_DIR)
 					make allclean -C $(NCRS_DIR)
 					make allclean -C $(GAME1_DIR)
+					make allclean -C $(SLFX_DIR)
 					make allclean -C $(CTP_DIR)
 .PHONY:	allclean
 
