@@ -78,7 +78,7 @@ namespace arcade
             Vector2<T> &operator=(const Vector2<U> &other) { x = static_cast<T>(other.x); y = static_cast<T>(other.y); return *this; };
 
             template<typename U>
-            Vector2<T> &operator+=(const Vector2<U> &other) { x = static_cast<T>(other.x); y = static_cast<T>(other.y); return *this; };
+            Vector2<T> &operator+=(const Vector2<U> &other) { x += static_cast<T>(other.x); y += static_cast<T>(other.y); return *this; };
 
             Vector2<T> operator+(const Vector2<T> &other) const { return arcade::data::Vector2<T>{x + other.x, y + other.y}; };
 
@@ -88,7 +88,7 @@ namespace arcade
             Vector2<T> &move(T x) { this->x += x; return *this; };
             Vector2<T> &move(T x, T y) { this->x += x; this->y += y; return *this; };
             template<typename U>
-            Vector2<T> &move(const Vector2<U> &other) { x = static_cast<T>(other.x); y = static_cast<T>(other.y); return *this; };
+            Vector2<T> &move(const Vector2<U> &other) { x += static_cast<T>(other.x); y += static_cast<T>(other.y); return *this; };
 
             T x;
             T y;
@@ -145,5 +145,13 @@ namespace arcade
         };
     } // namespace data
 } // namespace arcade
+
+#include <iostream>
+
+template<typename T>
+std::ostream &operator<<(std::ostream &s, const arcade::data::Vector2<T> &vect) {
+    s << '[' << vect.x << ", " << vect.y << ']';
+    return s;
+}
 
 #endif /* !DATA_HPP_ */

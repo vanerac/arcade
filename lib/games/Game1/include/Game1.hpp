@@ -18,10 +18,11 @@ class Game1 : public arcade::games::IGame {
 
         void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) override; // maybe call it reloadDisplayer and create a second func initGame which just set pos lives and etc
         // void restart() override;
-        GameStatus update() override; // return enum game state
+        arcade::games::GameStatus update() override; // return enum game state
         //GameStatus update() override; // return enum game state
         void stop() override;
-        unsigned int getScore() override;
+        void restart() override {};
+        unsigned int getScore() const override;
         void create_snake(arcade::data::Vector2f pos, bool isFirstCell);
         void createBlock(arcade::data::Vector2f pos, bool isApple);
         void snakeMoveUP();

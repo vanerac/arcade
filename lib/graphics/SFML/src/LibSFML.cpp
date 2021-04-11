@@ -45,7 +45,7 @@ void LibSFML::stop()
     _window.close();
 }
 
-bool LibSFML::isOpen()
+bool LibSFML::isOpen() const
 {
     return _window.isOpen();
 }
@@ -68,7 +68,7 @@ void LibSFML::restartClock()
     _timePoint = std::chrono::high_resolution_clock::now();
 }
 
-double LibSFML::getDeltaTime()
+double LibSFML::getDeltaTime() const
 {
     return _lastFrameTime;
 }
@@ -82,7 +82,7 @@ double LibSFML::getFrameDuration() const
             (std::chrono::high_resolution_clock::now() - _timePoint).count();
 }
 
-arcade::data::Vector2u LibSFML::getWindowSize()
+arcade::data::Vector2u LibSFML::getWindowSize() const
 {
     auto size = _window.getSize();
     return arcade::data::Vector2u{size.x, size.y};
@@ -176,28 +176,28 @@ void LibSFML::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
     _window.draw((reinterpret_cast<std::unique_ptr<SpriteSFML> &>(sprite))->getSprite());
 }
 
-std::unique_ptr<arcade::displayer::IText> LibSFML::createText()
+std::unique_ptr<arcade::displayer::IText> LibSFML::createText() const
 {
     return std::make_unique<TextSFML>();
 }
 
-std::unique_ptr<arcade::displayer::IText> LibSFML::createText(const std::string &text)
+std::unique_ptr<arcade::displayer::IText> LibSFML::createText(const std::string &text) const
 {
     return std::make_unique<TextSFML>(text);
 }
 
-std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite()
+std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite() const
 {
     return std::make_unique<SpriteSFML>();
 }
 
-std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale)
+std::unique_ptr<arcade::displayer::ISprite> LibSFML::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale) const
 {
     (void)asciiSprite;
     return std::make_unique<SpriteSFML>(spritePath, scale);
 }
 
-double LibSFML::scaleMoveX(double time)
+double LibSFML::scaleMoveX(double time) const
 {
     if (!time) {
         return 0;
@@ -205,7 +205,7 @@ double LibSFML::scaleMoveX(double time)
     return (getWindowSize().x / time) / (1.0f / getDeltaTime());
 }
 
-double LibSFML::scaleMoveY(double time)
+double LibSFML::scaleMoveY(double time) const
 {
     if (!time) {
         return 0;

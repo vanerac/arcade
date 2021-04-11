@@ -11,7 +11,7 @@
 #include <Games.hpp>
 
 enum orientation {
-    STATIC, // todo ?
+    STATIC,
     UP,
     RIGHT,
     RIGHT_DOWN,

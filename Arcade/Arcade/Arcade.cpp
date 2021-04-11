@@ -42,7 +42,7 @@ int arcade::Arcade::run()
             drawMenu();
         } else if (_status == ArcadeStatus::IN_GAME) {
             _displayer->clearWindow();
-            if (_game->update() == GameStatus::GAME_ENDED) {
+            if (_game->update() == arcade::games::GameStatus::GAME_ENDED) {
                 goBackToMenu();
             }
         }
@@ -80,7 +80,7 @@ void arcade::Arcade::handleEvents()
             } else if (_status == ArcadeStatus::IN_GAME && event.key == '9') {
                 setGaLib(1);
             } else if (_status == ArcadeStatus::IN_GAME && event.key == '-') {
-                // _game->restart();
+                _game->restart();
             }
         }
     }

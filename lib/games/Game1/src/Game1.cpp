@@ -252,7 +252,7 @@ void Game1::automaticMove()
         snakeMoveDOWN();
 }
 
-GameStatus Game1::update()
+arcade::games::GameStatus Game1::update()
 {
     //getPosSnake();
 
@@ -283,7 +283,7 @@ GameStatus Game1::update()
             //_displayer->log() << " Block: pos[" << b->getGlobalBounds().left << ", " << b->getGlobalBounds().top << "] - size[" << b->getGlobalBounds().width << ", " << b->getGlobalBounds().height << "]" << std::endl;
             //_displayer->log() << "Player: pos[" << pbounds.left << ", " << pbounds.top << "] - size[" << pbounds.width << ", " << pbounds.height << "]" << std::endl;
             if (arcade::isOverlap(b->getGlobalBounds(), pbounds))
-                return(GameStatus::GAME_ENDED);
+                return(arcade::games::GameStatus::GAME_ENDED);
         }
     }
 
@@ -322,7 +322,7 @@ GameStatus Game1::update()
         _displayer->draw(b);
     }
 
-    return(GameStatus::PLAYING);
+    return(arcade::games::GameStatus::PLAYING);
 }
 
 void Game1::stop()
@@ -330,7 +330,7 @@ void Game1::stop()
     this->_displayer->log() << "Stop Game1" << std::endl;
 }
 
-unsigned int Game1::getScore()
+unsigned int Game1::getScore() const
 {
     return this->totScore;
 }

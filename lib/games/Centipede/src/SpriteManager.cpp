@@ -55,7 +55,6 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getCentipedeBody(
     case RIGHT:
         return this->displayer->createSprite(
             std::string("ressources/Centipede/body_left.jpg"), {"x"});
-
     case RIGHT_DOWN:
         return this->displayer->createSprite(
             std::string("ressources/Centipede/body_down_right.jpg"), {"x"});
@@ -74,7 +73,7 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getObstacle(
     int health
 ) const
 {
-    // todo  change ascii sprite
+    // todo  change ascii _sprite
     switch (health) {
     case 4:
         return this->displayer->createSprite(
@@ -91,8 +90,6 @@ std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getObstacle(
     default:
         return nullptr;
     }
-
-    return std::unique_ptr<arcade::displayer::ISprite>();
 }
 
 std::unique_ptr<arcade::displayer::ISprite> SpriteManager::getPlayer() const

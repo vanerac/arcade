@@ -52,7 +52,7 @@ void LibNCRS::stop()
     std::cout << "Stop" << std::endl;
 }
 
-bool LibNCRS::isOpen()
+bool LibNCRS::isOpen() const
 {
     return isendwin();
 }
@@ -79,7 +79,7 @@ void LibNCRS::restartClock()
     _timePoint = std::chrono::high_resolution_clock::now();
 }
 
-double LibNCRS::getDeltaTime()
+double LibNCRS::getDeltaTime() const
 {
     return _lastFrameTime;
 }
@@ -93,7 +93,7 @@ double LibNCRS::getFrameDuration() const
             (std::chrono::high_resolution_clock::now() - _timePoint).count();
 }
 
-arcade::data::Vector2u LibNCRS::getWindowSize()
+arcade::data::Vector2u LibNCRS::getWindowSize() const
 {
     unsigned int width = 0;
     unsigned int height = 0;
@@ -137,7 +137,6 @@ std::vector<arcade::data::Event> LibNCRS::getEvents()
                                     [&event](auto &tupple) {
                                         return event.bstate == std::get<1>(tupple);
                                     });
-                    log() << (itT != ncrsToArcadeMouseType.end()) << (int)std::get<0>(*itT) << std::endl;
                     if (itT != ncrsToArcadeMouseType.end()) {
                         _events.emplace_back(std::get<0>(*itT), std::get<0>(*it), event.x, event.y);
                     }
@@ -213,28 +212,28 @@ void LibNCRS::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
     }
 }
 
-std::unique_ptr<arcade::displayer::IText> LibNCRS::createText()
+std::unique_ptr<arcade::displayer::IText> LibNCRS::createText() const
 {
     return std::make_unique<TextNCRS>();
 }
 
-std::unique_ptr<arcade::displayer::IText> LibNCRS::createText(const std::string &text)
+std::unique_ptr<arcade::displayer::IText> LibNCRS::createText(const std::string &text) const
 {
     return std::make_unique<TextNCRS>(text);
 }
 
-std::unique_ptr<arcade::displayer::ISprite> LibNCRS::createSprite()
+std::unique_ptr<arcade::displayer::ISprite> LibNCRS::createSprite() const
 {
     return std::make_unique<SpriteNCRS>();
 }
 
-std::unique_ptr<arcade::displayer::ISprite> LibNCRS::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale)
+std::unique_ptr<arcade::displayer::ISprite> LibNCRS::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale) const
 {
     (void)spritePath;
     return std::make_unique<SpriteNCRS>(asciiSprite, scale);
 }
 
-double LibNCRS::scaleMoveX(double time)
+double LibNCRS::scaleMoveX(double time) const
 {
     if (!time) {
         return 0;
@@ -242,7 +241,7 @@ double LibNCRS::scaleMoveX(double time)
     return (getWindowSize().x / time) / (1.0f / getDeltaTime());
 }
 
-double LibNCRS::scaleMoveY(double time)
+double LibNCRS::scaleMoveY(double time) const
 {
     if (!time) {
         return 0;

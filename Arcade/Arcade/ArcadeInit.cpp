@@ -195,7 +195,7 @@ void arcade::Arcade::setGrLib(int move)
     if (_displayer) {
         _displayer->stop();
     }
-    if (!_grLoader.load(path)) {
+    if (!_grLoader.load(path, RTLD_NOW | RTLD_NODELETE)) {
         throw arcade::errors::Error(_grLoader.getErrorMsg());
     }
     #define str(s)  #s
@@ -233,7 +233,7 @@ void arcade::Arcade::setGaLib(int move)
     if (_game && _status == ArcadeStatus::IN_GAME) {
         _game->stop();
     }
-    if (!_gaLoader.load(path)) {
+    if (!_gaLoader.load(path, RTLD_NOW | RTLD_NODELETE)) {
         throw arcade::errors::Error(_gaLoader.getErrorMsg());
     }
     #define str(s)  #s
