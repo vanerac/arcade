@@ -48,10 +48,14 @@ void Centipede::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     player->setSprite(spriteManager->getPlayer());
     player->setPosition(disp->getWindowSize().x / 2, disp->getWindowSize().y -
         player->getSprite()->getLocalBounds().height);
-    for (auto &centipede : _centipedes)
-        for (auto &body : centipede->getTiles())
+    for (auto &centipede : _centipedes) {
+        for (auto &body : centipede->getTiles()) {
             body->setSprite(
                 spriteManager->getCentipedeBody(centipede->getOrientation()));
+            body->getSprite()->setPosition(
+                arcade::data::Vector2f(disp->getWindowSize().x / 2, 0.0f));
+        }
+    }
 
     for (auto &obstacle : _obstacles)
         obstacle->setSprite(spriteManager->getObstacle(obstacle->getHealth()));
@@ -123,6 +127,8 @@ arcade::games::GameStatus Centipede::update()
             }
             int index = -1;
             for (auto &body : centipede->getTiles()) {
+                if (!body)
+                    continue;
                 ++index; // todo too dirty
                 if (shot && shot->does_collide(body)) {
                     this->_obstacles.push_back(std::make_unique<Entity>(4));
@@ -138,14 +144,15 @@ arcade::games::GameStatus Centipede::update()
                         << std::endl;
                     --itShot;
                     continue;
-                } else if (shot && !arcade::isOverlap(mapLimit,
-                    shot->getSprite()->getGlobalBounds())) {
-                    _shots.erase(itShot);
-                    _displayer->log() << "SHOT DELETED BY MAP LIMIT" <<
-                    std::endl;
-                    --itShot;
-                    continue;
                 }
+            }
+            if (shot && !arcade::isOverlap(mapLimit,
+                shot->getSprite()->getGlobalBounds())) {
+                _shots.erase(itShot);
+                _displayer->log() << "SHOT DELETED BY MAP LIMIT"
+                    << std::endl;
+                --itShot;
+                continue;
             }
         }
         for (auto itObstacle = _obstacles.begin();
@@ -182,8 +189,9 @@ arcade::games::GameStatus Centipede::update()
             for (auto &obstacle: _obstacles) {
                 if (!obstacle)
                     continue;
-                if (body->does_collide(obstacle) || arcade::isOverlap(mapLimit,
-                    body->getSprite()->getGlobalBounds())) {
+                if (body->does_collide(obstacle) ||
+                    !arcade::isOverlap(mapLimit,
+                        body->getSprite()->getGlobalBounds())) {
                     centipede->setOrientation(
                         centipede->getOrientation() == RIGHT ? LEFT_DOWN :
                             RIGHT_DOWN);
@@ -236,8 +244,11 @@ void Centipede::shoot()
     shot->setVelocity(1);
     shot->setOrientation(UP);
     shot->setSprite(spriteManager->getShot());
-    shot->setPosition(player->getPosition().x, player->getPosition().y -
-        player->getSprite()->getLocalBounds().height);
+    shot->getSprite()->setPosition(arcade::data::Vector2f(
+        player->getPosition().x +
+            (player->getSprite()->getLocalBounds().width / 2),
+        player->getPosition().y -
+            player->getSprite()->getLocalBounds().height));
 
     this->_shots.emplace_back(std::move(shot));
 }

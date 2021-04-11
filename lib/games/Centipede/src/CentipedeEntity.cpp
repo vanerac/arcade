@@ -61,15 +61,15 @@ std::vector<std::unique_ptr<Entity>> &CentipedeEntity::getTiles()
 void CentipedeEntity::move()
 {
     this->velocity = 1.0f / this->_tiles.size();
-    Position previous = _tiles[0]->getPosition();
-    Position buffer = {};
+    arcade::data::Vector2f previous = _tiles[0]->getPosition();
+    arcade::data::Vector2f buffer = {};
     enum orientation prevOrientation = _tiles[0]->getOrientation();
     enum orientation bufferOrientation;
 
     for (auto &tile : _tiles) {
         buffer = tile->getPosition();
         bufferOrientation = tile->getOrientation();
-        tile->setVelocity(1.0f / this->_tiles.size());
+        tile->setVelocity(/*5.0f / */this->_tiles.size());
         tile->setPosition(previous.x, previous.y);
         tile->setOrientation(prevOrientation);
         tile->move();
