@@ -30,10 +30,11 @@ std::unique_ptr<CentipedeEntity> CentipedeEntity::splitAt(int tileIndex)
     std::vector<std::unique_ptr<Entity>> &tiles = getTiles();
     std::vector<std::unique_ptr<Entity>> split_hi;//(tiles.begin(), tiles.begin() + tileIndex);
     split_hi.insert(split_hi.end(), std::make_move_iterator(tiles.begin()),
-                std::make_move_iterator(tiles.begin() + tileIndex));
+        std::make_move_iterator(tiles.begin() + tileIndex));
     std::vector<std::unique_ptr<Entity>> split_lo;//(tiles.begin() + tileIndex, tiles.end());
-    split_lo.insert(split_lo.end(), std::make_move_iterator(tiles.begin() + tileIndex),
-                std::make_move_iterator(tiles.end()));
+    split_lo.insert(split_lo.end(),
+        std::make_move_iterator(tiles.begin() + tileIndex),
+        std::make_move_iterator(tiles.end()));
     this->setTiles(std::move(split_hi));
     if (!split_lo.size())
         return nullptr;
@@ -63,22 +64,32 @@ void CentipedeEntity::move()
     this->velocity = 1.0f / this->_tiles.size();
     arcade::data::Vector2f previous = _tiles[0]->getPosition();
     arcade::data::Vector2f buffer = {};
-    enum orientation prevOrientation = _tiles[0]->getOrientation();
+    enum orientation prevOrientation = this->getOrientation();
     enum orientation bufferOrientation;
 
     for (auto &tile : _tiles) {
+
         buffer = tile->getPosition();
         bufferOrientation = tile->getOrientation();
-        tile->setVelocity(/*5.0f / */this->_tiles.size());
-        tile->setPosition(previous.x, previous.y);
+
+        if (tile != _tiles[0] && tile->getPosition() == previous)
+            continue;
+
+        tile->setVelocity(this->_tiles.size() +
+            tile->getSprite()->getLocalBounds().width / 2);
         tile->setOrientation(prevOrientation);
         tile->move();
+
         previous = buffer;
         prevOrientation = bufferOrientation;
+
         if (bufferOrientation == RIGHT_DOWN)
             tile->setOrientation(RIGHT);
         else if (bufferOrientation == LEFT_DOWN)
             tile->setOrientation(LEFT);
+    }
+    if (_tiles[0]->getOrientation() != this->getOrientation()) {
+        this->setOrientation(_tiles[0]->getOrientation());
     }
 }
 

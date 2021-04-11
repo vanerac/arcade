@@ -21,7 +21,7 @@ class Entity {
         Entity(int health);
         ~Entity();
         void setPosition(int x, int y);
-        arcade::data::Vector2f getPosition() const;
+        arcade::data::Vector2f getPosition();
         void setHealth(int health);
         int getHealth() const;
         virtual void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp);
@@ -35,7 +35,7 @@ class Entity {
         void setVelocity(float velocity);
         float getVelocity() const;
 
-        struct Position pos; // todo change this
+        arcade::data::Vector2<float> pos; // todo change this
 
     protected:
         int health;

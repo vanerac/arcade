@@ -15,7 +15,7 @@ Centipede::Centipede()
     std::cout << "Constructor in" << std::endl;
 
     player = std::make_unique<Entity>(1);
-    this->current_level = 1;
+    this->current_level = 0;
     /*Todo
      * Spawn:
      *  - random collision entities
@@ -97,7 +97,7 @@ void Centipede::handleMovement(
             this->shoot();
             break;
         default:
-            return;
+            break;
         }
     }
 }
@@ -149,8 +149,7 @@ arcade::games::GameStatus Centipede::update()
             if (shot && !arcade::isOverlap(mapLimit,
                 shot->getSprite()->getGlobalBounds())) {
                 _shots.erase(itShot);
-                _displayer->log() << "SHOT DELETED BY MAP LIMIT"
-                    << std::endl;
+                _displayer->log() << "SHOT DELETED BY MAP LIMIT" << std::endl;
                 --itShot;
                 continue;
             }
@@ -183,15 +182,23 @@ arcade::games::GameStatus Centipede::update()
             continue;
         }
         for (auto &body : centipede->getTiles()) {
+            if (!body)
+                continue;
             if (body->does_collide(this->player)) {
                 //                return arcade::games::GameStatus::GAME_ENDED;
+            }
+            if (!arcade::isOverlap(mapLimit,
+                body->getSprite()->getGlobalBounds())) {
+//                std::cout << "OUT OF BOUNDS" << std::endl;
+                centipede->setOrientation(
+                    centipede->getOrientation() == RIGHT ? LEFT_DOWN :
+                        RIGHT_DOWN);
+                continue; // head hit, the rest will follow head
             }
             for (auto &obstacle: _obstacles) {
                 if (!obstacle)
                     continue;
-                if (body->does_collide(obstacle) ||
-                    !arcade::isOverlap(mapLimit,
-                        body->getSprite()->getGlobalBounds())) {
+                if (body->does_collide(obstacle)) {
                     centipede->setOrientation(
                         centipede->getOrientation() == RIGHT ? LEFT_DOWN :
                             RIGHT_DOWN);
@@ -241,7 +248,7 @@ void Centipede::shoot()
 {
     _displayer->log() << "SHOT CREATED" << std::endl;
     auto shot = std::make_unique<Entity>(1);
-    shot->setVelocity(1);
+    shot->setVelocity(2);
     shot->setOrientation(UP);
     shot->setSprite(spriteManager->getShot());
     shot->getSprite()->setPosition(arcade::data::Vector2f(
