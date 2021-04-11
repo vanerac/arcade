@@ -5,6 +5,7 @@
 ** CentipedeEntity.c file
 */
 
+#include <iostream>
 #include "../include/Centipede.hpp"
 
 CentipedeEntity::CentipedeEntity(int size) : Entity(1)
@@ -76,7 +77,7 @@ void CentipedeEntity::move()
         if (tile != _tiles[0] && tile->getPosition() == previous)
             continue;
 
-        std::cout << i << " " << tile->getPosition() << " ";
+        // std::cout << i << " " << tile->getPosition() << " ";
         tile->setVelocity(this->_tiles.size() +
             tile->getSprite()->getLocalBounds().width / 2);
         tile->setOrientation(prevOrientation);

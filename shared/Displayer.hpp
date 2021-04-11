@@ -8,8 +8,6 @@
 #ifndef DISPLAYER_HPP_
 #define DISPLAYER_HPP_
 
-#include <fstream>
-
 #include <vector>
 #include <string>
 #include <memory>
@@ -86,8 +84,6 @@ namespace arcade
                 virtual std::unique_ptr<ISprite> createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale = arcade::data::Vector2f{1, 1}) const = 0;
                 virtual double scaleMoveX(double time) const = 0;
                 virtual double scaleMoveY(double time) const = 0;
-
-                virtual std::ofstream &log() = 0;
         };
     } // namespace Displayer
 

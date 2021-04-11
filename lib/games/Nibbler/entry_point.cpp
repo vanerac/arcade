@@ -6,9 +6,9 @@
 */
 
 #include <memory>
-#include "Game1.hpp"
+#include "Nibbler.hpp"
 
-extern "C" std::unique_ptr<Game1> GAMES_ENTRY_POINT ()
+extern "C" std::unique_ptr<Nibbler> GAMES_ENTRY_POINT ()
 {
-    return std::make_unique<Game1>();
+    return std::make_unique<Nibbler>();
 }

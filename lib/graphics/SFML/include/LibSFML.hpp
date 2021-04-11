@@ -99,13 +99,10 @@ class LibSFML : public arcade::displayer::IDisplay {
         double scaleMoveX(double time) const override;
         double scaleMoveY(double time) const override;
 
-        std::ofstream &log() { return stream; };
-
     protected:
     private:
         bool _eventsFetched = false;
         std::vector<arcade::data::Event> _events;
-        std::ofstream stream;
         sf::RenderWindow _window;
         std::chrono::time_point<std::chrono::high_resolution_clock> _timePoint;
         double _lastFrameTime;

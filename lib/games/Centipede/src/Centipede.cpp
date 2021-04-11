@@ -42,7 +42,7 @@ void Centipede::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     _displayer = disp;
     std::cout << "init in" << std::endl;
-    _displayer->log() << "INIT IN" << std::endl;
+    // _displayer->log() << "INIT IN" << std::endl;
     spriteManager = std::make_unique<SpriteManager>(disp, current_level);
 
     player->setSprite(spriteManager->getPlayer());
@@ -61,7 +61,7 @@ void Centipede::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
         obstacle->setSprite(spriteManager->getObstacle(obstacle->getHealth()));
     for (auto &shot : _shots)
         shot->setSprite(spriteManager->getShot());
-    _displayer->log() << "INIT OUT" << std::endl;
+    // _displayer->log() << "INIT OUT" << std::endl;
     // todo display text
 
 }
@@ -104,7 +104,7 @@ void Centipede::handleMovement(
 
 arcade::games::GameStatus Centipede::update()
 {
-    _displayer->log() << "Update IN" << std::endl;
+    // _displayer->log() << "Update IN" << std::endl;
     auto mapLimit = arcade::data::FloatRect(
         this->_displayer->getWindowSize().x,
         this->_displayer->getWindowSize().y);
@@ -140,8 +140,7 @@ arcade::games::GameStatus Centipede::update()
                     this->_centipedes.push_back(centipede->splitAt(index));
                     // todo explosion animation ?
                     _shots.erase(itShot);
-                    _displayer->log() << "SHOT DELETED BY CENTIPEDE"
-                        << std::endl;
+                    // _displayer->log() << "SHOT DELETED BY CENTIPEDE" << std::endl;
                     --itShot;
                     continue;
                 }
@@ -149,7 +148,7 @@ arcade::games::GameStatus Centipede::update()
             if (shot && !arcade::isOverlap(mapLimit,
                 shot->getSprite()->getGlobalBounds())) {
                 _shots.erase(itShot);
-                _displayer->log() << "SHOT DELETED BY MAP LIMIT" << std::endl;
+                // _displayer->log() << "SHOT DELETED BY MAP LIMIT" << std::endl;
                 --itShot;
                 continue;
             }
@@ -165,12 +164,12 @@ arcade::games::GameStatus Centipede::update()
                 spriteManager->getObstacle(obstacle->getHealth()));
             if (obstacle->getHealth() == 0) {
                 _obstacles.erase(itObstacle);
-                _displayer->log() << "SHOT DELETED BY OBSTACLE" << std::endl;
+                // _displayer->log() << "SHOT DELETED BY OBSTACLE" << std::endl;
                 --itObstacle;
             }
         }
     }
-    _displayer->log() << "UPDATE MOVE CENTIPEDE" << std::endl;
+    // _displayer->log() << "UPDATE MOVE CENTIPEDE" << std::endl;
     for (auto itCentipede = _centipedes.begin();
         itCentipede != _centipedes.end(); ++itCentipede) {
         auto &centipede = *itCentipede;
@@ -205,7 +204,7 @@ arcade::games::GameStatus Centipede::update()
         centipede->move();
     }
 
-    _displayer->log() << "UPDATE USER INPUT" << std::endl;
+    // _displayer->log() << "UPDATE USER INPUT" << std::endl;
     auto event = this->_displayer->getEvents();
     handleMovement(event);
     player->move();
@@ -213,21 +212,21 @@ arcade::games::GameStatus Centipede::update()
 
     if (_centipedes.empty())
         this->newLevel();
-    _displayer->log() << "UPDATE DRAW" << std::endl;
+    // _displayer->log() << "UPDATE DRAW" << std::endl;
     draw();
-    _displayer->log() << "Update OUT" << std::endl;
+    // _displayer->log() << "Update OUT" << std::endl;
     return arcade::games::GameStatus::PLAYING;
 }
 
 void Centipede::stop()
 {
-    _displayer->log() << "Stop Game1" << std::endl;
+    // _displayer->log() << "Stop Game1" << std::endl;
 }
 
 void Centipede::draw()
 {
 
-    _displayer->log() << "DRAW IN" << std::endl;
+    // _displayer->log() << "DRAW IN" << std::endl;
     this->_displayer->clearWindow();
     for (auto &centipede : _centipedes)
         centipede->draw(this->_displayer);
@@ -238,12 +237,12 @@ void Centipede::draw()
             shot->draw(this->_displayer);
     }
     player->draw(this->_displayer);
-    _displayer->log() << "DRAW OUT" << std::endl;
+    // _displayer->log() << "DRAW OUT" << std::endl;
 }
 
 void Centipede::shoot()
 {
-    _displayer->log() << "SHOT CREATED" << std::endl;
+    // _displayer->log() << "SHOT CREATED" << std::endl;
     auto shot = std::make_unique<Entity>(1);
     shot->setVelocity(5);
     shot->setOrientation(UP);

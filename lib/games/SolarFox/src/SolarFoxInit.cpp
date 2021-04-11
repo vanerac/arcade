@@ -9,21 +9,6 @@
 #include <cmath>
 #include "SolarFox.hpp"
 
-std::ostream &operator<<(std::ostream &s, const solarfox::direction &d) {
-    if (d == solarfox::direction::Going_Up) {
-        s << "Going_Up";
-    } else if (d == solarfox::direction::Going_Down) {
-        s << "Going_Down";
-    } else if (d == solarfox::direction::Going_Left) {
-        s << "Going_Left";
-    } else if (d == solarfox::direction::Going_Right) {
-        s << "Going_Right";
-    } else {
-        s << "No_Direction";
-    }
-    return s;
-};
-
 void solarfox::SolarFox::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
     _displayer = disp;
@@ -39,11 +24,8 @@ void solarfox::SolarFox::init(std::shared_ptr<arcade::displayer::IDisplay> &disp
     int characterSize = isOptions(_displayer, SET_CHARACTER_SIZE) ? 40 : 1;
     const int yOffset = winSize.y * 0.02f;
 
-
-    if (!_isRestarting || _level > 1) {
-        _pbullets.clear();
-        _ebullets.clear();
-    }
+    _pbullets.clear();
+    _ebullets.clear();
 
 
 

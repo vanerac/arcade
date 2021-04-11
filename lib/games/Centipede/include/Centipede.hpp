@@ -20,14 +20,12 @@ class Centipede : public arcade::games::IGame {
     ~Centipede();
 
     void init(std::shared_ptr<arcade::displayer::IDisplay> &disp
-    ) override; // maybe call it reloadDisplayer and create a second func initGame which just set pos lives and etc
-    // void restart() override;
-    arcade::games::GameStatus update() override; // return enum game state
+    ) override;
+    arcade::games::GameStatus update() override;
     void draw();
     void stop() override;
     unsigned int getScore() const override;
     void restart() override {};
-    // BITE
 
     protected:
     private:

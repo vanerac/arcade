@@ -5,6 +5,8 @@
 ** ArcadeInit
 */
 
+#include <iostream>
+#include <fstream>
 #include <algorithm>
 #include <regex>
 #include "Arcade.hpp"
@@ -169,12 +171,6 @@ void arcade::Arcade::fetchHighScores()
                         });
             gamePair.second.erase(std::unique(gamePair.second.begin(), gamePair.second.end()), gamePair.second.end());
             _highScores[it - games.begin()] = gamePair.second;
-        }
-    }
-    for (unsigned int i = 0; i < _highScores.size(); ++i) {
-        std::cout << _galibsPath[i] << ": " << std::endl;
-        for (auto &h : _highScores[i]) {
-            std::cout << "    " << h.first << ": " << h.second << std::endl;
         }
     }
 }

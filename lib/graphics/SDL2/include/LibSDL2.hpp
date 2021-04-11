@@ -8,8 +8,6 @@
 #ifndef LIBSDL2_HPP_
 #define LIBSDL2_HPP_
 
-#include <iostream>
-
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <chrono>
@@ -123,8 +121,6 @@ class LibSDL2 : public arcade::displayer::IDisplay {
         double scaleMoveX(double time) const override;
         double scaleMoveY(double time) const override;
 
-        std::ofstream &log() { return stream; };
-
         static RendererPtr renderer;
 
     protected:
@@ -137,7 +133,6 @@ class LibSDL2 : public arcade::displayer::IDisplay {
         bool _windowIsOpen = false;
         bool _eventsFetched = false;
         std::vector<arcade::data::Event> _events;
-        std::ofstream stream;
         std::chrono::time_point<std::chrono::high_resolution_clock> _timePoint;
         double _lastFrameTime;
         unsigned int _frameLimit;

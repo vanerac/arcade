@@ -8,8 +8,6 @@
 #ifndef SOLARFOX_HPP_
 #define SOLARFOX_HPP_
 
-#include <iostream>
-
 #include <chrono>
 #include "Games.hpp"
 #include "solarfoxData.hpp"

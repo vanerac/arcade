@@ -4,7 +4,6 @@
 ** File description:
 ** SpriteNCRS
 */
-#include <iostream>
 
 #include <cmath>
 #include "LibNCRS.hpp"

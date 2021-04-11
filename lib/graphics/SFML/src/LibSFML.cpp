@@ -5,15 +5,12 @@
 ** LibSFML
 */
 
-#include <iostream>
 #include <unordered_map>
 #include "LibSFML.hpp"
 #include "Errors.hpp"
 
 LibSFML::LibSFML()
 {
-    // stream.open("./log.txt");
-    stream.open("./log.txt", std::ios_base::app);
 }
 
 LibSFML::~LibSFML()
@@ -30,7 +27,6 @@ int LibSFML::availableOptions() const
 
 void LibSFML::init(const std::string &winName, unsigned int framesLimit)
 {
-    std::cout << "Init" << std::endl;
     _window.create(sf::VideoMode(1920, 1080), winName, sf::Style::Fullscreen);
     if (_window.isOpen() == false) {
         throw arcade::errors::Error("The SFML graphic lib could not been initialize properly.");
@@ -41,7 +37,6 @@ void LibSFML::init(const std::string &winName, unsigned int framesLimit)
 
 void LibSFML::stop()
 {
-    std::cout << "Stop" << std::endl;
     _window.close();
 }
 

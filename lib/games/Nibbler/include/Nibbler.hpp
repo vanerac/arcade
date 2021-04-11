@@ -2,27 +2,26 @@
 ** EPITECH PROJECT, 2021
 ** B-OOP-400-BDX-4-1-arcade-honore.dupieu
 ** File description:
-** Game1
+** Nibbler
 */
 
-#ifndef GAME1_HPP_
-#define GAME1_HPP_
+#ifndef NIBBLER_HPP_
+#define NIBBLER_HPP_
 
-#include "Games.hpp"
 #include <chrono>
+#include "Games.hpp"
 
-class Game1 : public arcade::games::IGame {
+class Nibbler : public arcade::games::IGame {
     public:
-        Game1();
-        ~Game1();
+        Nibbler();
+        ~Nibbler();
 
-        void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) override; // maybe call it reloadDisplayer and create a second func initGame which just set pos lives and etc
-        // void restart() override;
-        arcade::games::GameStatus update() override; // return enum game state
-        //GameStatus update() override; // return enum game state
+        void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) override;
+        arcade::games::GameStatus update() override;
         void stop() override;
         void restart() override {};
         unsigned int getScore() const override;
+
         void create_snake(arcade::data::Vector2f pos, bool isFirstCell);
         void createBlock(arcade::data::Vector2f pos, bool isApple);
         void snakeMoveUP();
@@ -57,4 +56,4 @@ class Game1 : public arcade::games::IGame {
         long unsigned int totScore = 0;
 };
 
-#endif /* !GAME1_HPP_ */
+#endif /* !NIBBLER_HPP_ */
