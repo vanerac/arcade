@@ -154,6 +154,15 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     createBlock(initPos + arcade::data::Vector2f{(finalPos / map.size()) * _unit.x, (finalPos % map.size()) * _unit.y}, true);
 }
 
+void Game1::restart()
+{
+    posSnake.clear();
+    _player.clear();
+    automaticMoveTimer = 0.8;
+    totScore = 0;
+    init(_displayer);
+}
+
 void Game1::snakeMoveRIGHT()
 {
     int i = -1;
@@ -298,6 +307,8 @@ arcade::games::GameStatus Game1::update()
             direction = arcade::data::KeyCode::RIGHT;
         if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::DOWN)
             direction = arcade::data::KeyCode::DOWN;
+        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::SPACE)
+            restart();
     }
     this->_displayer->draw(_logo);
     for (auto &b : _blocks) {
