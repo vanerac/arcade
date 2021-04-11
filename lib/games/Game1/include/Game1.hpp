@@ -54,7 +54,7 @@ class Game1 : public arcade::games::IGame {
         std::chrono::time_point<std::chrono::high_resolution_clock> _clock = std::chrono::high_resolution_clock::now();
         double automaticMoveTimer = 0.8;
         arcade::data::Vector2u winSize;
-        int totScore = 0;
+        long unsigned int totScore = 0;
 };
 
 #endif /* !GAME1_HPP_ */

@@ -79,7 +79,7 @@ void Game1::create_snake(arcade::data::Vector2f pos, bool isFirstCell)
     std::vector<std::string> snake_ascii = {"xx", "xx"};
     getPosSnake();
 
-    if (isFirstCell != true) {
+    if (isFirstCell != true && pos.x == 0 && pos.y == 0) {
         if (direction == arcade::data::KeyCode::UP){
             pos.x = posSnake[posSnake.size() - 1].x;
             pos.y = posSnake[posSnake.size() - 1].y + _unit.y;
@@ -126,7 +126,6 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     auto oldUnit = _unit;
     _unit.x = _blocks[0]->getGlobalBounds().width + 0.02f;
     _unit.y = _blocks[0]->getGlobalBounds().height + 0.02f;
-    getPosSnake();
     for (auto &b : posSnake){
         b.x = b.x / oldUnit.x * _unit.x;
         b.y = b.y / oldUnit.y * _unit.y;
@@ -148,11 +147,16 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
         ypos.move(0, _unit.y);
         pos = ypos;
     }
-    arcade::data::Vector2f initPosSnake{initPos.x + _unit.x, initPos.y + ((map.size() - 2) * _unit.y)};
-    if (!posSnake.empty()){
-        initPosSnake = posSnake[0];
-    }
+    arcade::data::Vector2f initPosSnake{initPos.x + (_unit.x * 4), initPos.y + ((map.size() - 2) * _unit.y)};
+    if (!posSnake.empty())
+        initPosSnake = posSnake[0]; 
     create_snake(initPosSnake, true);
+    for (long unsigned int i = 1; i != totScore + 4; i++){
+        if (!posSnake.empty())
+            create_snake({posSnake[i].x, posSnake[i].y}, false);
+        else
+            create_snake({0, 0}, false);
+    }
     int finalPos = 0;
     for (finalPos = std::rand() % (map.size() * map[0].size());
             map[finalPos % map.size()][finalPos / map.size()];
@@ -280,8 +284,6 @@ arcade::games::GameStatus Game1::update()
     }
     else {
         for (auto &b : _blocks) {
-            //_displayer->log() << " Block: pos[" << b->getGlobalBounds().left << ", " << b->getGlobalBounds().top << "] - size[" << b->getGlobalBounds().width << ", " << b->getGlobalBounds().height << "]" << std::endl;
-            //_displayer->log() << "Player: pos[" << pbounds.left << ", " << pbounds.top << "] - size[" << pbounds.width << ", " << pbounds.height << "]" << std::endl;
             if (arcade::isOverlap(b->getGlobalBounds(), pbounds))
                 return(arcade::games::GameStatus::GAME_ENDED);
         }
@@ -289,7 +291,6 @@ arcade::games::GameStatus Game1::update()
 
     if (getElapsedTime() > automaticMoveTimer){
         automaticMove();
-        this->_displayer->log() << automaticMoveTimer << std::endl;
         if (automaticMoveTimer >= 0.3)
             automaticMoveTimer -= 0.01;
         restartClock();
