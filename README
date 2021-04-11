@@ -1,0 +1,6 @@
+This project is an arcade simulator.
+It utilise dynamic libraries for the graphics and the games.
+The goal is to be able to share and launch the libs with the core of a diffrent group.
+
+Our group leader was:   honore.dupieu@epitech.eu
+The other group leader: alexandre.lacoste@epitech.eu

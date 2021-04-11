@@ -20,6 +20,17 @@ static void print_help()
     arcade::Arcade::printLibconfHelp();
 }
 
+bool check_env(char **env)
+{
+    unsigned short found = 0;
+    for (; *env; ++env) {
+        if (!strcmp(*env, "DISPLAY=:0.0") || !strcmp(*env, "XDG_RUNTIME_DIR=/run/user/1000")) {
+            ++found;
+        }
+    }
+    return found == 2;
+}
+
 static void setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
 {
     arcade.setLibsList("./lib");
@@ -43,7 +54,7 @@ static void setArcade(arcade::Arcade &arcade, const std::string &firstGrLib)
     }
 }
 
-int main(int ac, char **av)
+int main(int ac, char **av, char **env)
 {
     if (ac != 2) {
         std::cerr << "Error: You must give the first graphical lib to use." << std::endl;
@@ -52,6 +63,9 @@ int main(int ac, char **av)
     if (!strcmp(av[1], "-h") || !strcmp(av[1], "--help")) {
         print_help();
         return 0;
+    } else if (!check_env(env)) {
+        std::cerr << "Make sure the DISPLAY and XDG_RUNTIME_DIR environment variable is set correctly." << '\n';
+        return 84;
     }
     std::srand(time(0));
     arcade::Arcade arcade;
@@ -76,36 +90,8 @@ int main(int ac, char **av)
         std::cerr << "Get more info with the -h flag." << '\n';
         status = 84;
     }
+    catch(...) {
+        std::cerr << "Ooooh nooooooo" << '\n';
+    }
     return status;
 }
-
-
-
-
-
-
-
-
-
-// int main()
-// {
-//     DLLoader loader{"./lib/arcade_sfml.so"};
-
-//     if (!loader.didLoad()) {
-//         std::cerr << "Could not open!!" << dlerror() << std::endl;
-//         return 84;
-//     }
-//     std::unique_ptr<Displayer::IDisplay> (*getter)() = loader.getFunc<std::unique_ptr<Displayer::IDisplay> (*)()>("entry_point");
-//     if (!getter) {
-//         std::cerr << "Could not find getter!!" << std::endl;
-//         return 84;
-//     }
-//     std::unique_ptr<Displayer::IDisplay> displayer = getter();
-//     if (!displayer) {
-//         std::cerr << "Could not create displayer!!" << std::endl;
-//         return 84;
-//     }
-//     displayer->init();
-//     displayer->stop();
-//     return 0;
-// }
