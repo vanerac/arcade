@@ -66,13 +66,13 @@ void TextSFML::setCharacterSize(unsigned int size)
     _text.setCharacterSize(size);
 }
 
-arcade::data::FloatRect TextSFML::getLocalBounds()
+arcade::data::FloatRect TextSFML::getLocalBounds() const
 {
     auto rect = _text.getLocalBounds();
     return arcade::data::FloatRect{rect.top, rect.left, rect.width, rect.height};
 }
 
-arcade::data::FloatRect TextSFML::getGlobalBounds()
+arcade::data::FloatRect TextSFML::getGlobalBounds() const
 {
     auto rect = _text.getGlobalBounds();
     return arcade::data::FloatRect{rect.top, rect.left, rect.width, rect.height};
@@ -83,7 +83,7 @@ void TextSFML::setOrigin(arcade::data::Vector2f origin)
     _text.setOrigin(sf::Vector2f{origin.x, origin.y});
 }
 
-arcade::data::Vector2f TextSFML::getOrigin()
+arcade::data::Vector2f TextSFML::getOrigin() const
 {
     auto org = _text.getOrigin();
     return arcade::data::Vector2f{org.x, org.y};

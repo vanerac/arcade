@@ -22,7 +22,7 @@ class Game1 : public arcade::games::IGame {
         //GameStatus update() override; // return enum game state
         void stop() override;
         void restart() override {};
-        unsigned int getScore() override;
+        unsigned int getScore() const override;
         void create_snake(arcade::data::Vector2f pos, bool isFirstCell);
         void createBlock(arcade::data::Vector2f pos, bool isApple);
         void snakeMoveUP();

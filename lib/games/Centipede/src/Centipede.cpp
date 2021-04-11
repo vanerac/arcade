@@ -33,7 +33,7 @@ Centipede::~Centipede()
 {
 }
 
-unsigned int Centipede::getScore()
+unsigned int Centipede::getScore() const
 {
     return 0;
 }

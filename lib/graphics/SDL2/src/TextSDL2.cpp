@@ -86,12 +86,12 @@ void TextSDL2::setCharacterSize(unsigned int size)
     }
 }
 
-arcade::data::FloatRect TextSDL2::getLocalBounds()
+arcade::data::FloatRect TextSDL2::getLocalBounds() const
 {
     return arcade::data::FloatRect{0, 0, _rect.w, _rect.h};
 }
 
-arcade::data::FloatRect TextSDL2::getGlobalBounds()
+arcade::data::FloatRect TextSDL2::getGlobalBounds() const
 {
     return arcade::data::FloatRect{_rect.y, _rect.x, _rect.w, _rect.h};
 }
@@ -105,7 +105,7 @@ void TextSDL2::setOrigin(arcade::data::Vector2f origin)
     _rect.y -= _origin.y;
 }
 
-arcade::data::Vector2f TextSDL2::getOrigin()
+arcade::data::Vector2f TextSDL2::getOrigin() const
 {
     return _origin;
 }

@@ -62,12 +62,12 @@ void TextNCRS::setCharacterSize(unsigned int size)
     (void)size;
 }
 
-arcade::data::FloatRect TextNCRS::getLocalBounds()
+arcade::data::FloatRect TextNCRS::getLocalBounds() const
 {
     return arcade::data::FloatRect{0, 0, static_cast<float>(_text.size()), 1.0f};
 }
 
-arcade::data::FloatRect TextNCRS::getGlobalBounds()
+arcade::data::FloatRect TextNCRS::getGlobalBounds() const
 {
     return arcade::data::FloatRect{_pos.y - _origin.y, _pos.x - _origin.x, static_cast<float>(_text.size()), 1.0f};
 }
@@ -77,7 +77,7 @@ void TextNCRS::setOrigin(arcade::data::Vector2f origin)
     _origin = origin;
 }
 
-arcade::data::Vector2f TextNCRS::getOrigin()
+arcade::data::Vector2f TextNCRS::getOrigin() const
 {
     return _origin;
 }

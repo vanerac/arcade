@@ -38,7 +38,7 @@ void solarfox::SolarFox::restart()
     init(_displayer);
 }
 
-unsigned int solarfox::SolarFox::getScore()
+unsigned int solarfox::SolarFox::getScore() const
 {
     return _score;
 }

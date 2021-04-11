@@ -55,7 +55,7 @@ void LibSDL2::stop()
     _windowIsOpen = false;
 }
 
-bool LibSDL2::isOpen()
+bool LibSDL2::isOpen() const
 {
     return _windowIsOpen;
 }
@@ -84,7 +84,7 @@ void LibSDL2::restartClock()
     _timePoint = std::chrono::high_resolution_clock::now();
 }
 
-double LibSDL2::getDeltaTime()
+double LibSDL2::getDeltaTime() const
 {
     return _lastFrameTime;
 }
@@ -98,7 +98,7 @@ double LibSDL2::getFrameDuration() const
             (std::chrono::high_resolution_clock::now() - _timePoint).count();
 }
 
-arcade::data::Vector2u LibSDL2::getWindowSize()
+arcade::data::Vector2u LibSDL2::getWindowSize() const
 {
     int x = 0;
     int y = 0;
@@ -193,28 +193,28 @@ void LibSDL2::draw(std::unique_ptr<arcade::displayer::ISprite> &sprite)
     reinterpret_cast<std::unique_ptr<SpriteSDL2> &>(sprite)->draw();
 }
 
-std::unique_ptr<arcade::displayer::IText> LibSDL2::createText()
+std::unique_ptr<arcade::displayer::IText> LibSDL2::createText() const
 {
     return std::make_unique<TextSDL2>();
 }
 
-std::unique_ptr<arcade::displayer::IText> LibSDL2::createText(const std::string &text)
+std::unique_ptr<arcade::displayer::IText> LibSDL2::createText(const std::string &text) const
 {
     return std::make_unique<TextSDL2>(text);
 }
 
-std::unique_ptr<arcade::displayer::ISprite> LibSDL2::createSprite()
+std::unique_ptr<arcade::displayer::ISprite> LibSDL2::createSprite() const
 {
     return std::make_unique<SpriteSDL2>();
 }
 
-std::unique_ptr<arcade::displayer::ISprite> LibSDL2::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale)
+std::unique_ptr<arcade::displayer::ISprite> LibSDL2::createSprite(const std::string &spritePath, const std::vector<std::string> &asciiSprite, arcade::data::Vector2f scale) const
 {
     (void)asciiSprite;
     return std::make_unique<SpriteSDL2>(spritePath, scale);
 }
 
-double LibSDL2::scaleMoveX(double time)
+double LibSDL2::scaleMoveX(double time) const
 {
     if (!time) {
         return 0;
@@ -222,7 +222,7 @@ double LibSDL2::scaleMoveX(double time)
     return (getWindowSize().x / time) / (1.0f / getDeltaTime());
 }
 
-double LibSDL2::scaleMoveY(double time)
+double LibSDL2::scaleMoveY(double time) const
 {
     if (!time) {
         return 0;

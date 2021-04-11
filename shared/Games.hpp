@@ -25,7 +25,7 @@ namespace arcade
                 virtual GameStatus update() = 0;
                 virtual void stop() = 0;
                 virtual void restart() = 0;
-                virtual unsigned int getScore() = 0;
+                virtual unsigned int getScore() const = 0;
 
         };
     } // namespace games

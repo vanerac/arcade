@@ -26,17 +26,17 @@ namespace solarfox
             void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) override;
             void stop() override;
             arcade::games::GameStatus update() override;
-            unsigned int getScore() override;
+            unsigned int getScore() const override;
             void restart() override;
 
+        protected:
+        private:
             void handleEvents();
             void updateEnemies();
             bool updateBullets();
             bool updatePlayer();
             void draw();
 
-        protected:
-        private:
             arcade::data::FloatRect findUnitCube(arcade::data::Vector2f pos) const;
             float findRotation(direction whereToPoint);
             void createMap();

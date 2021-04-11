@@ -96,17 +96,17 @@ void SpriteSDL2::setOrigin(arcade::data::Vector2f origin)
     _pos.y -= _origin.y;
 }
 
-arcade::data::Vector2f SpriteSDL2::getOrigin()
+arcade::data::Vector2f SpriteSDL2::getOrigin() const
 {
     return {_origin.x * _scale.x, _origin.y * _scale.y};
 }
 
-arcade::data::FloatRect SpriteSDL2::getLocalBounds()
+arcade::data::FloatRect SpriteSDL2::getLocalBounds() const
 {
     return arcade::data::FloatRect{0, 0, _originalSize.x, _originalSize.y};
 }
 
-arcade::data::FloatRect SpriteSDL2::getGlobalBounds()
+arcade::data::FloatRect SpriteSDL2::getGlobalBounds() const
 {
     return arcade::data::FloatRect{_pos.y, _pos.x, _displayRect.x, _displayRect.y};
 }
@@ -122,7 +122,7 @@ void SpriteSDL2::setScale(arcade::data::Vector2f scale)
     _displayRect.y = _originalSize.y * _scale.y;
 }
 
-arcade::data::Vector2f SpriteSDL2::getScale()
+arcade::data::Vector2f SpriteSDL2::getScale() const
 {
     return _scale;
 }
@@ -137,7 +137,7 @@ void SpriteSDL2::setRotation(float angle)
     _angle = angle;
 }
 
-float SpriteSDL2::getRotation()
+float SpriteSDL2::getRotation() const
 {
     return _angle;
 }

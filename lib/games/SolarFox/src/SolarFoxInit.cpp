@@ -39,7 +39,7 @@ void solarfox::SolarFox::init(std::shared_ptr<arcade::displayer::IDisplay> &disp
     const int yOffset = winSize.y * 0.02f;
 
 
-    if (!_isRestarting) {
+    if (!_isRestarting || _level) {
         _pbullets.clear();
         _ebullets.clear();
     }
@@ -105,25 +105,13 @@ void solarfox::SolarFox::init(std::shared_ptr<arcade::displayer::IDisplay> &disp
                     c->setScale({_unit.x / c->getLocalBounds().width, _unit.y / c->getLocalBounds().height});
                     c->setPosition(pos);
                 } else if (_map[y - 1][x - 1] == 2) {
-                    {
-                        _collectables.push_back(_displayer->createSprite("ressources/solarfox/asteroid.bmp", {"XX", "XX"}));
-                        auto &c = _collectables[_collectables.size() - 1];
-                        c->setScale({_unit.x / c->getLocalBounds().width, _unit.y / c->getLocalBounds().height});
-                        c->setPosition(pos);
-                    }
                     _player = _displayer->createSprite("ressources/solarfox/player.bmp", {"##", "||"});
                     _player->setScale({_unit.x / _player->getLocalBounds().width, _unit.y / _player->getLocalBounds().height});
                     _player->setOrigin({_player->getLocalBounds().width / 2, _player->getLocalBounds().height / 2});
                     arcade::data::Vector2f p{_player->getGlobalBounds().width / 2, _player->getGlobalBounds().height / 2};
                     _player->setPosition(pos + p);
-                    _player->setRotation(findRotation(direction::Going_Right));std::cout << 
+                    _player->setRotation(findRotation(direction::Going_Right));
                     _playerDirection = Going_Right;
-                    {
-                        _collectables.push_back(_displayer->createSprite("ressources/solarfox/asteroid.bmp", {"XX", "XX"}));
-                        auto &c = _collectables[_collectables.size() - 1];
-                        c->setScale({_unit.x / c->getLocalBounds().width, _unit.y / c->getLocalBounds().height});
-                        c->setPosition(pos + p);
-                    }
                 }
             }
         }

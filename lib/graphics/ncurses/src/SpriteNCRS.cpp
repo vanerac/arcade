@@ -80,18 +80,18 @@ void SpriteNCRS::setOrigin(arcade::data::Vector2f origin)
     _origin = origin;
 }
 
-arcade::data::Vector2f SpriteNCRS::getOrigin()
+arcade::data::Vector2f SpriteNCRS::getOrigin() const
 {
     return _origin;
 }
 
-arcade::data::FloatRect SpriteNCRS::getLocalBounds()
+arcade::data::FloatRect SpriteNCRS::getLocalBounds() const
 {
     float width = _originalSprite.size() ? _originalSprite[0].size() : 0;
     return arcade::data::FloatRect{0, 0, width, static_cast<float>(_originalSprite.size())};
 }
 
-arcade::data::FloatRect SpriteNCRS::getGlobalBounds()
+arcade::data::FloatRect SpriteNCRS::getGlobalBounds() const
 {
     return arcade::data::FloatRect{_pos.y - _origin.y, _pos.x - _origin.x, static_cast<float>(_textureRect.width), static_cast<float>(_textureRect.height)};
 }
@@ -104,7 +104,7 @@ void SpriteNCRS::setScale(arcade::data::Vector2f scale)
     _scale = scale;
 }
 
-arcade::data::Vector2f SpriteNCRS::getScale()
+arcade::data::Vector2f SpriteNCRS::getScale() const
 {
     return _scale;
 }
@@ -144,7 +144,7 @@ void SpriteNCRS::setRotation(float angle)
     _actualRotation = rot;
 }
 
-float SpriteNCRS::getRotation()
+float SpriteNCRS::getRotation() const
 {
     return _rotation;
 }

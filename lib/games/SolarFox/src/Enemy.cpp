@@ -44,18 +44,17 @@ std::unique_ptr<arcade::displayer::ISprite> &solarfox::Enemy::getSprite()
 
 void solarfox::Enemy::resetPos()
 {
-    // float diff = std::sqrt(std::pow(_end.x - _start.x, 2) + std::pow(_end.y - _start.y, 2));    
-    // float off = (diff * 0.15f) + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / ((diff * (1 - 0.15f)) - (diff * 0.15f))));
-    // if (_rotation == direction::Going_Up) {
-    //     _sprite->setPosition(_start + arcade::data::Vector2f{-off, 0});
-    // } else if (_rotation == direction::Going_Right) {
-    //     _sprite->setPosition(_start + arcade::data::Vector2f{0, -off});
-    // } else if (_rotation == direction::Going_Down) {
-    //     _sprite->setPosition(_start + arcade::data::Vector2f{off, 0});
-    // } else if (_rotation == direction::Going_Left) {
-    //     _sprite->setPosition(_start + arcade::data::Vector2f{0, off});
-    // }
-    _sprite->setPosition(_start);
+    float diff = std::sqrt(std::pow(_end.x - _start.x, 2) + std::pow(_end.y - _start.y, 2));    
+    float off = (diff * 0.15f) + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / ((diff * (1 - 0.15f)) - (diff * 0.15f))));
+    if (_rotation == direction::Going_Up) {
+        _sprite->setPosition(_start + arcade::data::Vector2f{-off, 0});
+    } else if (_rotation == direction::Going_Right) {
+        _sprite->setPosition(_start + arcade::data::Vector2f{0, -off});
+    } else if (_rotation == direction::Going_Down) {
+        _sprite->setPosition(_start + arcade::data::Vector2f{off, 0});
+    } else if (_rotation == direction::Going_Left) {
+        _sprite->setPosition(_start + arcade::data::Vector2f{0, off});
+    }
 }
 
 void solarfox::Enemy::shot()

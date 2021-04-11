@@ -25,7 +25,7 @@ class Centipede : public arcade::games::IGame {
     arcade::games::GameStatus update() override; // return enum game state
     void draw();
     void stop() override;
-    unsigned int getScore() override;
+    unsigned int getScore() const override;
     void restart() override {};
     // BITE
 
