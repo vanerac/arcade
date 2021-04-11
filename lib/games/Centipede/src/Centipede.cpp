@@ -46,6 +46,8 @@ void Centipede::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     spriteManager = std::make_unique<SpriteManager>(disp, current_level);
 
     player->setSprite(spriteManager->getPlayer());
+    player->setPosition(disp->getWindowSize().x / 2, disp->getWindowSize().y -
+        player->getSprite()->getLocalBounds().height);
     for (auto &centipede : _centipedes)
         for (auto &body : centipede->getTiles())
             body->setSprite(
@@ -73,19 +75,19 @@ void Centipede::handleMovement(
         switch (event.keyCode) {
         case arcade::data::UP:
             this->player->setOrientation(UP);
-            this->player->setVelocity(1);
+            this->player->setVelocity(player->getVelocity() + 1);
             break;
         case arcade::data::DOWN:
             this->player->setOrientation(DOWN);
-            this->player->setVelocity(1);
+            this->player->setVelocity(player->getVelocity() + 1);
             break;
         case arcade::data::LEFT:
             this->player->setOrientation(LEFT);
-            this->player->setVelocity(1);
+            this->player->setVelocity(player->getVelocity() + 1);
             break;
         case arcade::data::RIGHT:
             this->player->setOrientation(RIGHT);
-            this->player->setVelocity(1);
+            this->player->setVelocity(player->getVelocity() + 1);
             break;
         case arcade::data::SPACE:
             this->shoot();
@@ -203,7 +205,7 @@ arcade::games::GameStatus Centipede::update()
     auto event = this->_displayer->getEvents();
     handleMovement(event);
     player->move();
-    player->setVelocity(0); // todo dont move forever
+    player->setVelocity(0);
 
     if (_centipedes.empty())
         this->newLevel();

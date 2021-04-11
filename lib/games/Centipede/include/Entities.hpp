@@ -39,7 +39,7 @@ class Entity {
 
     protected:
         int health;
-        std::unique_ptr<arcade::displayer::ISprite> sprite;
+        std::unique_ptr<arcade::displayer::ISprite> _sprite;
         enum orientation _orientation = STATIC;
         float velocity;
 

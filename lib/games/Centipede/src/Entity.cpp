@@ -6,6 +6,7 @@
 */
 
 #include "../include/Entities.hpp"
+#include <iostream>
 
 Entity::Entity(int health)
 {
@@ -41,13 +42,13 @@ int Entity::getHealth() const
 
 std::unique_ptr<arcade::displayer::ISprite> &Entity::getSprite()
 {
-    return this->sprite;
+    return this->_sprite;
 }
 
 // &&
 void Entity::setSprite(std::unique_ptr<arcade::displayer::ISprite> sprite)
 {
-    this->sprite = std::move(sprite);
+    this->_sprite = std::move(sprite);
 }
 
 void Entity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
@@ -65,45 +66,46 @@ bool Entity::does_collide(std::unique_ptr<Entity> &target)
     if (!(thisSprite))
         return false;
 
-    return
-    arcade::isOverlap(
-        (thisSprite)->getGlobalBounds(),
-        (targetSprite)->getGlobalBounds()
-        );
+    return arcade::isOverlap((thisSprite)->getGlobalBounds(),
+        (targetSprite)->getGlobalBounds());
 }
 
 void Entity::move()
 {
-    // todo update position
-    // todo update sprite position
     switch (_orientation) {
+    // todo use delta
     case UP:
-        this->setPosition(getPosition().x, getPosition().y + getVelocity());
+        std::cout << "up" << std::endl;
+        this->setPosition(getPosition().x, getPosition().y - getVelocity());
         break;
     case RIGHT:
+        std::cout << "right" << std::endl;
         this->setPosition(getPosition().x + getVelocity(), getPosition().y);
         break;
     case RIGHT_DOWN:
+        std::cout << "right down" << std::endl;
         this->setPosition(getPosition().x + getVelocity(),
-            getPosition().y - getVelocity());
+            getPosition().y + getVelocity());
         break;
     case LEFT:
+        std::cout << "left" << std::endl;
         this->setPosition(getPosition().x - getVelocity(), getPosition().y);
         break;
     case LEFT_DOWN:
-        this->setPosition(getPosition().x - getVelocity(),
-            getPosition().y - getVelocity());
+        std::cout << "left down" << std::endl;
+        this->setPosition(this->getPosition().x - getVelocity(),
+            this->getPosition().y + getVelocity());
         break;
     case DOWN:
-        this->setPosition(getPosition().x, getPosition().y - getVelocity());
+        std::cout << "down" << std::endl;
+        this->setPosition(getPosition().x, getPosition().y + getVelocity());
         break;
     case STATIC:
         break;
     }
+    this->getSprite()->setPosition(
+        arcade::data::Vector2f(getPosition().x, getPosition().y));
 
-    this->getSprite()->setPosition((getPosition().x, getPosition().y));
-
-    // todo move depending on _orientation
     // todo prevent moving beyond window ?
 }
 
