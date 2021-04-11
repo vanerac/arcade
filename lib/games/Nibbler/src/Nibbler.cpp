@@ -152,6 +152,15 @@ void Nibbler::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     createBlock(initPos + arcade::data::Vector2f{(finalPos / map.size()) * _unit.x, (finalPos % map.size()) * _unit.y}, true);
 }
 
+void Nibbler::restart()
+{
+    posSnake.clear();
+    _player.clear();
+    automaticMoveTimer = 0.8;
+    totScore = 0;
+    init(_displayer);
+}
+
 void Nibbler::snakeMoveRIGHT()
 {
     int i = -1;

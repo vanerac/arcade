@@ -19,7 +19,7 @@ class Nibbler : public arcade::games::IGame {
         void init(std::shared_ptr<arcade::displayer::IDisplay> &disp) override;
         arcade::games::GameStatus update() override;
         void stop() override;
-        void restart() override {};
+        void restart() override;
         unsigned int getScore() const override;
 
         void create_snake(arcade::data::Vector2f pos, bool isFirstCell);
