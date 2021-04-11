@@ -305,8 +305,6 @@ arcade::games::GameStatus Nibbler::update()
             direction = arcade::data::KeyCode::RIGHT;
         if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::DOWN)
             direction = arcade::data::KeyCode::DOWN;
-        if (event.type == arcade::data::EventType::KEY_PRESSED && event.keyCode == arcade::data::KeyCode::SPACE)
-            restart();
     }
     this->_displayer->draw(_logo);
     for (auto &b : _blocks) {
