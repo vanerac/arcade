@@ -88,7 +88,7 @@ void Entity::move()
         this->getSprite()->move(velocity, 0);
         break;
     case RIGHT_DOWN:
-
+        std::cout << "right down" << std::endl;
         this->getSprite()->move(velocity, velocity);
         break;
     case LEFT:
@@ -96,6 +96,7 @@ void Entity::move()
         this->getSprite()->move(-velocity, 0);
         break;
     case LEFT_DOWN:
+        std::cout << "left down" << std::endl;
         this->getSprite()->move(-velocity, velocity);
         break;
     case DOWN:

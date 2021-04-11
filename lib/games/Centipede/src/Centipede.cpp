@@ -181,30 +181,27 @@ arcade::games::GameStatus Centipede::update()
             --itCentipede;
             continue;
         }
-        for (auto &body : centipede->getTiles()) {
-            if (!body)
-                continue;
-            if (body->does_collide(this->player)) {
-                //                return arcade::games::GameStatus::GAME_ENDED;
-            }
-            if (!arcade::isOverlap(mapLimit,
-                body->getSprite()->getGlobalBounds())) {
-//                std::cout << "OUT OF BOUNDS" << std::endl;
+        auto &head = centipede->getTiles()[0]; // only head, rest follows
+        if (!head)
+            continue;
+        if (head->does_collide(this->player))
+            return arcade::games::GameStatus::GAME_ENDED;
+
+        if (!arcade::isOverlap(mapLimit,
+            head->getSprite()->getGlobalBounds())) {
+            std::cout << "OUT OF BOUNDS" << std::endl;
+            centipede->setOrientation(
+                centipede->getOrientation() == RIGHT ? LEFT_DOWN : RIGHT_DOWN);
+        }
+        for (auto &obstacle: _obstacles) {
+            if (obstacle && head->does_collide(obstacle)) {
+
                 centipede->setOrientation(
                     centipede->getOrientation() == RIGHT ? LEFT_DOWN :
                         RIGHT_DOWN);
-                continue; // head hit, the rest will follow head
-            }
-            for (auto &obstacle: _obstacles) {
-                if (!obstacle)
-                    continue;
-                if (body->does_collide(obstacle)) {
-                    centipede->setOrientation(
-                        centipede->getOrientation() == RIGHT ? LEFT_DOWN :
-                            RIGHT_DOWN);
-                }
             }
         }
+
         centipede->move();
     }
 
@@ -248,7 +245,7 @@ void Centipede::shoot()
 {
     _displayer->log() << "SHOT CREATED" << std::endl;
     auto shot = std::make_unique<Entity>(1);
-    shot->setVelocity(2);
+    shot->setVelocity(5);
     shot->setOrientation(UP);
     shot->setSprite(spriteManager->getShot());
     shot->getSprite()->setPosition(arcade::data::Vector2f(

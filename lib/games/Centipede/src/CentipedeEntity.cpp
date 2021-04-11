@@ -36,8 +36,8 @@ std::unique_ptr<CentipedeEntity> CentipedeEntity::splitAt(int tileIndex)
         std::make_move_iterator(tiles.begin() + tileIndex),
         std::make_move_iterator(tiles.end()));
     this->setTiles(std::move(split_hi));
-    if (!split_lo.size())
-        return nullptr;
+    if (split_lo.empty())
+        return nullptr; // todo return empty
     std::unique_ptr<Entity> &v = split_lo.front();
     // if (!v)
     //     return nullptr;
@@ -67,14 +67,16 @@ void CentipedeEntity::move()
     enum orientation prevOrientation = this->getOrientation();
     enum orientation bufferOrientation;
 
+    int i = -1;
     for (auto &tile : _tiles) {
-
+        ++i;
         buffer = tile->getPosition();
         bufferOrientation = tile->getOrientation();
 
         if (tile != _tiles[0] && tile->getPosition() == previous)
             continue;
 
+        std::cout << i << " " << tile->getPosition() << " ";
         tile->setVelocity(this->_tiles.size() +
             tile->getSprite()->getLocalBounds().width / 2);
         tile->setOrientation(prevOrientation);
@@ -83,21 +85,32 @@ void CentipedeEntity::move()
         previous = buffer;
         prevOrientation = bufferOrientation;
 
-        if (bufferOrientation == RIGHT_DOWN)
+        if (bufferOrientation == RIGHT_DOWN) {
+            std::cout << "SKRR RIGHT" << std::endl;
             tile->setOrientation(RIGHT);
-        else if (bufferOrientation == LEFT_DOWN)
+        } else if (bufferOrientation == LEFT_DOWN) {
+            std::cout << "SKRR LEFT" << std::endl;
             tile->setOrientation(LEFT);
+        }
     }
-    if (_tiles[0]->getOrientation() != this->getOrientation()) {
-        this->setOrientation(_tiles[0]->getOrientation());
+    //    if (_tiles[0]->getOrientation() != this->getOrientation())
+    this->setOrientation(_tiles[0]->getOrientation());
+    if (this->getOrientation() == RIGHT_DOWN) {
+        std::cout << "SKRR RIGHT" << std::endl;
+        this->setOrientation(RIGHT);
+    } else if (this->getOrientation() == LEFT_DOWN) {
+        std::cout << "SKRR LEFT" << std::endl;
+        this->setOrientation(LEFT);
     }
+    std::cout << std::endl;
 }
 
 void CentipedeEntity::draw(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 {
-    SpriteManager spriteManager(disp, 0); // todo use current level
+    SpriteManager spriteManager(disp, 0);
     int index = 0;
     for (auto &body : _tiles) {
+        // todo head sprite
         auto orientation = body->getOrientation();
         if (!body->getSprite()) {
             body->setSprite(
