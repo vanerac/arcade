@@ -123,8 +123,14 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
     snake.clear();
 
     createBlock({0, 0}, false);
+    auto oldUnit = _unit;
     _unit.x = _blocks[0]->getGlobalBounds().width + 0.02f;
     _unit.y = _blocks[0]->getGlobalBounds().height + 0.02f;
+    getPosSnake();
+    for (auto &b : posSnake){
+        b.x = b.x / oldUnit.x * _unit.x;
+        b.y = b.y / oldUnit.y * _unit.y;
+    }
     _player.clear();
     _blocks.clear();
 
@@ -143,6 +149,9 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
         pos = ypos;
     }
     arcade::data::Vector2f initPosSnake{initPos.x + _unit.x, initPos.y + ((map.size() - 2) * _unit.y)};
+    if (!posSnake.empty()){
+        initPosSnake = posSnake[0];
+    }
     create_snake(initPosSnake, true);
     int finalPos = 0;
     for (finalPos = std::rand() % (map.size() * map[0].size());
@@ -153,7 +162,6 @@ void Game1::init(std::shared_ptr<arcade::displayer::IDisplay> &disp)
 
 void Game1::snakeMoveRIGHT()
 {
-    posSnake.clear();
     int i = -1;
 
     getPosSnake();
@@ -169,7 +177,6 @@ void Game1::snakeMoveRIGHT()
 
 void Game1::snakeMoveLEFT()
 {
-    posSnake.clear();
     int i = -1;
 
     getPosSnake();
@@ -185,7 +192,6 @@ void Game1::snakeMoveLEFT()
 
 void Game1::snakeMoveDOWN()
 {
-    posSnake.clear();
     int i = -1;
 
     getPosSnake();
@@ -201,7 +207,6 @@ void Game1::snakeMoveDOWN()
 
 void Game1::snakeMoveUP()
 {
-    posSnake.clear();
     int i = -1;
 
     getPosSnake();
@@ -249,7 +254,7 @@ void Game1::automaticMove()
 
 GameStatus Game1::update()
 {
-    getPosSnake();
+    //getPosSnake();
 
     float adjustment = 0.01;
     auto pbounds = _player[0]->getGlobalBounds();
@@ -260,7 +265,6 @@ GameStatus Game1::update()
 
     if (arcade::isOverlap(pbounds, abounds)){
         totScore += 1;
-        // this->_displayer->log() << "APPLE" << std::endl;
         intScore = _displayer->createText(std::to_string(totScore));
         intScore->setPosition({winSize.x / 3.5f, winSize.y / 2.0f});
         intScore->setCharacterSize(40);
