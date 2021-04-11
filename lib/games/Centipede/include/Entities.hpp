@@ -21,7 +21,7 @@ class Entity {
         Entity(int health);
         ~Entity();
         void setPosition(int x, int y);
-        struct Position getPosition() const;
+        arcade::data::Vector2f getPosition() const;
         void setHealth(int health);
         int getHealth() const;
         virtual void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp);

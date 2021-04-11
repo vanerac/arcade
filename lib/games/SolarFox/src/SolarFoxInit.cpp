@@ -28,6 +28,7 @@ void solarfox::SolarFox::init(std::shared_ptr<arcade::displayer::IDisplay> &disp
 {
     _displayer = disp;
     createMap();
+    _wichedDirection = direction::No_Direction;
 
     arcade::data::Vector2f winSize = _displayer->getWindowSize();
     _mapSize = {static_cast<unsigned int>(_map[0].size()) + 2, static_cast<unsigned int>(_map.size()) + 2};
@@ -39,7 +40,7 @@ void solarfox::SolarFox::init(std::shared_ptr<arcade::displayer::IDisplay> &disp
     const int yOffset = winSize.y * 0.02f;
 
 
-    if (!_isRestarting || _level) {
+    if (!_isRestarting || _level > 1) {
         _pbullets.clear();
         _ebullets.clear();
     }

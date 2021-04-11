@@ -69,7 +69,7 @@ void solarfox::SolarFox::updateEnemies()
             auto r = findUnitCube(p);
             p.x = r.left + (r.width / 2);
             p.y = r.top  + (r.height / 2);
-            createBullet(false, p, d, (s * 0.65f) * u, 3 - (0.1 * _level));
+            createBullet(false, p, d, (s * 0.65f) * u, 2 - (0.1 * _level));
         }
     }
 }
@@ -92,10 +92,10 @@ bool solarfox::SolarFox::updateBullets()
     };
     moveBullets(_pbullets);
     moveBullets(_ebullets);
-    static const float ajustement = _unit.x * 0.40f;
     for (auto itPbullet = _pbullets.begin(); itPbullet != _pbullets.end(); ++itPbullet) {
         auto &pbullet = *itPbullet;
         auto pbbound = pbullet->getSprite()->getGlobalBounds();
+        static const float ajustement = _unit.x * 0.05f;
         pbbound.left += ajustement;
         pbbound.top += ajustement;
         pbbound.width -= ajustement * 2;
@@ -141,6 +141,7 @@ bool solarfox::SolarFox::updateBullets()
             continue;
         }
     }
+    float ajustement = _unit.x * (0.40f - (!isOptions(_displayer, SET_CHARACTER_SIZE) * 0.30f));
     auto pbounds = _player->getGlobalBounds();
     pbounds.left += ajustement;
     pbounds.top += ajustement;
@@ -185,7 +186,7 @@ bool solarfox::SolarFox::updatePlayer()
     _player->move(x * speedBoost, y * speedBoost);
 
     auto pbounds = _player->getGlobalBounds();
-    static const float ajustement = _unit.x * 0.40f;
+    const float ajustement = _unit.x * (0.40f - (!isOptions(_displayer, SET_CHARACTER_SIZE) * 0.30f));
     pbounds.left += ajustement;
     pbounds.top += ajustement;
     pbounds.width -= ajustement * 2;
