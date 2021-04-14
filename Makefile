@@ -48,7 +48,6 @@ core:				shared									## Make the core of the arcade
 games:				shared									## Make all games
 					make -C $(NBBL_DIR) && mv $(NBBL_DIR)/$(NBBL_NAME) $(LIBS_DIR)
 					make -C $(SLFX_DIR) && mv $(SLFX_DIR)/$(SLFX_NAME) $(LIBS_DIR)
-					make -C $(CTP_DIR)  && mv $(CTP_DIR)/$(CTP_NAME) $(LIBS_DIR)
 .PHONY:	games
 
 graphicals:			shared									## Make all graphicals
