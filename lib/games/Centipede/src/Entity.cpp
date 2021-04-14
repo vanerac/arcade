@@ -23,6 +23,7 @@ void Entity::setPosition(int new_x, int new_y)
 {
     if (this->getSprite())
         this->getSprite()->setPosition(arcade::data::Vector2f(new_x, new_y));
+
     this->pos = arcade::data::Vector2f(new_x, new_y);
 }
 

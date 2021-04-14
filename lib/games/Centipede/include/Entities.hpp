@@ -51,7 +51,7 @@ class CentipedeEntity : public Entity {
         ~CentipedeEntity();
         void setTiles(std::vector<std::unique_ptr<Entity>> tiles);
         std::vector<std::unique_ptr<Entity>> &getTiles();
-        std::unique_ptr<CentipedeEntity> splitAt(int tileIndex);
+        std::unique_ptr<CentipedeEntity> splitAt(unsigned long int tileIndex);
         void move() override;
         void draw(std::shared_ptr<arcade::displayer::IDisplay> &disp) override;
 
